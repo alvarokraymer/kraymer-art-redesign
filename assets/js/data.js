@@ -48,6 +48,7 @@ const PRODUCTS = [
     sizes: ["5", "6", "7", "8", "9", "10", "11", "12"],
     line: "Inspired by Gojo Satoru's Limitless. Infinity, rendered as an unbroken circle of hand-set sapphire.",
     gem: "Sapphire",
+    imgDir: "Gojo Geto_Results",
   },
   {
     handle: "king-of-curses-pendant",
@@ -62,6 +63,7 @@ const PRODUCTS = [
     sizes: [],
     line: "A pendant for the King of Curses. Carved flame motifs around a deep garnet core.",
     gem: "Garnet",
+    imgDir: "Gojo Geto_Results",
   },
   {
     handle: "domain-expansion-set",
@@ -76,6 +78,7 @@ const PRODUCTS = [
     sizes: ["5", "6", "7", "8", "9", "10", "11", "12"],
     line: "Ring and pendant, one domain. The Limitless circle paired with the Six Eyes sapphire drop.",
     gem: "Sapphire",
+    imgDir: "Gojo Geto_Results",
   },
   {
     handle: "cursed-energy-studs",
@@ -90,6 +93,7 @@ const PRODUCTS = [
     sizes: [],
     line: "Small studs, heavy presence. Black onyx cut to hold the light like cursed energy does.",
     gem: "Onyx",
+    imgDir: "Yor Earings_Results",
   },
   {
     handle: "hinokami-kagura-pendant",
@@ -104,6 +108,7 @@ const PRODUCTS = [
     sizes: [],
     line: "The dance of the fire god, caught in a flame-cut garnet that moves with you.",
     gem: "Garnet",
+    imgDir: "Ring_Results",
   },
   {
     handle: "water-breathing-ring",
@@ -118,6 +123,7 @@ const PRODUCTS = [
     sizes: ["5", "6", "7", "8", "9", "10", "11", "12"],
     line: "Dead calm. A still-water band with a single channel of blue topaz, cut like a blade's edge.",
     gem: "Blue Topaz",
+    imgDir: "Ring_Results",
   },
   {
     handle: "nezuko-bamboo-cuff",
@@ -132,6 +138,7 @@ const PRODUCTS = [
     sizes: ["S", "M", "L"],
     line: "Bamboo, reimagined as a cuff. Gentle to look at, stubborn in the fire.",
     gem: "Pink Opal",
+    imgDir: "Ring_Results",
   },
   {
     handle: "nichirin-blade-set",
@@ -146,6 +153,7 @@ const PRODUCTS = [
     sizes: ["5", "6", "7", "8", "9", "10", "11", "12"],
     line: "Pendant and ring in one collector box. The blade that changes color, set in stone and steel.",
     gem: "Onyx",
+    imgDir: "Ring_Results",
   },
   {
     handle: "electro-vision-ring",
@@ -160,6 +168,7 @@ const PRODUCTS = [
     sizes: ["5", "6", "7", "8", "9", "10", "11", "12"],
     line: "Eternity, held still. An amethyst Vision in a storm-setting of polished silver.",
     gem: "Amethyst",
+    imgDir: "Ring_Results",
   },
   {
     handle: "anemo-vision-pendant",
@@ -174,6 +183,7 @@ const PRODUCTS = [
     sizes: [],
     line: "A wind that remembers every song. Peridot cut light, on a chain that barely weighs a breath.",
     gem: "Peridot",
+    imgDir: "Ring_Results",
   },
   {
     handle: "geo-archon-signet",
@@ -188,6 +198,7 @@ const PRODUCTS = [
     sizes: ["5", "6", "7", "8", "9", "10", "11", "12"],
     line: "A contract sealed in stone. Citrine set deep, the way Liyue sets its word.",
     gem: "Citrine",
+    imgDir: "Ring_Results",
   },
   {
     handle: "vision-gemstone-collector-box",
@@ -202,6 +213,7 @@ const PRODUCTS = [
     sizes: [],
     line: "Three Visions, one vault box. Certificate of authenticity numbered by hand.",
     gem: "Mixed",
+    imgDir: "Ring_Results",
   },
 ];
 

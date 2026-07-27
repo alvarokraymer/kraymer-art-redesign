@@ -19,6 +19,10 @@
 const PH_GOLD = "#C4A882";
 const accentColors = { jjk: "#5B7FA5", kny: "#B55848", genshin: "#8A6DAE" };
 
+function imgPath(p, shot) {
+  return p.imgDir ? `assets/${p.imgDir}/${shot}.jpg` : null;
+}
+
 function phSVG(type, gemColor) {
   const g = gemColor || PH_GOLD;
   const shapes = {
@@ -63,6 +67,9 @@ function phSVG(type, gemColor) {
 }
 
 function ph(label, opts = {}) {
+  if (opts.img) {
+    return `<div class="ph" role="img" aria-label="${label}" style="background-image:url(${opts.img});background-size:cover;background-position:center">${opts.tag ? `<span class="ph__tag" style="position:absolute;bottom:var(--space-sm);right:var(--space-sm);font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);opacity:.5;z-index:1;display:none">${opts.tag}</span>` : ""}</div>`;
+  }
   const type = opts.type || "rings";
   const gemColor = opts.gemColor || PH_GOLD;
   const svg = phSVG(type, gemColor);
@@ -111,7 +118,7 @@ function productCard(p) {
   return `
   <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}">
     <a class="card__img" href="producto.html?id=${p.handle}" aria-label="${p.title}" style="position:relative">
-      ${ph(p.title, { type: p.type, gemColor })}
+      ${ph(p.title, { type: p.type, gemColor, img: imgPath(p, "Front View.jpg") })}
       ${badge}
     </a>
     <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
@@ -395,27 +402,31 @@ function initHome() {
   const strip = document.querySelector("[data-bestsellers]");
   if (strip) strip.innerHTML = best.map(productCard).join("");
 
-  /* Hero slider: auto-rotate every 5s, arrows, dots */
+  /* Hero slider: auto-rotate every 5s, touch swipe, elegant progress bar */
   const track = document.querySelector("[data-hs-track]");
-  const dots = document.querySelector("[data-hs-dots]");
-  if (track && dots) {
+  const bar = document.querySelector("[data-hs-bar]");
+  if (track && bar) {
     const total = track.children.length;
     let current = 0;
     let auto = setInterval(() => go(current + 1), 5000);
     const go = (i) => {
       current = ((i % total) + total) % total;
       track.style.transform = `translateX(-${current * 100}%)`;
-      dots.querySelectorAll("button").forEach((d, j) => d.classList.toggle("on", j === current));
+      bar.style.width = `${((current + 1) / total) * 100}%`;
     };
-    dots.addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-      clearInterval(auto);
-      auto = setInterval(() => go(current + 1), 5000);
-      go(Array.from(dots.children).indexOf(btn));
-    });
-    document.querySelector("[data-hs-prev]").addEventListener("click", () => { clearInterval(auto); auto = setInterval(() => go(current + 1), 5000); go(current - 1); });
-    document.querySelector("[data-hs-next]").addEventListener("click", () => { clearInterval(auto); auto = setInterval(() => go(current + 1), 5000); go(current + 1); });
+
+    /* Touch swipe */
+    let sx = 0, ex = 0;
+    track.addEventListener("touchstart", (e) => { sx = e.changedTouches[0].screenX; }, {passive:true});
+    track.addEventListener("touchend", (e) => {
+      ex = e.changedTouches[0].screenX;
+      const dx = sx - ex;
+      if (Math.abs(dx) > 60) {
+        clearInterval(auto);
+        auto = setInterval(() => go(current + 1), 5000);
+        go(dx > 0 ? current + 1 : current - 1);
+      }
+    }, {passive:true});
   }
 
   /* Quiz: Find Your Domain (3 steps, series -> metal -> style) */
@@ -423,7 +434,7 @@ function initHome() {
   if (quiz) {
     const state = { series: null, metal: null, style: null };
     const steps = [
-      { key: "series", q: "Pick your universe", opts: [["jjk", "Jujutsu Kaisen"], ["kny", "Demon Slayer"], ["genshin", "Genshin Impact"]] },
+      { key: "series", q: "Pick your collection", opts: [["jjk", "Collection JJ"], ["kny", "Collection KN"], ["genshin", "Collection GI"]] },
       { key: "metal", q: "Pick your metal", opts: [["silver", "925 Sterling Silver"], ["gold", "18K Gold"]] },
       { key: "style", q: "Pick your style", opts: [["subtle", "Subtle, every day"], ["statement", "Statement piece"]] },
     ];
@@ -592,10 +603,10 @@ function initPDP() {
   const hasCompare = !!p.compareAt;
 
   const galleryShots = [
-    { label: `${p.title} · Studio`, tag: "Studio" },
-    { label: "Stone setting, macro", tag: "Detail" },
-    { label: "Worn on hand", tag: "On hand" },
-    { label: "Collector box & certificate", tag: "Packaging" },
+    { label: `${p.title} · Studio`, tag: "Studio", file: "Front View.jpg" },
+    { label: "Stone setting, macro", tag: "Detail", file: "Hero 3_4 Angle.jpg" },
+    { label: "Worn on hand", tag: "On hand", file: "Scale Shot.jpg" },
+    { label: "Collector box & certificate", tag: "Packaging", file: "Detail_Function Shot.jpg" },
   ];
 
   host.innerHTML = `
@@ -604,10 +615,10 @@ function initPDP() {
     </nav>
     <div class="pdp-layout">
       <div class="pdp-gallery">
-        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch })}</div>
+        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: imgPath(p, galleryShots[0].file) })}</div>
         <div class="gal--thumbs">
           ${galleryShots.map((s, i) => `
-            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</button>`).join("")}
+            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: imgPath(p, s.file) })}</button>`).join("")}
         </div>
       </div>
       <div class="pdp-meta">
@@ -713,7 +724,7 @@ function initPDP() {
   host.querySelectorAll("[data-thumb]").forEach((btn) => {
     btn.addEventListener("click", () => {
       activeShot = Number(btn.dataset.thumb);
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: imgPath(p, galleryShots[activeShot].file) });
       host.querySelectorAll("[data-thumb]").forEach((b) => b.classList.toggle("active", b === btn));
     });
   });
@@ -724,7 +735,7 @@ function initPDP() {
     btn.addEventListener("click", () => {
       selectedMetal = btn.dataset.metal;
       host.querySelectorAll("[data-metal]").forEach((b) => b.classList.toggle("selected", b === btn));
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: imgPath(p, galleryShots[activeShot].file) });
     });
   });
   host.querySelectorAll("[data-size]").forEach((btn) => {
@@ -772,6 +783,12 @@ function initPDP() {
 
 /* ---------------- Global wiring ---------------- */
 document.addEventListener("DOMContentLoaded", () => {
+  /* Restore theme */
+  if (localStorage.getItem("ka_theme") === "dark") {
+    document.documentElement.setAttribute("data-theme","dark");
+    const btn = document.querySelector("[data-theme-toggle]");
+    if (btn) btn.classList.add("on");
+  }
   updateBadges();
   renderCart();
   initCardActions();
@@ -782,11 +799,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.closest("[data-mob-nav] a")) { document.querySelector("[data-mob-nav]").classList.remove("on"); document.querySelector(".hamburger").classList.remove("on"); }
     if (e.target.closest("[data-open-cart]")) openCart();
     if (e.target.closest("[data-close-cart]") || e.target.closest("[data-scrim]")) closeCart();
-    if (e.target.closest("[data-open-search]")) openSearch();
-    if (e.target.closest("[data-close-search]")) closeSearch();
+    if (e.target.closest("[data-close-search]")) { document.querySelector("[data-mob-nav]").classList.remove("on"); document.querySelector(".hamburger").classList.remove("on"); document.querySelector("[data-search-results]").innerHTML = ""; return; }
     if (e.target.closest("[data-close-modal]")) closeModal();
     if (e.target.closest("[data-checkout]")) openModal(CHECKOUT_MOCK_HTML);
     if (e.target.closest("[data-open-sizeguide]")) { e.preventDefault(); openModal(SIZE_GUIDE_HTML); }
+    if (e.target.closest("[data-theme-toggle]")) {
+      const btn = document.querySelector("[data-theme-toggle]");
+      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      if (isDark) { document.documentElement.removeAttribute("data-theme"); btn.classList.remove("on"); localStorage.setItem("ka_theme","light"); }
+      else { document.documentElement.setAttribute("data-theme","dark"); btn.classList.add("on"); localStorage.setItem("ka_theme","dark"); }
+      return;
+    }
     if (e.target.closest("[data-open-wishlist]")) {
       const list = Wishlist.read();
       openModal(list.length
@@ -799,7 +822,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const searchInput = document.querySelector("[data-search-input]");
-  if (searchInput) searchInput.addEventListener("input", (e) => runSearch(e.target.value));
+  if (searchInput) searchInput.addEventListener("input", (e) => { runSearch(e.target.value); });
 
   const news = document.querySelector("[data-newsletter]");
   if (news) news.addEventListener("submit", (e) => {
