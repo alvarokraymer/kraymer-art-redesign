@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kraymer Art · Fine Jewelry, Handcrafted</title>
   <meta name="description" content="Fine jewelry in solid 925 silver and 18K gold. Handcrafted to order. Lifetime warranty.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body data-page="home">
@@ -15,45 +12,45 @@
   <div id="site-header"></div>
 
   <main>
-    <!-- HERO: dark bg, text overlaid, 3-card infinite carousel -->
-    <section class="hero">
-      <div class="hero__top">
-        <span class="eyebrow eyebrow-d">Handcrafted in small batches</span>
-        <h1>For those who carry <i>their worlds with them.</i></h1>
-        <p class="lead">Fine jewelry in solid 925 silver and 18K gold. Made to order, one piece at a time.</p>
+    <!-- HERO SLIDER: full viewport, 3 slides, auto-rotate -->
+    <section class="hero-slider" data-hero-slider>
+      <div class="hs-track" data-hs-track>
+        <!-- Slide 1: Nezuko / Demon Slayer -->
+        <div class="hs-slide" style="background-image:url(assets/sakuraHero_forAI.png)">
+          <div class="hs-content">
+            <span class="eyebrow">Demon Slayer</span>
+            <h2>Nichirin Flame</h2>
+            <p>Blade elements, forged as pendants and cuffs. Flame and water, cut in garnet and topaz.</p>
+            <a class="btn btn--light" href="coleccion.html?collection=kny">Shop Demon Slayer</a>
+          </div>
+        </div>
+        <!-- Slide 2: Giyu / Water Breathing -->
+        <div class="hs-slide" style="background-image:url(assets/giyuRing_hero_AI.png)">
+          <div class="hs-content">
+            <span class="eyebrow">Demon Slayer</span>
+            <h2>Dead Calm</h2>
+            <p>The Eleventh Form, stilled in silver. Blue topaz cut like the edge of a blade.</p>
+            <a class="btn btn--light" href="coleccion.html?collection=kny">Shop Demon Slayer</a>
+          </div>
+        </div>
+        <!-- Slide 3: Gojo / JJK -->
+        <div class="hs-slide" style="background-image:url(assets/otherRing_hero_AI.png)">
+          <div class="hs-content">
+            <span class="eyebrow">Jujutsu Kaisen</span>
+            <h2>The Limitless Ring</h2>
+            <p>Inspired by Gojo Satoru. Infinity, rendered as an unbroken circle of sapphire and silver.</p>
+            <a class="btn btn--light" href="coleccion.html?collection=jjk">Shop Jujutsu Kaisen</a>
+          </div>
+        </div>
       </div>
-      <div class="hero__cards" data-hero-cards>
-        <div class="hc-track" data-hc-track>
-          <div class="hc-card">
-            <div class="hc-card__box">
-              <span class="eyebrow">Jujutsu Kaisen</span>
-              <h2>The Gojo Collection</h2>
-              <p>A sapphire set in an unbroken circle. Inspired by Infinity, designed to be worn.</p>
-              <a class="btn btn--dark btn--full" href="coleccion.html?collection=jjk">Shop Jujutsu Kaisen</a>
-            </div>
-          </div>
-          <div class="hc-card">
-            <div class="hc-card__box">
-              <span class="eyebrow">Demon Slayer</span>
-              <h2>The Nichirin Series</h2>
-              <p>Blade elements, forged as pendants and cuffs. Flame and water, cut in garnet and topaz.</p>
-              <a class="btn btn--dark btn--full" href="coleccion.html?collection=kny">Shop Demon Slayer</a>
-            </div>
-          </div>
-          <div class="hc-card">
-            <div class="hc-card__box">
-              <span class="eyebrow">Kraymer Art</span>
-              <h2>Best Sellers</h2>
-              <p>The pieces collectors keep coming back to. Handcrafted, small batch, numbered by hand.</p>
-              <a class="btn btn--dark btn--full" href="coleccion.html">Shop Best Sellers</a>
-            </div>
-          </div>
-        </div>
-        <div class="hc-dots" data-hc-dots>
-          <button class="on"></button>
-          <button></button>
-          <button></button>
-        </div>
+      <div class="hs-arrows">
+        <button data-hs-prev aria-label="Previous slide">&#8249;</button>
+        <button data-hs-next aria-label="Next slide">&#8250;</button>
+      </div>
+      <div class="hs-dots" data-hs-dots>
+        <button class="on"></button>
+        <button></button>
+        <button></button>
       </div>
     </section>
 
@@ -75,7 +72,7 @@
         <div class="trust__item"><b>60-Day Returns</b><span>No questions asked</span></div>
         <div class="trust__item"><b>Certificate Included</b><span>Numbered by hand</span></div>
       </div>
-      <p class="trust__proof"><b>[SOCIAL PROOF PLACEHOLDER]</b> collectors worldwide · Replace with real number before launch</p>
+      <p class="trust__proof"><b>[SOCIAL PROOF PLACEHOLDER]</b> collectors worldwide · Replace before launch</p>
     </div>
 
     <!-- FANDOM: dark section -->
@@ -91,7 +88,7 @@
             <div class="ftile__body">
               <span class="eyebrow">Jujutsu Kaisen</span>
               <h3>Inspired by Gojo Satoru</h3>
-              <p>The Limitless technique, rendered as an unbroken circle of sapphire and silver.</p>
+              <p>The Limitless technique, rendered as an unbroken circle.</p>
               <span class="ftile__cta">Shop Jujutsu Kaisen</span>
             </div>
           </a>
@@ -100,7 +97,7 @@
             <div class="ftile__body">
               <span class="eyebrow">Demon Slayer</span>
               <h3>Inspired by Tanjiro Kamado</h3>
-              <p>Nichirin blade elements, forged as pendants and cuffs you can wear anywhere.</p>
+              <p>Nichirin blade elements, forged as pendants and cuffs.</p>
               <span class="ftile__cta">Shop Demon Slayer</span>
             </div>
           </a>
@@ -109,7 +106,7 @@
             <div class="ftile__body">
               <span class="eyebrow">Genshin Impact</span>
               <h3>Inspired by the Archons</h3>
-              <p>Vision gemstones, cut and set by hand. Elemental power in fine jewelry form.</p>
+              <p>Vision gemstones, cut and set by hand.</p>
               <span class="ftile__cta">Shop Genshin Impact</span>
             </div>
           </a>
@@ -127,11 +124,11 @@
         <div class="craft-grid">
           <div class="craft-item"><h3>Hand-Sculpted Originals</h3><p>Every design starts as a wax sculpture at the bench. If it does not feel like the character, it does not ship.</p></div>
           <div class="craft-item"><h3>Precious Metals &amp; Gems</h3><p>Solid 925 sterling silver and 18K gold. Hand-set stones. No brass, no nickel.</p></div>
-          <div class="craft-item"><h3>Small Batches Only</h3><p>We forge in numbered batches and stop when the batch is done. Quality over quantity, always.</p></div>
+          <div class="craft-item"><h3>Small Batches Only</h3><p>Forged in numbered batches. Quality over quantity, always.</p></div>
         </div>
         <div class="founder">
           <span class="eyebrow">From the founder</span>
-          <p style="margin-top:1rem">I spent years teaching art and shipping pieces to more than 2,000 collectors before opening this store. I started Kraymer Art because I wanted jewelry I could wear anywhere and still feel like myself.</p>
+          <p style="margin-top:1rem">I spent years teaching art and shipping pieces to more than 2,000 collectors before opening this store. I wanted jewelry I could wear anywhere and still feel like myself.</p>
           <p>Every piece here is something I would put on my own hand. That is the whole standard.</p>
           <p class="founder__sig">David Wang, "Kraymer"</p>
         </div>
@@ -152,17 +149,9 @@
     <!-- REVIEWS -->
     <section class="sec sec--sm" id="reviews">
       <div class="w">
-        <div class="ct" style="margin-bottom:2rem">
-          <span class="eyebrow">Word of mouth</span>
-          <h2>What People Say</h2>
-        </div>
-        <div class="rv">
-          <p style="font-family:var(--display);font-style:italic">"The level of detail is unlike any anime merchandise I have ever seen."</p>
-          <p class="who" style="margin-top:1rem">[PRESS QUOTE PLACEHOLDER] · Replace with real quote</p>
-        </div>
-        <div class="rv">
-          <p class="sm muted">[CUSTOMER PHOTO CAROUSEL PLACEHOLDER] · Real collector photos with permission.</p>
-        </div>
+        <div class="ct" style="margin-bottom:2rem"><span class="eyebrow">Word of mouth</span><h2>What People Say</h2></div>
+        <div class="rv"><p style="font-family:var(--display);font-style:italic">"The level of detail is unlike any anime merchandise I have ever seen."</p><p class="who" style="margin-top:1rem">[PRESS QUOTE PLACEHOLDER] · Replace with real quote</p></div>
+        <div class="rv"><p class="sm muted">[CUSTOMER PHOTO CAROUSEL PLACEHOLDER] · Real collector photos with permission.</p></div>
       </div>
     </section>
 
@@ -171,9 +160,9 @@
       <div class="w">
         <h2 class="ct" style="margin-bottom:2rem">Good questions</h2>
         <div class="faq">
-          <div class="faq__item"><button class="faq__btn">Will it tarnish or turn my skin green?</button><div class="faq__panel"><p>No. We use solid 925 sterling silver and 18K gold, never brass or nickel. Silver naturally darkens; a wipe with the polishing cloth brings it back.</p></div></div>
+          <div class="faq__item"><button class="faq__btn">Will it tarnish or turn my skin green?</button><div class="faq__panel"><p>No. Solid 925 sterling silver and 18K gold, never brass or nickel. A quick wipe with the polishing cloth and it looks new.</p></div></div>
           <div class="faq__item"><button class="faq__btn">How do I find my ring size?</button><div class="faq__panel"><p>Measure the inside diameter of a ring that fits you. If you get it wrong, resizing is free for life.</p></div></div>
-          <div class="faq__item"><button class="faq__btn">Do you ship internationally?</button><div class="faq__panel"><p>Yes, worldwide with tracking. Every piece is made to order, 9–20 days. Free shipping over $150.</p></div></div>
+          <div class="faq__item"><button class="faq__btn">Do you ship internationally?</button><div class="faq__panel"><p>Yes, worldwide with tracking. Made to order, 9–20 days. Free shipping over $150.</p></div></div>
           <div class="faq__item"><button class="faq__btn">What is your return policy?</button><div class="faq__panel"><p>60 days, no questions asked. Lifetime warranty and certificate on every piece.</p></div></div>
         </div>
       </div>

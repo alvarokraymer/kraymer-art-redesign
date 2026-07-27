@@ -1,6 +1,6 @@
 /* ============================================================
-   KRAYMER ART — Shared partials (v2)
-   Header, nav, footer, cart drawer, search overlay.
+   KRAYMER ART — Shared partials v3
+   Hamburger nav, header, footer, cart drawer, search.
    ============================================================ */
 
 const ICONS = {
@@ -13,6 +13,9 @@ const ICONS = {
 const HEADER_HTML = `
 <header class="site-header">
   <div class="hdr-bar">
+    <button class="hamburger" data-open-menu aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
     <a class="hdr-logo" href="index.html">Kraymer <i>Art</i></a>
     <div class="hdr-actions">
       <button class="ico" data-open-search aria-label="Search">${ICONS.search}</button>
@@ -21,14 +24,15 @@ const HEADER_HTML = `
       <button class="ico" data-open-cart aria-label="Cart">${ICONS.bag}<span class="n" data-cart-count hidden>0</span></button>
     </div>
   </div>
-  <nav class="nav-strip" aria-label="Collections">
-    <a href="coleccion.html?collection=jjk" data-nav="jjk">Jujutsu Kaisen <small>JJK</small></a>
-    <a href="coleccion.html?collection=kny" data-nav="kny">Demon Slayer <small>KNY</small></a>
-    <a href="coleccion.html?collection=genshin" data-nav="genshin">Genshin Impact</a>
-    <a href="coleccion.html" data-nav="all">Best Sellers</a>
-    <a href="coleccion.html?type=sets" data-nav="sets">Collector Sets</a>
-  </nav>
 </header>
+<!-- Mobile nav overlay -->
+<nav class="mob-nav" data-mob-nav>
+  <a href="coleccion.html?collection=jjk">Jujutsu Kaisen <small>JJK</small></a>
+  <a href="coleccion.html?collection=kny">Demon Slayer <small>KNY</small></a>
+  <a href="coleccion.html?collection=genshin">Genshin Impact</a>
+  <a href="coleccion.html">Best Sellers</a>
+  <a href="coleccion.html?type=sets">Collector Sets</a>
+</nav>
 `;
 
 const FOOTER_HTML = `
@@ -73,17 +77,15 @@ const FOOTER_HTML = `
     </div>
     <div class="ft-copy">
       <p>&copy; 2026 Kraymer Art. All rights reserved.</p>
-      <p>Kraymer Art designs are original works inspired by the series we love. We are not affiliated with any studio or license holder.</p>
+      <p>Kraymer Art designs are original works inspired by the series we love. Not affiliated with any studio or license holder.</p>
     </div>
   </div>
 </footer>
 `;
 
-/* Cart drawer — ONE dominant CTA by design.
-   Checkout button opens a simulated modal. No real integration. */
 const CART_HTML = `
 <div class="scrim" data-scrim></div>
-<aside class="drawer" data-cart-drawer aria-label="Shopping cart">
+<aside class="drawer" data-cart-drawer aria-label="Cart">
   <div class="drawer__top">
     <h2>Your Cart <span data-cart-headcount></span></h2>
     <button class="ico" data-close-cart aria-label="Close">&times;</button>
@@ -91,7 +93,7 @@ const CART_HTML = `
   <div class="drawer__body" data-cart-body></div>
   <div class="drawer__bot" data-cart-foot hidden>
     <div class="drawer__sub"><span>Subtotal</span><b data-cart-subtotal>$0</b></div>
-    <button class="btn btn--dark" style="width:100%" data-checkout>Checkout</button>
+    <button class="btn btn--dark btn--full" data-checkout>Checkout</button>
     <p class="drawer__note">Free shipping over $150 · 60-day returns</p>
   </div>
 </aside>
@@ -101,7 +103,7 @@ const SEARCH_HTML = `
 <div class="search" data-search-overlay>
   <div class="search__bar">
     <input type="search" placeholder="Search by character, series or gem..." data-search-input aria-label="Search">
-    <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 var(--m)">&times;</button>
+    <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 1rem">&times;</button>
   </div>
   <div class="search__body" data-search-results>
     <p class="search__hint">Try "Gojo", "Demon Slayer" or "sapphire".</p>

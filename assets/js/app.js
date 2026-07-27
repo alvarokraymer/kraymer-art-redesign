@@ -16,7 +16,7 @@
    Each product type gets a distinct minimal line drawing:
    ring, necklace, earrings, bracelet, sets.
    In production, swap these for real product images. */
-const PH_GOLD = "#C5A47E";
+const PH_GOLD = "#C4A882";
 const accentColors = { jjk: "#5B7FA5", kny: "#B55848", genshin: "#8A6DAE" };
 
 function phSVG(type, gemColor) {
@@ -388,19 +388,20 @@ function initCardActions() {
   });
 }
 
-/* ---- HOME (hero carousel) ---- */
+/* ---- HOME (hero slider + hamburger) ---- */
 function initHome() {
   /* Bestsellers */
   const best = PRODUCTS.filter((p) => p.badges.includes("bestseller") && !p.soldOut);
   const strip = document.querySelector("[data-bestsellers]");
   if (strip) strip.innerHTML = best.map(productCard).join("");
 
-  /* Hero carousel: 3 cards, auto-rotate every 4s, infinite loop */
-  const track = document.querySelector("[data-hc-track]");
-  const dots = document.querySelector("[data-hc-dots]");
+  /* Hero slider: auto-rotate every 5s, arrows, dots */
+  const track = document.querySelector("[data-hs-track]");
+  const dots = document.querySelector("[data-hs-dots]");
   if (track && dots) {
     const total = track.children.length;
     let current = 0;
+    let auto = setInterval(() => go(current + 1), 5000);
     const go = (i) => {
       current = ((i % total) + total) % total;
       track.style.transform = `translateX(-${current * 100}%)`;
@@ -409,9 +410,12 @@ function initHome() {
     dots.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
       if (!btn) return;
+      clearInterval(auto);
+      auto = setInterval(() => go(current + 1), 5000);
       go(Array.from(dots.children).indexOf(btn));
     });
-    setInterval(() => go(current + 1), 4000);
+    document.querySelector("[data-hs-prev]").addEventListener("click", () => { clearInterval(auto); auto = setInterval(() => go(current + 1), 5000); go(current - 1); });
+    document.querySelector("[data-hs-next]").addEventListener("click", () => { clearInterval(auto); auto = setInterval(() => go(current + 1), 5000); go(current + 1); });
   }
 
   /* Quiz: Find Your Domain (3 steps, series -> metal -> style) */
@@ -774,6 +778,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initAccordions();
 
   document.addEventListener("click", (e) => {
+    if (e.target.closest("[data-open-menu]")) { document.querySelector("[data-mob-nav]").classList.toggle("on"); document.querySelector(".hamburger").classList.toggle("on"); return; }
+    if (e.target.closest("[data-mob-nav] a")) { document.querySelector("[data-mob-nav]").classList.remove("on"); document.querySelector(".hamburger").classList.remove("on"); }
     if (e.target.closest("[data-open-cart]")) openCart();
     if (e.target.closest("[data-close-cart]") || e.target.closest("[data-scrim]")) closeCart();
     if (e.target.closest("[data-open-search]")) openSearch();
