@@ -95,7 +95,8 @@ input,select{font:inherit}
 /* ── Header + hamburger ── */
 .site-header{position:fixed;top:0;left:0;right:0;z-index:60;background:var(--light);border-bottom:1px solid var(--line);transition:background .3s}
 .hdr-bar{height:var(--header-h);display:flex;align-items:center;padding:0 var(--gutter);gap:1rem}
-.hdr-logo{font-family:var(--display);font-size:1.1rem;font-weight:400;letter-spacing:.1em;text-transform:uppercase}
+.hdr-logo{display:flex;align-items:center}
+.hdr-logo img{display:block}
 .hdr-logo i{font-style:italic;color:var(--accent)}
 .hdr-actions{margin-left:auto;display:flex;align-items:center;gap:2px}
 .ico{position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm)}

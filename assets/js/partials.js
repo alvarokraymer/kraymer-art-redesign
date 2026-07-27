@@ -25,7 +25,7 @@ const HEADER_HTML = `
 <header class="site-header">
   <div class="hdr-bar">
     <button class="hamburger" data-open-menu aria-label="Menu"><span></span><span></span><span></span></button>
-    <a class="hdr-logo" href="index.html">Kraymer</a>
+    <a class="hdr-logo" href="index.html"><img src="assets/kraymer-logo.svg" alt="Kraymer" height="18"></a>
     <div class="hdr-actions">
       <button class="ico" data-open-search aria-label="Search">${ICONS.search}</button>
       <a class="ico" href="#" aria-label="Account" title="Not in mockup">${ICONS.account}</a>
