@@ -410,13 +410,15 @@ function initHome() {
 
   /* Hero slider: auto-rotate every 5s, touch swipe */
   const track = document.querySelector("[data-hs-track]");
-  if (track) {
+  const dots = document.querySelector("[data-hs-dots]");
+  if (track && dots) {
     const total = track.children.length;
     let current = 0;
     let auto = setInterval(() => go(current + 1), 5000);
     const go = (i) => {
       current = ((i % total) + total) % total;
       track.style.transform = `translateX(-${current * 100}%)`;
+      dots.querySelectorAll("button").forEach((d, j) => d.classList.toggle("on", j === current));
     };
 
     /* Touch swipe */
