@@ -1,6 +1,7 @@
 /* ============================================================
-   KRAYMER ART — Shared partials v3
-   Hamburger nav, header, footer, cart drawer, search.
+   KRAYMER ART — Shared partials v4
+   Logo: "Kraymer" only. Nav: JJ / KN / GI.
+   Marquee, hamburger menu, footer, cart drawer, search.
    ============================================================ */
 
 const ICONS = {
@@ -11,25 +12,32 @@ const ICONS = {
 };
 
 const HEADER_HTML = `
+<div class="marquee"><div class="marquee__track">
+  <span>10,000+ clients</span><span>&middot;</span>
+  <span>Free delivery over $150</span><span>&middot;</span>
+  <span>Lifetime warranty</span><span>&middot;</span>
+  <span>Handcrafted to order</span><span>&middot;</span>
+  <span>10,000+ clients</span><span>&middot;</span>
+  <span>Free delivery over $150</span><span>&middot;</span>
+  <span>Lifetime warranty</span><span>&middot;</span>
+  <span>Handcrafted to order</span>
+</div></div>
 <header class="site-header">
   <div class="hdr-bar">
-    <button class="hamburger" data-open-menu aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-    <a class="hdr-logo" href="index.html">Kraymer <i>Art</i></a>
+    <button class="hamburger" data-open-menu aria-label="Menu"><span></span><span></span><span></span></button>
+    <a class="hdr-logo" href="index.html">Kraymer</a>
     <div class="hdr-actions">
       <button class="ico" data-open-search aria-label="Search">${ICONS.search}</button>
-      <a class="ico" href="#" aria-label="Account" title="Account not in mockup">${ICONS.account}</a>
+      <a class="ico" href="#" aria-label="Account" title="Not in mockup">${ICONS.account}</a>
       <button class="ico" data-open-wishlist aria-label="Wishlist">${ICONS.heart}<span class="n" data-wishlist-count hidden>0</span></button>
       <button class="ico" data-open-cart aria-label="Cart">${ICONS.bag}<span class="n" data-cart-count hidden>0</span></button>
     </div>
   </div>
 </header>
-<!-- Mobile nav overlay -->
 <nav class="mob-nav" data-mob-nav>
-  <a href="coleccion.html?collection=jjk">Jujutsu Kaisen <small>JJK</small></a>
-  <a href="coleccion.html?collection=kny">Demon Slayer <small>KNY</small></a>
-  <a href="coleccion.html?collection=genshin">Genshin Impact</a>
+  <a href="coleccion.html?collection=jjk">Collection JJ</a>
+  <a href="coleccion.html?collection=kny">Collection KN</a>
+  <a href="coleccion.html?collection=genshin">Collection GI</a>
   <a href="coleccion.html">Best Sellers</a>
   <a href="coleccion.html?type=sets">Collector Sets</a>
 </nav>
@@ -49,16 +57,16 @@ const FOOTER_HTML = `
     <div class="ft-cols">
       <div>
         <h3>Shop</h3>
-        <a href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
-        <a href="coleccion.html?collection=kny">Demon Slayer</a>
-        <a href="coleccion.html?collection=genshin">Genshin Impact</a>
+        <a href="coleccion.html?collection=jjk">Collection JJ</a>
+        <a href="coleccion.html?collection=kny">Collection KN</a>
+        <a href="coleccion.html?collection=genshin">Collection GI</a>
         <a href="coleccion.html">Best Sellers</a>
         <a href="coleccion.html?type=sets">Collector Sets</a>
       </div>
       <div>
         <h3>Support</h3>
         <a href="#" data-open-sizeguide>Ring Size Guide</a>
-        <a href="#">Shipping &amp; Handmade Timeline</a>
+        <a href="#">Shipping &amp; Handmade</a>
         <a href="#">60-Day Returns</a>
         <a href="#">Lifetime Warranty</a>
         <a class="mail" href="mailto:support@kraymerart.com">support@kraymerart.com</a>
@@ -76,8 +84,8 @@ const FOOTER_HTML = `
       <span>APPLE PAY</span><span>GOOGLE PAY</span><span>PAYPAL</span>
     </div>
     <div class="ft-copy">
-      <p>&copy; 2026 Kraymer Art. All rights reserved.</p>
-      <p>Kraymer Art designs are original works inspired by the series we love. Not affiliated with any studio or license holder.</p>
+      <p>&copy; 2026 Kraymer. All rights reserved.</p>
+      <p>Kraymer designs are original handcrafted works. Not affiliated with any studio or license holder.</p>
     </div>
   </div>
 </footer>
@@ -94,7 +102,7 @@ const CART_HTML = `
   <div class="drawer__bot" data-cart-foot hidden>
     <div class="drawer__sub"><span>Subtotal</span><b data-cart-subtotal>$0</b></div>
     <button class="btn btn--dark btn--full" data-checkout>Checkout</button>
-    <p class="drawer__note">Free shipping over $150 · 60-day returns</p>
+    <p class="drawer__note">Free shipping over $150 &middot; 60-day returns</p>
   </div>
 </aside>
 `;
@@ -102,11 +110,11 @@ const CART_HTML = `
 const SEARCH_HTML = `
 <div class="search" data-search-overlay>
   <div class="search__bar">
-    <input type="search" placeholder="Search by character, series or gem..." data-search-input aria-label="Search">
+    <input type="search" placeholder="Search by name or gem..." data-search-input aria-label="Search">
     <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 1rem">&times;</button>
   </div>
   <div class="search__body" data-search-results>
-    <p class="search__hint">Try "Gojo", "Demon Slayer" or "sapphire".</p>
+    <p class="search__hint">Try "sapphire", "garnet" or "topaz".</p>
   </div>
 </div>
 `;

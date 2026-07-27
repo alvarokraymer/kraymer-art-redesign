@@ -21,9 +21,9 @@
    ============================================================ */
 
 const COLLECTIONS = {
-  jjk:     { name: "Jujutsu Kaisen", abbr: "JJK", accent: "jjk" },
-  kny:     { name: "Demon Slayer",   abbr: "KNY", accent: "kny" },
-  genshin: { name: "Genshin Impact", abbr: "GI",  accent: "genshin" },
+  jjk:     { name: "Collection JJ", abbr: "JJ", accent: "jjk" },
+  kny:     { name: "Collection KN", abbr: "KN", accent: "kny" },
+  genshin: { name: "Collection GI", abbr: "GI",  accent: "genshin" },
 };
 
 const PRODUCT_TYPES = [

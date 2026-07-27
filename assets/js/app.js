@@ -118,7 +118,7 @@ function productCard(p) {
       <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
     </button>
     <div class="card__body">
-      <span class="card__series">${col.name} · ${p.character}</span>
+      <span class="card__series">${col.name}</span>
       <h3 class="card__title"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
       ${priceHTML(p)}
       ${cta}
@@ -611,7 +611,7 @@ function initPDP() {
         </div>
       </div>
       <div class="pdp-meta">
-        <span class="eyebrow">${col.name} Collection · ${p.character}</span>
+        <span class="eyebrow">${col.name}</span>
         <h1 class="pdp-title">${p.title}</h1>
         <p class="pdp-rating"><span class="stars">★★★★★</span> ${RATING_PLACEHOLDER} · <a href="#reviews">Read reviews</a></p>
         <p class="pdp-line">${p.line}</p>
