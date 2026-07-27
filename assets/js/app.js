@@ -16,7 +16,8 @@
    Each product type gets a distinct minimal line drawing:
    ring, necklace, earrings, bracelet, sets.
    In production, swap these for real product images. */
-const PH_GOLD = "#A87E3F";
+const PH_GOLD = "#C5A47E";
+const accentColors = { jjk: "#5B7FA5", kny: "#B55848", genshin: "#8A6DAE" };
 
 function phSVG(type, gemColor) {
   const g = gemColor || PH_GOLD;
@@ -102,11 +103,12 @@ function productCard(p) {
   const gemColor = accentColors[p.collection] || PH_GOLD;
   const cta = p.soldOut
     ? `<button class="p-card__add" data-notify="${p.handle}">Notify Me</button>`
-    : `<button class="p-card__add" data-add="${p.handle}">Add to Cart</button>`;
+    : `<button class="p-card__add" data-add="${p.handle}">Add</button>`;
   return `
   <article class="p-card ${p.soldOut ? "p-card--out" : ""}" data-handle="${p.handle}">
     <a class="p-card__media" href="producto.html?id=${p.handle}" aria-label="${p.title}">
       ${ph(p.title, { type: p.type, gemColor, tag: p.soldOut ? "Sold out" : p.batch })}
+      <span class="p-card__badges">${cardBadges(p)}</span>
     </a>
     <button class="p-card__wish" data-wish="${p.handle}" aria-label="Add to wishlist">
       <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
@@ -114,7 +116,6 @@ function productCard(p) {
     <div class="p-card__body">
       <span class="p-card__series">${col.name} · ${p.character}</span>
       <h3 class="p-card__title"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
-      <span class="p-card__rating"><span class="stars">★★★★★</span> ${RATING_PLACEHOLDER}</span>
       ${priceHTML(p)}
       ${cta}
     </div>
