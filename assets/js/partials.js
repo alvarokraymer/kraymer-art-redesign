@@ -1,14 +1,6 @@
 /* ============================================================
-   KRAYMER ART — Shared partials
-   Header, nav strip, footer, cart drawer, search overlay.
-   Injected as template strings so the mockup works even from
-   file:// with zero build step and zero fetch() calls.
-
-   SHOPIFY HORIZON MAPPING:
-     HEADER_HTML  -> sections/header.liquid (+ snippets)
-     FOOTER_HTML  -> sections/footer.liquid
-     CART_HTML    -> snippets/cart-drawer.liquid
-     SEARCH_HTML  -> predictive search component
+   KRAYMER ART — Shared partials (v2)
+   Header, nav, footer, cart drawer, search overlay.
    ============================================================ */
 
 const ICONS = {
@@ -19,24 +11,20 @@ const ICONS = {
 };
 
 const HEADER_HTML = `
-<div class="announce">
-  <span>Free worldwide shipping over $150</span>
-  <span>Lifetime warranty on every piece</span>
-</div>
 <header class="site-header">
-  <div class="header-bar">
-    <a class="header-logo" href="index.html">Kraymer <em>Art</em></a>
-    <div class="header-actions">
-      <button class="icon-btn" data-open-search aria-label="Search">${ICONS.search}</button>
-      <a class="icon-btn" href="#" aria-label="Account (not part of mockup)" title="Account is out of scope for this mockup">${ICONS.account}</a>
-      <button class="icon-btn" data-open-wishlist aria-label="Wishlist">${ICONS.heart}<span class="count" data-wishlist-count hidden>0</span></button>
-      <button class="icon-btn" data-open-cart aria-label="Cart">${ICONS.bag}<span class="count" data-cart-count hidden>0</span></button>
+  <div class="hdr-bar">
+    <a class="hdr-logo" href="index.html">Kraymer <i>Art</i></a>
+    <div class="hdr-actions">
+      <button class="ico" data-open-search aria-label="Search">${ICONS.search}</button>
+      <a class="ico" href="#" aria-label="Account" title="Account not in mockup">${ICONS.account}</a>
+      <button class="ico" data-open-wishlist aria-label="Wishlist">${ICONS.heart}<span class="n" data-wishlist-count hidden>0</span></button>
+      <button class="ico" data-open-cart aria-label="Cart">${ICONS.bag}<span class="n" data-cart-count hidden>0</span></button>
     </div>
   </div>
   <nav class="nav-strip" aria-label="Collections">
     <a href="coleccion.html?collection=jjk" data-nav="jjk">Jujutsu Kaisen <small>JJK</small></a>
     <a href="coleccion.html?collection=kny" data-nav="kny">Demon Slayer <small>KNY</small></a>
-    <a href="coleccion.html?collection=genshin" data-nav="genshin">Genshin Impact <small>GI</small></a>
+    <a href="coleccion.html?collection=genshin" data-nav="genshin">Genshin Impact</a>
     <a href="coleccion.html" data-nav="all">Best Sellers</a>
     <a href="coleccion.html?type=sets" data-nav="sets">Collector Sets</a>
   </nav>
@@ -44,17 +32,17 @@ const HEADER_HTML = `
 `;
 
 const FOOTER_HTML = `
-<footer class="site-footer">
-  <div class="wrap">
-    <div class="footer-news">
+<footer class="ft">
+  <div class="w">
+    <div class="ft-news">
       <h2>Join the Inner Circle</h2>
       <p>Early access to limited batch drops, and 10% off your first piece.</p>
       <form data-newsletter>
-        <input type="email" placeholder="Your email" aria-label="Email address" required>
+        <input type="email" placeholder="Your email" aria-label="Email" required>
         <button type="submit">Join</button>
       </form>
     </div>
-    <div class="footer-cols">
+    <div class="ft-cols">
       <div>
         <h3>Shop</h3>
         <a href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
@@ -65,7 +53,7 @@ const FOOTER_HTML = `
       </div>
       <div>
         <h3>Support</h3>
-        <a href="producto.html?id=the-limitless-ring" data-open-sizeguide>Ring Size Guide</a>
+        <a href="#" data-open-sizeguide>Ring Size Guide</a>
         <a href="#">Shipping &amp; Handmade Timeline</a>
         <a href="#">60-Day Returns</a>
         <a href="#">Lifetime Warranty</a>
@@ -73,63 +61,59 @@ const FOOTER_HTML = `
       </div>
       <div>
         <h3>Brand</h3>
-        <a href="index.html#story">Our Story</a>
+        <a href="index.html#craft">Our Story</a>
         <a href="index.html#craft">The Craft</a>
         <a href="index.html#reviews">Reviews</a>
         <a href="index.html#faq">FAQ</a>
       </div>
     </div>
-    <div class="footer-pay" aria-label="Accepted payments">
+    <div class="ft-pay">
       <span>VISA</span><span>MASTERCARD</span><span>AMEX</span>
-      <span>APPLE PAY</span><span>GOOGLE PAY</span><span>PAYPAL</span><span>SHOP PAY</span>
+      <span>APPLE PAY</span><span>GOOGLE PAY</span><span>PAYPAL</span>
     </div>
-    <div class="footer-legal">
+    <div class="ft-copy">
       <p>&copy; 2026 Kraymer Art. All rights reserved.</p>
-      <p>Kraymer Art designs are original works inspired by the series we love. We are not affiliated with, endorsed by, or sponsored by any studio or license holder.</p>
+      <p>Kraymer Art designs are original works inspired by the series we love. We are not affiliated with any studio or license holder.</p>
     </div>
   </div>
 </footer>
 `;
 
-/* Cart drawer: ONE dominant CTA by design decision (see brief).
-   MOCKUP NOTE: the checkout button opens a simulated modal only.
-   There is NO real checkout integration in this file. */
+/* Cart drawer — ONE dominant CTA by design.
+   Checkout button opens a simulated modal. No real integration. */
 const CART_HTML = `
 <div class="scrim" data-scrim></div>
 <aside class="drawer" data-cart-drawer aria-label="Shopping cart">
-  <div class="drawer__head">
+  <div class="drawer__top">
     <h2>Your Cart <span data-cart-headcount></span></h2>
-    <button class="drawer__close" data-close-cart aria-label="Close cart">&times;</button>
+    <button class="ico" data-close-cart aria-label="Close">&times;</button>
   </div>
   <div class="drawer__body" data-cart-body></div>
-  <div class="drawer__foot" data-cart-foot hidden>
-    <div class="drawer__subtotal"><span>Subtotal</span><b data-cart-subtotal>$0</b></div>
-    <button class="btn btn--primary" data-checkout>Checkout</button>
-    <p class="drawer__note">Free worldwide shipping over $150 · 60-day returns</p>
+  <div class="drawer__bot" data-cart-foot hidden>
+    <div class="drawer__sub"><span>Subtotal</span><b data-cart-subtotal>$0</b></div>
+    <button class="btn btn--solid" style="width:100%" data-checkout>Checkout</button>
+    <p class="drawer__note">Free shipping over $150 · 60-day returns</p>
   </div>
 </aside>
 `;
 
 const SEARCH_HTML = `
-<div class="search-overlay" data-search-overlay>
-  <div class="search-overlay__bar">
-    <input type="search" placeholder="Search by character, series or gem..." data-search-input aria-label="Search products">
-    <button class="drawer__close" data-close-search aria-label="Close search">&times;</button>
+<div class="search" data-search-overlay>
+  <div class="search__bar">
+    <input type="search" placeholder="Search by character, series or gem..." data-search-input aria-label="Search">
+    <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 var(--m)">&times;</button>
   </div>
-  <div class="search-results" data-search-results>
-    <p class="search-hint">Try "Gojo", "Demon Slayer" or "sapphire".</p>
+  <div class="search__body" data-search-results>
+    <p class="search__hint">Try "Gojo", "Demon Slayer" or "sapphire".</p>
   </div>
 </div>
 `;
 
-/* Inject everything into the page */
 (function injectPartials() {
   const headerMount = document.getElementById("site-header");
   const footerMount = document.getElementById("site-footer");
-
   if (headerMount) headerMount.innerHTML = HEADER_HTML;
   if (footerMount) footerMount.innerHTML = FOOTER_HTML;
-
   const cartHost = document.createElement("div");
   cartHost.innerHTML = CART_HTML + SEARCH_HTML;
   document.body.appendChild(cartHost);

@@ -2,57 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Collections · Kraymer Art</title>
   <meta name="description" content="Fine anime jewelry, handcrafted in small batches. Shop Jujutsu Kaisen, Demon Slayer and Genshin Impact collections.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body data-page="plp">
 
-  <!-- section: header -->
   <div id="site-header"></div>
 
-  <main class="wrap">
-    <!-- section: collection hero -->
-    <section class="plp-hero" data-plp-hero>
+  <main class="w">
+    <div class="plp-head" data-plp-hero>
       <span class="eyebrow">Fine Anime Jewelry</span>
-      <h1 class="h1">All Collections</h1>
-      <p class="muted" data-plp-desc></p>
-      <p class="plp-count" data-plp-count></p>
-    </section>
+      <h1>All Collections</h1>
+      <p data-plp-desc></p>
+      <p class="plp-n" data-plp-count></p>
+    </div>
 
-    <!-- section: subcategory step (Rings / Necklaces / ... before the full grid) -->
-    <section aria-label="Shop by type">
-      <div class="subcat-scroll" data-subcats></div>
-    </section>
+    <div class="sub-scroll" data-subcats></div>
 
-    <!-- section: utility bar (sort chips + filter button) -->
-    <div class="utility-bar">
-      <div class="sort-scroll">
-        <button class="chip is-active" data-sort="trending">Trending</button>
+    <div class="ubar">
+      <div class="ubar-scroll">
+        <button class="chip active" data-sort="trending">Trending</button>
         <button class="chip" data-sort="newest">Newest</button>
-        <button class="chip" data-sort="price-asc">Price: Low to High</button>
-        <button class="chip" data-sort="price-desc">Price: High to Low</button>
+        <button class="chip" data-sort="price-asc">Price: Low</button>
+        <button class="chip" data-sort="price-desc">Price: High</button>
       </div>
-      <button class="filter-btn" data-open-filters>
-        <svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-        Filters
+      <button class="fbtn" data-open-filters>
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filters
       </button>
     </div>
 
-    <!-- section: product grid (2 cols mobile) -->
     <div class="plp-grid" data-plp-grid></div>
 
     <div class="load-more">
-      <button class="btn btn--outline" data-load-more>Load More Pieces</button>
-      <div class="load-more__bar"><i></i></div>
+      <button class="btn btn--line" data-load-more>Load More Pieces</button>
+      <div class="load-more__bar"></div>
     </div>
   </main>
 
-  <!-- section: footer -->
   <div id="site-footer"></div>
 
   <script src="assets/js/data.js"></script>

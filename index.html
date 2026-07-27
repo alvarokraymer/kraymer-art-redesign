@@ -2,232 +2,152 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kraymer Art · Fine Anime Jewelry, Handcrafted</title>
-  <meta name="description" content="Fine jewelry inspired by the anime universes you love. Handcrafted in solid 925 sterling silver and 18K gold.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kraymer Art · Fine Jewelry, Handcrafted</title>
+  <meta name="description" content="Fine jewelry inspired by the anime universes you love. Solid 925 sterling silver and 18K gold, handcrafted to order.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body data-page="home">
 
-  <!-- section: header (Shopify: sections/header.liquid) -->
   <div id="site-header"></div>
 
   <main>
-    <!-- section: hero -->
-    <section class="hero wrap">
+    <section class="hero w">
       <div>
-        <span class="eyebrow">Handcrafted in small batches</span>
-        <h1>Wear the World <em>That Made You.</em></h1>
-        <p class="lead">Fine jewelry forged from the anime universes you love. Solid 925 sterling silver, 18K gold, hand-set stones. Made to order, one piece at a time.</p>
-        <div class="hero__ctas">
-          <a class="btn btn--primary" href="coleccion.html">Shop Best Sellers</a>
-          <a class="btn btn--ghost" href="coleccion.html?collection=jjk">The Gojo Collection &rarr;</a>
+        <span class="hero-eyebrow eyebrow">Handcrafted in small batches</span>
+        <h1>Wear the World <i>That Made You.</i></h1>
+        <div class="hero-text">
+          <p class="lead">Fine jewelry forged from the anime universes you love. Solid 925 sterling silver, 18K gold, hand-set stones. Made to order, one piece at a time.</p>
+          <a class="btn btn--solid" href="coleccion.html">Shop Best Sellers</a>
         </div>
       </div>
-      <div class="hero__visual ph" role="img">
-        <svg class="ph__svg" viewBox="0 0 400 500" fill="none">
-          <circle cx="200" cy="250" r="100" fill="none" stroke="#A87E3F" stroke-width="1"/>
-          <circle cx="200" cy="135" r="14" fill="#A87E3F" opacity=".8"/>
-          <path d="M200,230 l-16,-25 h32 z" fill="#A87E3F" opacity=".8"/>
-          <path d="M50,420 Q200,30 350,420" fill="none" stroke="#C4A474" stroke-width=".5" opacity=".35"/>
-          <path d="M70,460 Q200,70 330,460" fill="none" stroke="#C4A474" stroke-width=".5" opacity=".25"/>
-          <circle cx="40" cy="400" r="3" fill="#A87E3F" opacity=".3"/>
-          <circle cx="360" cy="400" r="3" fill="#A87E3F" opacity=".3"/>
-          <circle cx="200" cy="430" r="2" fill="#A87E3F" opacity=".2"/>
+      <div class="hero__vis">
+        <svg width="60%" height="60%" viewBox="0 0 400 500" fill="none">
+          <circle cx="200" cy="220" r="90" fill="none" stroke="#B7976A" stroke-width="1.2"/>
+          <circle cx="200" cy="115" r="12" fill="none" stroke="#B7976A" stroke-width="1.5"/>
+          <circle cx="200" cy="115" r="5" fill="#B7976A" opacity=".6"/>
+          <path d="M50,420 Q200,30 350,420" fill="none" stroke="#E8E3DA" stroke-width=".5"/>
+          <path d="M70,460 Q200,70 330,460" fill="none" stroke="#E8E3DA" stroke-width=".3"/>
         </svg>
-        <span class="ph__tag">Editorial illustration</span>
       </div>
     </section>
 
-    <!-- section: bestsellers (product visible within the first scroll) -->
-    <section class="section section--tight">
-      <div class="wrap">
-        <div class="section-head" style="display:flex;align-items:baseline;justify-content:space-between;gap:1rem">
-          <div>
-            <span class="eyebrow">Most collected</span>
-            <h2 class="h2">Best Sellers</h2>
-          </div>
-          <a class="link-more" href="coleccion.html">View all &rarr;</a>
-        </div>
-        <div class="card-scroll" data-bestsellers></div>
+    <section class="s">
+      <div class="w">
+        <h2 style="text-align:center;margin-bottom:var(--xl)"><span class="eyebrow" style="display:block;margin-bottom:var(--s);color:var(--accent)">Most collected</span>Best Sellers</h2>
+        <div class="card-row" data-bestsellers></div>
       </div>
     </section>
 
-    <!-- section: trust strip (consolidated, one social proof figure) -->
-    <section class="trust-strip">
-      <div class="wrap">
-        <div class="trust-strip__row">
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z"/></svg>
-            <b>Lifetime Warranty</b><span>Every piece, forever</span>
-          </div>
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-            <b>60-Day Returns</b><span>No questions asked</span>
-          </div>
-          <div class="trust-item">
-            <svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6"/></svg>
-            <b>Certificate Included</b><span>Numbered by hand</span>
-          </div>
-        </div>
-        <p class="trust-strip__proof"><b>[SOCIAL PROOF PLACEHOLDER]</b> collectors worldwide · Replace with the real number before launch</p>
+    <div class="trust w">
+      <div class="trust__row">
+        <div class="trust__item"><b>Lifetime Warranty</b><span>Every piece, forever</span></div>
+        <div class="trust__item"><b>60-Day Returns</b><span>No questions asked</span></div>
+        <div class="trust__item"><b>Certificate Included</b><span>Numbered by hand</span></div>
       </div>
-    </section>
+      <p class="trust__proof"><b>[SOCIAL PROOF PLACEHOLDER]</b> collectors worldwide · Replace with real number before launch</p>
+    </div>
 
-    <!-- section: fandom collections (character-first framing) -->
-    <section class="section">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="eyebrow">Shop by universe</span>
-          <h2 class="h2">Your Character. Your Metal.</h2>
-        </div>
-        <div class="fandom-grid">
-          <a class="fandom-tile fandom-tile--jjk" href="coleccion.html?collection=jjk">
-            <div class="ph">
-              <svg class="ph__svg" viewBox="0 0 400 500" fill="none">
-                <circle cx="200" cy="260" r="70" fill="none" stroke="#A87E3F" stroke-width="1"/>
-                <circle cx="200" cy="178" r="7" fill="#4A6FA5" opacity=".7"/>
-                <path d="M200,190 l-8,-13 h16 z" fill="#4A6FA5" opacity=".7"/>
-              </svg>
-            </div>
-            <div class="fandom-tile__body">
-              <span class="fandom-tile__series">Jujutsu Kaisen</span>
-              <h3 class="fandom-tile__char">Inspired by Gojo Satoru</h3>
-              <p class="fandom-tile__line">The Limitless technique, rendered as an unbroken circle of sapphire and silver.</p>
-              <span class="fandom-tile__cta">Shop Jujutsu Kaisen</span>
+    <section class="s">
+      <div class="w">
+        <h2 style="text-align:center;margin-bottom:var(--xl)"><span class="eyebrow" style="display:block;margin-bottom:var(--s);color:var(--accent)">Shop by universe</span>Your Character.<br>Your Metal.</h2>
+        <div class="fandom-stack">
+          <a class="fandom-tile" href="coleccion.html?collection=jjk">
+            <div class="ph"><svg viewBox="0 0 400 500" fill="none"><circle cx="200" cy="260" r="70" fill="none" stroke="#B7976A" stroke-width="1"/><circle cx="200" cy="178" r="6" fill="#5B7FA5" opacity=".6"/></svg></div>
+            <div class="fandom__overlay">
+              <span class="eyebrow">Jujutsu Kaisen</span>
+              <h3>Inspired by Gojo Satoru</h3>
+              <p>The Limitless technique, rendered as an unbroken circle of sapphire and silver.</p>
+              <span class="fandom__cta">Shop Jujutsu Kaisen</span>
             </div>
           </a>
-          <a class="fandom-tile fandom-tile--kny" href="coleccion.html?collection=kny">
-            <div class="ph">
-              <svg class="ph__svg" viewBox="0 0 400 500" fill="none">
-                <path d="M100,170 Q200,90 300,170" fill="none" stroke="#A87E3F" stroke-width=".8"/>
-                <path d="M250,200 Q255,260 240,320" fill="none" stroke="#A87E3F" stroke-width=".5"/>
-                <circle cx="238" cy="330" r="16" fill="none" stroke="#A87E3F" stroke-width="1"/>
-                <circle cx="238" cy="330" r="5" fill="#B04A3A" opacity=".7"/>
-              </svg>
-            </div>
-            <div class="fandom-tile__body">
-              <span class="fandom-tile__series">Demon Slayer</span>
-              <h3 class="fandom-tile__char">Inspired by Tanjiro Kamado</h3>
-              <p class="fandom-tile__line">Nichirin blade elements, forged as pendants and cuffs you can wear anywhere.</p>
-              <span class="fandom-tile__cta">Shop Demon Slayer</span>
+          <a class="fandom-tile" href="coleccion.html?collection=kny">
+            <div class="ph"><svg viewBox="0 0 400 500" fill="none"><path d="M100,170 Q200,90 300,170" fill="none" stroke="#B7976A" stroke-width=".8"/><circle cx="238" cy="330" r="14" fill="none" stroke="#B7976A" stroke-width="1"/><circle cx="238" cy="330" r="4" fill="#B55848" opacity=".6"/></svg></div>
+            <div class="fandom__overlay">
+              <span class="eyebrow">Demon Slayer</span>
+              <h3>Inspired by Tanjiro Kamado</h3>
+              <p>Nichirin blade elements, forged as pendants and cuffs you can wear anywhere.</p>
+              <span class="fandom__cta">Shop Demon Slayer</span>
             </div>
           </a>
-          <a class="fandom-tile fandom-tile--genshin" href="coleccion.html?collection=genshin">
-            <div class="ph">
-              <svg class="ph__svg" viewBox="0 0 400 500" fill="none">
-                <circle cx="200" cy="270" r="60" fill="none" stroke="#A87E3F" stroke-width="1"/>
-                <circle cx="200" cy="200" r="6" fill="#7A5C9E" opacity=".7"/>
-                <path d="M200,210 l-7,-11 h14 z" fill="#7A5C9E" opacity=".7"/>
-                <path d="M180,270 Q200,330 220,270" fill="none" stroke="#7A5C9E" stroke-width=".8" opacity=".4"/>
-              </svg>
-            </div>
-            <div class="fandom-tile__body">
-              <span class="fandom-tile__series">Genshin Impact</span>
-              <h3 class="fandom-tile__char">Inspired by the Archons</h3>
-              <p class="fandom-tile__line">Vision gemstones, cut and set by hand. Elemental power in fine jewelry form.</p>
-              <span class="fandom-tile__cta">Shop Genshin Impact</span>
+          <a class="fandom-tile" href="coleccion.html?collection=genshin">
+            <div class="ph"><svg viewBox="0 0 400 500" fill="none"><circle cx="200" cy="270" r="55" fill="none" stroke="#B7976A" stroke-width="1"/><circle cx="200" cy="205" r="5" fill="#8A6DAE" opacity=".6"/></svg></div>
+            <div class="fandom__overlay">
+              <span class="eyebrow">Genshin Impact</span>
+              <h3>Inspired by the Archons</h3>
+              <p>Vision gemstones, cut and set by hand. Elemental power in fine jewelry form.</p>
+              <span class="fandom__cta">Shop Genshin Impact</span>
             </div>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- section: the craft (brand story below product, first person founder) -->
-    <section class="section section--alt" id="craft">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="eyebrow">The Craft</span>
-          <h2 class="h2">Not Merch. Fine Jewelry.</h2>
-        </div>
-        <div class="pillars">
-          <div class="pillar">
-            <svg viewBox="0 0 24 24"><path d="M4 20c4-1 5-2 6-6l8-8a2.8 2.8 0 0 0-4-4l-8 8c-4 1-5 2-6 6l2 2 2 2z"/></svg>
+    <section class="s" style="background:var(--surface-warm)" id="craft">
+      <div class="w">
+        <h2 style="text-align:center;margin-bottom:var(--xl)"><span class="eyebrow" style="display:block;margin-bottom:var(--s);color:var(--accent)">The Craft</span>Not Merch.<br>Fine Jewelry.</h2>
+        <div class="craft-stack">
+          <div class="craft-item">
             <h3>Hand-Sculpted Originals</h3>
             <p>Every design starts as a wax sculpture at the bench, not a licensed asset pulled from a catalog. If it does not feel like the character, it does not ship.</p>
           </div>
-          <div class="pillar">
-            <svg viewBox="0 0 24 24"><path d="M12 3l3 5-3 13L9 8l3-5z"/><path d="M9 8h6"/></svg>
+          <div class="craft-item">
             <h3>Precious Metals &amp; Gems</h3>
             <p>Solid 925 sterling silver and 18K gold. Hand-set stones. No brass, no nickel, nothing that turns your skin green.</p>
           </div>
-          <div class="pillar">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+          <div class="craft-item">
             <h3>Small Batches Only</h3>
             <p>We forge in numbered batches and stop when the batch is done. It keeps quality high and waste near zero.</p>
           </div>
         </div>
-        <div class="founder" id="story">
-          <p class="eyebrow">From the founder</p>
-          <p style="margin-top:var(--space-3)">I spent years teaching art and shipping pieces to more than 2,000 collectors on Etsy and Kickstarter before opening this store. I started Kraymer Art because I wanted jewelry I could wear to a meeting and still feel like myself.</p>
+        <div class="founder">
+          <span class="eyebrow">From the founder</span>
+          <p style="margin-top:var(--m)">I spent years teaching art and shipping pieces to more than 2,000 collectors on Etsy and Kickstarter before opening this store. I started Kraymer Art because I wanted jewelry I could wear to a meeting and still feel like myself.</p>
           <p>Every piece here is something I would put on my own hand. That is the whole standard.</p>
           <p class="founder__sig">David Wang, "Kraymer"</p>
         </div>
       </div>
     </section>
 
-    <!-- section: quiz -->
-    <section class="section">
-      <div class="wrap">
-        <div class="quiz">
-          <span class="eyebrow">Not sure where to start?</span>
-          <h2 class="h2" style="margin-top:var(--space-2)">Find Your Domain</h2>
+    <section class="s">
+      <div class="w">
+        <div class="quiz-wrap">
+          <span class="eyebrow" style="color:var(--accent);margin-bottom:var(--s)">Not sure where to start?</span>
+          <h2 style="margin-bottom:var(--m)">Find Your Domain</h2>
           <div data-quiz></div>
         </div>
       </div>
     </section>
 
-    <!-- section: press & reviews (placeholders, never invented figures) -->
-    <section class="section section--tight" id="reviews">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="eyebrow">Word of mouth</span>
-          <h2 class="h2">What People Say</h2>
+    <section class="s" id="reviews">
+      <div class="w">
+        <h2 style="text-align:center;margin-bottom:var(--xl)"><span class="eyebrow" style="display:block;margin-bottom:var(--s);color:var(--accent)">Word of mouth</span>What People Say</h2>
+        <div class="rv">
+          <p style="font-family:var(--display);font-style:italic;font-size:var(--fs-body);color:var(--ink)">"The level of detail is unlike any anime merchandise I have ever seen."</p>
+          <cite class="who" style="margin-top:var(--m)">[PRESS QUOTE PLACEHOLDER] · Replace with real publication quote</cite>
         </div>
-        <div class="press-quote">
-          <p>"The level of detail is unlike any anime merchandise I have ever seen."</p>
-          <cite>[PRESS QUOTE PLACEHOLDER] · Replace with a real publication or creator quote</cite>
-        </div>
-        <div class="press-quote" style="margin-top:var(--space-3)">
-          <p>[CUSTOMER PHOTO CAROUSEL PLACEHOLDER] · Instagram and TikTok photos from real collectors go here, with permission.</p>
+        <div class="rv" style="margin-top:var(--m)">
+          <p class="sm muted">[CUSTOMER PHOTO CAROUSEL PLACEHOLDER] · Instagram and TikTok photos from real collectors go here, with permission.</p>
         </div>
       </div>
     </section>
 
-    <!-- section: faq -->
-    <section class="section" id="faq">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="eyebrow">Good questions</span>
-          <h2 class="h2">Before You Ask</h2>
+    <section class="s" id="faq">
+      <div class="w">
+        <h2 style="text-align:center;margin-bottom:var(--xl)">Good questions</h2>
+        <div class="faq">
+          <div class="faq__item"><button class="faq__btn">Will it tarnish or turn my skin green?</button><div class="faq__panel"><p>No. We use solid 925 sterling silver and 18K gold, never brass or nickel. Silver naturally darkens over time; a wipe with the included polishing cloth brings it straight back.</p></div></div>
+          <div class="faq__item"><button class="faq__btn">How do I find my ring size?</button><div class="faq__panel"><p>Measure the inside diameter of a ring that fits you and match it on our size guide. If you get it wrong anyway, resizing is free for life.</p></div></div>
+          <div class="faq__item"><button class="faq__btn">Do you ship internationally?</button><div class="faq__panel"><p>Yes, worldwide with tracking. Every piece is handcrafted to order, so expect 9 to 20 days from purchase to delivery. Shipping is free over $150.</p></div></div>
+          <div class="faq__item"><button class="faq__btn">What is your return policy?</button><div class="faq__panel"><p>60 days, no questions asked. Every piece also carries a lifetime warranty and a certificate of authenticity.</p></div></div>
         </div>
-        <div class="acc">
-          <div class="acc__item">
-            <button class="acc__btn">Will it tarnish or turn my skin green?</button>
-            <div class="acc__panel"><p>No. We use solid 925 sterling silver and 18K gold, never brass or nickel. Silver naturally darkens over time; a wipe with the included polishing cloth brings it straight back.</p></div>
-          </div>
-          <div class="acc__item">
-            <button class="acc__btn">How do I find my ring size?</button>
-            <div class="acc__panel"><p>Measure the inside diameter of a ring that fits you and match it on our size guide. If you get it wrong anyway, resizing is free for life.</p></div>
-          </div>
-          <div class="acc__item">
-            <button class="acc__btn">Do you ship internationally?</button>
-            <div class="acc__panel"><p>Yes, worldwide with tracking. Every piece is handcrafted to order, so expect 9 to 20 days from purchase to delivery. Shipping is free over $150.</p></div>
-          </div>
-          <div class="acc__item">
-            <button class="acc__btn">What is your return policy?</button>
-            <div class="acc__panel"><p>60 days, no questions asked. Every piece also carries a lifetime warranty and a certificate of authenticity.</p></div>
-          </div>
-        </div>
-        <p style="margin-top:var(--space-4)"><a class="link-more" href="#">View all FAQs &rarr;</a></p>
       </div>
     </section>
   </main>
 
-  <!-- section: footer (Shopify: sections/footer.liquid) -->
   <div id="site-footer"></div>
 
   <script src="assets/js/data.js"></script>

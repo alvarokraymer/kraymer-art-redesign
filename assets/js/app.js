@@ -101,21 +101,25 @@ function priceHTML(p) {
 function productCard(p) {
   const col = COLLECTIONS[p.collection];
   const gemColor = accentColors[p.collection] || PH_GOLD;
+  const dot = `<span class="card__dot" style="background:${gemColor}"></span>`;
   const cta = p.soldOut
-    ? `<button class="p-card__add" data-notify="${p.handle}">Notify Me</button>`
-    : `<button class="p-card__add" data-add="${p.handle}">Add</button>`;
+    ? `<button class="btn btn--line sm" data-notify="${p.handle}" style="margin-top:var(--m)">Notify Me</button>`
+    : ``;
+  const badge = p.soldOut
+    ? `<span class="badge">Sold Out</span>`
+    : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
   return `
-  <article class="p-card ${p.soldOut ? "p-card--out" : ""}" data-handle="${p.handle}">
-    <a class="p-card__media" href="producto.html?id=${p.handle}" aria-label="${p.title}">
-      ${ph(p.title, { type: p.type, gemColor, tag: p.soldOut ? "Sold out" : p.batch })}
-      <span class="p-card__badges">${cardBadges(p)}</span>
+  <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}">
+    <a class="card__img" href="producto.html?id=${p.handle}" aria-label="${p.title}" style="position:relative">
+      ${ph(p.title, { type: p.type, gemColor })}
+      ${badge}
     </a>
-    <button class="p-card__wish" data-wish="${p.handle}" aria-label="Add to wishlist">
+    <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
       <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
     </button>
-    <div class="p-card__body">
-      <span class="p-card__series">${col.name} · ${p.character}</span>
-      <h3 class="p-card__title"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
+    <div class="card__body">
+      <span class="card__series">${col.name} · ${p.character}</span>
+      <h3 class="card__title"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
       ${priceHTML(p)}
       ${cta}
     </div>
@@ -181,15 +185,15 @@ function renderCart() {
       <div class="cart-empty">
         <h3>Your cart is empty</h3>
         <p>Start with a piece people keep coming back for.</p>
-        <div class="cart-empty__recs">
+        <div class="cart-rec">
           ${recs.map((p) => `
             <div>
-              <a class="p-card__media" href="producto.html?id=${p.handle}" style="display:block">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</a>
-              <div class="p-card__body">
-                <span class="p-card__series">${COLLECTIONS[p.collection].name}</span>
-                <h3 class="p-card__title" style="font-size:.9rem"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
-                <div class="p-card__price"><span>${kaMoney(p.price)}</span></div>
-                <button class="p-card__add" data-add="${p.handle}">Add to Cart</button>
+              <a class="card__img" href="producto.html?id=${p.handle}" style="display:block;position:relative;margin-bottom:var(--s)">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</a>
+              <div class="card__body">
+                <span class="card__series">${COLLECTIONS[p.collection].name}</span>
+                <h3 class="card__title" style="font-size:.9rem"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
+                <div class="card__price"><span>${kaMoney(p.price)}</span></div>
+                <button class="btn btn--line sm" data-add="${p.handle}" style="margin-top:var(--s)">Add</button>
               </div>
             </div>`).join("")}
         </div>
@@ -202,20 +206,20 @@ function renderCart() {
     const p = kaProduct(i.handle);
     const variant = [i.metal, i.size ? `Size ${i.size}` : null].filter(Boolean).join(" · ");
     return `
-    <div class="cart-item">
-      <a class="cart-item__media" href="producto.html?id=${p.handle}">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</a>
-      <div class="cart-item__meta">
+    <div class="cart-row">
+      <a class="cart-row__img" href="producto.html?id=${p.handle}">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</a>
+      <div class="cart-row__info">
         <b>${p.title}</b>
-        <span class="variant">${variant}</span>
-        <div class="cart-item__row">
-          <span class="qty">
-            <button data-qty="${idx}|-1" aria-label="Decrease quantity">−</button>
-            <span>${i.qty}</span>
-            <button data-qty="${idx}|1" aria-label="Increase quantity">+</button>
+        <span class="var">${variant}</span>
+        <div class="cart-row__actions">
+          <span class="qty-ctl">
+            <button data-qty="${idx}|-1" aria-label="Decrease">−</button>
+            <b>${i.qty}</b>
+            <button data-qty="${idx}|1" aria-label="Increase">+</button>
           </span>
-          <span class="cart-item__price">${kaMoney(p.price * i.qty)}</span>
+          <span class="cart-row__price">${kaMoney(p.price * i.qty)}</span>
         </div>
-        <button class="cart-item__remove" data-remove="${idx}">Remove</button>
+        <button class="cart-row__rm" data-remove="${idx}">Remove</button>
       </div>
     </div>`;
   }).join("");
@@ -234,13 +238,13 @@ function updateBadges() {
 
 function openCart() {
   renderCart();
-  document.querySelector("[data-cart-drawer]").classList.add("is-open");
-  document.querySelector("[data-scrim]").classList.add("is-open");
+  document.querySelector("[data-cart-drawer]").classList.add("on");
+  document.querySelector("[data-scrim]").classList.add("on");
   document.body.style.overflow = "hidden";
 }
 function closeCart() {
-  document.querySelector("[data-cart-drawer]").classList.remove("is-open");
-  document.querySelector("[data-scrim]").classList.remove("is-open");
+  document.querySelector("[data-cart-drawer]").classList.remove("on");
+  document.querySelector("[data-scrim]").classList.remove("on");
   document.body.style.overflow = "";
 }
 
@@ -263,18 +267,18 @@ const Wishlist = {
 function syncWishUI() {
   const list = Wishlist.read();
   document.querySelectorAll("[data-wish]").forEach((btn) => {
-    btn.classList.toggle("is-active", list.includes(btn.dataset.wish));
+    btn.classList.toggle("active", list.includes(btn.dataset.wish));
   });
 }
 
 /* ---------------- 5. Search overlay ---------------- */
 function openSearch() {
-  document.querySelector("[data-search-overlay]").classList.add("is-open");
+  document.querySelector("[data-search-overlay]").classList.add("on");
   const input = document.querySelector("[data-search-input]");
   setTimeout(() => input.focus(), 200);
 }
 function closeSearch() {
-  document.querySelector("[data-search-overlay]").classList.remove("is-open");
+  document.querySelector("[data-search-overlay]").classList.remove("on");
 }
 function runSearch(q) {
   const host = document.querySelector("[data-search-results]");
@@ -304,7 +308,7 @@ function openModal(html) {
       ${html}
     </div>`;
   document.body.appendChild(host);
-  requestAnimationFrame(() => host.classList.add("is-open"));
+  requestAnimationFrame(() => host.classList.add("on"));
 }
 function closeModal() {
   const m = document.querySelector("[data-modal]");
@@ -333,16 +337,16 @@ const SIZE_GUIDE_HTML = `
 const CHECKOUT_MOCK_HTML = `
   <h3>This is a design mockup</h3>
   <p class="small muted">Checkout is intentionally not wired up. In the real build, this button hands off to the Shopify checkout. What matters here: this is the only CTA in the cart, and it stays dominant.</p>
-  <button class="btn btn--primary" data-close-modal style="margin-top:var(--space-4)">Back to the mockup</button>
+  <button class="btn btn--solid" data-close-modal style="margin-top:var(--space-4)">Back to the mockup</button>
 `;
 
 /* ---------------- 7. Accordions ---------------- */
 function initAccordions(scope = document) {
-  scope.querySelectorAll(".acc__btn").forEach((btn) => {
+  scope.querySelectorAll(".faq__btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const item = btn.closest(".acc__item");
-      const panel = item.querySelector(".acc__panel");
-      const open = item.classList.toggle("is-open");
+      const item = btn.closest(".faq__item");
+      const panel = item.querySelector(".faq__panel");
+      const open = item.classList.toggle("on");
       panel.style.maxHeight = open ? panel.scrollHeight + "px" : "0";
     });
   });
@@ -356,10 +360,10 @@ function initCardActions() {
     const addBtn = e.target.closest("[data-add]");
     if (addBtn) {
       Cart.add(addBtn.dataset.add);
-      addBtn.classList.add("is-added");
+      addBtn.classList.add("done");
       addBtn.textContent = "Added ✓";
       setTimeout(() => {
-        addBtn.classList.remove("is-added");
+        addBtn.classList.remove("done");
         addBtn.textContent = "Add to Cart";
       }, 1500);
       return;
@@ -424,7 +428,7 @@ function initHome() {
       quiz.innerHTML = `
         <div class="quiz__result">
           <p class="eyebrow">Your piece</p>
-          <h3 class="p-card__title">${pick.title}</h3>
+          <h3 class="card__title">${pick.title}</h3>
           <p class="small" style="margin:var(--space-2) 0 var(--space-3);opacity:.8">${pick.line}</p>
           <a href="producto.html?id=${pick.handle}">View the piece &rarr;</a>
         </div>`;
@@ -471,10 +475,10 @@ function initPLP() {
   const subHost = document.querySelector("[data-subcats]");
   const poolForCounts = colParam ? PRODUCTS.filter((p) => p.collection === colParam) : PRODUCTS;
   subHost.innerHTML =
-    `<button class="subcat ${!activeType ? "is-active" : ""}" data-type=""><b>All</b><span>${poolForCounts.length} pieces</span></button>` +
+    `<button class="subcat ${!activeType ? "active" : ""}" data-type=""><b>All</b><span>${poolForCounts.length} pieces</span></button>` +
     PRODUCT_TYPES.map((t) => {
       const n = poolForCounts.filter((p) => p.type === t.id).length;
-      return `<button class="subcat ${activeType === t.id ? "is-active" : ""}" data-type="${t.id}"><b>${t.name}</b><span>${n} piece${n === 1 ? "" : "s"}</span></button>`;
+      return `<button class="subcat ${activeType === t.id ? "active" : ""}" data-type="${t.id}"><b>${t.name}</b><span>${n} piece${n === 1 ? "" : "s"}</span></button>`;
     }).join("");
 
   const grid = document.querySelector("[data-plp-grid]");
@@ -507,14 +511,14 @@ function initPLP() {
     const btn = e.target.closest("[data-type]");
     if (!btn) return;
     activeType = btn.dataset.type || null;
-    subHost.querySelectorAll(".subcat").forEach((s) => s.classList.toggle("is-active", s === btn));
+    subHost.querySelectorAll(".sub").forEach((s) => s.classList.toggle("active", s === btn));
     apply();
   });
 
   document.querySelectorAll("[data-sort]").forEach((chip) => {
     chip.addEventListener("click", () => {
       activeSort = chip.dataset.sort;
-      document.querySelectorAll("[data-sort]").forEach((c) => c.classList.toggle("is-active", c === chip));
+      document.querySelectorAll("[data-sort]").forEach((c) => c.classList.toggle("active", c === chip));
       apply();
     });
   });
@@ -539,7 +543,7 @@ function initPLP() {
           <button class="quiz__opt" style="border-color:var(--line);color:var(--ink)">In stock</button>
           <button class="quiz__opt" style="border-color:var(--line);color:var(--ink)">Collector sets only</button>
         </div>
-        <button class="btn btn--primary" data-close-modal style="margin-top:var(--space-5)">Done</button>
+        <button class="btn btn--solid" data-close-modal style="margin-top:var(--space-5)">Done</button>
       `);
     });
   }
@@ -572,63 +576,63 @@ function initPDP() {
   ];
 
   host.innerHTML = `
-    <nav class="breadcrumb" aria-label="Breadcrumb">
+    <nav class="bread" aria-label="Breadcrumb">
       <a href="index.html">Home</a><span></span><a href="coleccion.html?collection=${p.collection}">${col.name}</a><span></span><b>${p.title}</b>
     </nav>
-    <div class="pdp">
+    <div class="pdp-layout">
       <div class="pdp-gallery">
-        <div class="pdp-gallery__main" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch })}</div>
-        <div class="pdp-gallery__thumbs">
+        <div class="gallery__main" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch })}</div>
+        <div class="gallery__thumbs">
           ${galleryShots.map((s, i) => `
-            <button data-thumb="${i}" class="${i === 0 ? "is-active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</button>`).join("")}
+            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</button>`).join("")}
         </div>
       </div>
-      <div class="pdp-info">
+      <div class="pdp-meta">
         <span class="eyebrow">${col.name} Collection · ${p.character}</span>
         <h1 class="pdp-title">${p.title}</h1>
         <p class="pdp-rating"><span class="stars">★★★★★</span> ${RATING_PLACEHOLDER} · <a href="#reviews">Read reviews</a></p>
         <p class="pdp-line">${p.line}</p>
 
-        <div class="price-block">
+        <div class="pdp-price">
           <span class="price">${kaMoney(p.price)}</span>
           ${hasCompare ? `<s>${kaMoney(p.compareAt)}</s><span class="badge badge--save">Save ${kaMoney(p.compareAt - p.price)}</span>` : ""}
           ${p.pieces > 1 ? `<span class="small muted">· ${kaMoney(Math.round(p.price / p.pieces))} per piece</span>` : ""}
         </div>
 
-        <div class="variant-group">
-          <p class="variant-group__label">Metal</p>
-          <div class="variant-opts" data-metal-opts>
-            ${p.metals.map((m, i) => `<button class="variant-opt ${i === 0 ? "is-selected" : ""}" data-metal="${m}">${m}</button>`).join("")}
+        <div class="v-group">
+          <p class="v-label">Metal</p>
+          <div class="v-row" data-metal-opts>
+            ${p.metals.map((m, i) => `<button class="v-chip ${i === 0 ? "selected" : ""}" data-metal="${m}">${m}</button>`).join("")}
           </div>
         </div>
 
         ${p.sizes.length ? `
-        <div class="variant-group">
-          <p class="variant-group__label">${isRing ? "Ring size" : "Size"}
+        <div class="v-group">
+          <p class="v-label">${isRing ? "Ring size" : "Size"}
             ${isRing ? `<button data-open-sizeguide>Size Guide</button>` : ""}
           </p>
-          <div class="variant-opts" data-size-opts>
-            ${p.sizes.map((s, i) => `<button class="variant-opt variant-opt--size ${i === 0 ? "is-selected" : ""}" data-size="${s}">${s}</button>`).join("")}
+          <div class="v-row" data-size-opts>
+            ${p.sizes.map((s, i) => `<button class="v-chip variant-opt--size ${i === 0 ? "selected" : ""}" data-size="${s}">${s}</button>`).join("")}
           </div>
           ${isRing ? `<p class="size-reassure">Between sizes? <b>Free lifetime resizing</b> on every ring.</p>` : ""}
         </div>` : ""}
 
         <div class="pdp-atc">
-          <button class="btn btn--primary" data-pdp-atc ${p.soldOut ? "disabled" : ""}>
+          <button class="btn btn--solid" data-pdp-atc ${p.soldOut ? "disabled" : ""}>
             ${p.soldOut ? "Sold Out" : `Add to Cart · ${kaMoney(p.price)}`}
           </button>
-          <div class="handmade-note">
+          <div class="hm-note">
             <b>Handcrafted to order</b>
             Ships in 9–20 days. You get photo updates while your piece is being made, then tracked shipping.
           </div>
-          <div class="pdp-trust">
+          <div class="pdp-trust-row">
             <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z"/></svg><b>Lifetime Warranty</b></div>
             <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><b>60-Day Returns</b></div>
             <div class="trust-item"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6"/></svg><b>Certificate Included</b></div>
           </div>
         </div>
 
-        <div class="pdp-accordions acc">
+        <div class="spec-acc faq">
           <div class="acc__item">
             <button class="acc__btn">Specs &amp; Materials</button>
             <div class="acc__panel"><p>Solid 925 sterling silver${p.metals.some((m) => m.includes("Gold")) ? " or 18K gold plated over sterling silver" : ""}. Hand-set ${p.gem.toLowerCase()}, brilliant cut. Interior engraving available. Hypoallergenic and nickel free, always.</p></div>
@@ -643,7 +647,7 @@ function initPDP() {
           </div>
         </div>
 
-        <a class="back-link" href="coleccion.html?collection=${p.collection}">&larr; Back to ${col.name}</a>
+        <a class="btn btn--link" href="coleccion.html?collection=${p.collection}">&larr; Back to ${col.name}</a>
       </div>
     </div>
 
@@ -687,7 +691,7 @@ function initPDP() {
     btn.addEventListener("click", () => {
       activeShot = Number(btn.dataset.thumb);
       main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch });
-      host.querySelectorAll("[data-thumb]").forEach((b) => b.classList.toggle("is-active", b === btn));
+      host.querySelectorAll("[data-thumb]").forEach((b) => b.classList.toggle("active", b === btn));
     });
   });
 
@@ -696,14 +700,14 @@ function initPDP() {
   host.querySelectorAll("[data-metal]").forEach((btn) => {
     btn.addEventListener("click", () => {
       selectedMetal = btn.dataset.metal;
-      host.querySelectorAll("[data-metal]").forEach((b) => b.classList.toggle("is-selected", b === btn));
+      host.querySelectorAll("[data-metal]").forEach((b) => b.classList.toggle("selected", b === btn));
       main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch });
     });
   });
   host.querySelectorAll("[data-size]").forEach((btn) => {
     btn.addEventListener("click", () => {
       selectedSize = btn.dataset.size;
-      host.querySelectorAll("[data-size]").forEach((b) => b.classList.toggle("is-selected", b === btn));
+      host.querySelectorAll("[data-size]").forEach((b) => b.classList.toggle("selected", b === btn));
     });
   });
 
@@ -713,10 +717,10 @@ function initPDP() {
   const atcBtn = host.querySelector("[data-pdp-atc]");
   atcBtn.addEventListener("click", () => {
     Cart.add(p.handle, selectedMetal, selectedSize);
-    atcBtn.classList.add("is-added");
+    atcBtn.classList.add("done");
     atcBtn.textContent = "Added ✓";
     setTimeout(() => {
-      atcBtn.classList.remove("is-added");
+      atcBtn.classList.remove("done");
       atcBtn.textContent = `Add to Cart · ${kaMoney(p.price)}`;
       openCart();
     }, 600);
@@ -728,14 +732,14 @@ function initPDP() {
   bar.innerHTML = `
     <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</div>
     <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
-    <button class="btn btn--primary" ${p.soldOut ? "disabled" : ""}>${p.soldOut ? "Sold Out" : "Add to Cart"}</button>`;
+    <button class="btn btn--solid" ${p.soldOut ? "disabled" : ""}>${p.soldOut ? "Sold Out" : "Add to Cart"}</button>`;
   document.body.appendChild(bar);
   bar.querySelector("button").addEventListener("click", () => {
     Cart.add(p.handle, selectedMetal, selectedSize);
     openCart();
   });
   const io = new IntersectionObserver(([entry]) => {
-    bar.classList.toggle("is-visible", !entry.isIntersecting && entry.boundingClientRect.top < 0);
+    bar.classList.toggle("show", !entry.isIntersecting && entry.boundingClientRect.top < 0);
   }, { threshold: 0 });
   io.observe(atcBtn);
 
