@@ -118,7 +118,7 @@ function productCard(p) {
   return `
   <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}">
     <a class="card__img" href="producto.html?id=${p.handle}" aria-label="${p.title}" style="position:relative">
-      ${ph(p.title, { type: p.type, gemColor, img: "placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}
+      ${ph(p.title, { type: p.type, gemColor, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}
       ${badge}
     </a>
     <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
@@ -195,7 +195,7 @@ function renderCart() {
         <div class="cart-rec">
           ${recs.map((p) => `
             <div>
-              <a class="card__img" href="producto.html?id=${p.handle}" style="display:block;position:relative;margin-bottom:var(--s)">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</a>
+              <a class="card__img" href="producto.html?id=${p.handle}" style="display:block;position:relative;margin-bottom:var(--s)">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</a>
               <div class="card__body">
                 <span class="card__series">${COLLECTIONS[p.collection].name}</span>
                 <h3 class="card__title" style="font-size:.9rem"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
@@ -214,7 +214,7 @@ function renderCart() {
     const variant = [i.metal, i.size ? `Size ${i.size}` : null].filter(Boolean).join(" · ");
     return `
     <div class="cart-row">
-      <a class="cart-row__img" href="producto.html?id=${p.handle}">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</a>
+      <a class="cart-row__img" href="producto.html?id=${p.handle}">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</a>
       <div class="cart-row__info">
         <b>${p.title}</b>
         <span class="var">${variant}</span>
@@ -623,10 +623,10 @@ function initPDP() {
     </nav>
     <div class="pdp-layout">
       <div class="pdp-gallery">
-        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</div>
+        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</div>
         <div class="gal--thumbs">
           ${galleryShots.map((s, i) => `
-            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</button>`).join("")}
+            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</button>`).join("")}
         </div>
       </div>
       <div class="pdp-meta">
@@ -732,7 +732,7 @@ function initPDP() {
   host.querySelectorAll("[data-thumb]").forEach((btn) => {
     btn.addEventListener("click", () => {
       activeShot = Number(btn.dataset.thumb);
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" });
       host.querySelectorAll("[data-thumb]").forEach((b) => b.classList.toggle("active", b === btn));
     });
   });
@@ -743,7 +743,7 @@ function initPDP() {
     btn.addEventListener("click", () => {
       selectedMetal = btn.dataset.metal;
       host.querySelectorAll("[data-metal]").forEach((b) => b.classList.toggle("selected", b === btn));
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" });
     });
   });
   host.querySelectorAll("[data-size]").forEach((btn) => {
@@ -772,7 +772,7 @@ function initPDP() {
   const bar = document.createElement("div");
   bar.className = "sticky-atc";
   bar.innerHTML = `
-    <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</div>
+    <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</div>
     <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
     <button class="btn btn--dark" ${p.soldOut ? "disabled" : ""}>${p.soldOut ? "Sold Out" : "Add to Cart"}</button>`;
   document.body.appendChild(bar);
