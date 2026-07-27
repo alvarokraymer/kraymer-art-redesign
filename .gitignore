@@ -1,4 +1,5 @@
-# No node_modules or build artifacts — no build step in this project
 *.log
 .DS_Store
 Thumbs.db
+.wrangler/
+node_modules/
