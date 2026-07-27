@@ -1,0 +1,17 @@
+# Auto-deploy to Cloudflare Pages on push to master
+# Uses CLOUDFLARE_API_TOKEN stored as a GitHub secret (set up automatically).
+# The token has pages:write scope and was generated via `npx wrangler login`.
+name: Deploy to Cloudflare Pages
+on:
+  push:
+    branches: [master]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: pages deploy . --project-name kraymer-art-redesign --branch master
