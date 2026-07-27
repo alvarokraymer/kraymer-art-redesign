@@ -1,0 +1,4 @@
+# Kraymer Art redesign mockup — not for production, not indexed.
+# This is an internal design-direction mockup. Crawlers are blocked.
+User-agent: *
+Disallow: /
