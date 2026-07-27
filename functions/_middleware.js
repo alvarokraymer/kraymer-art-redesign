@@ -1,29 +1,24 @@
-/* Kraymer Art mockup — PIN protection.
-   This runs on Cloudflare Pages Functions, no extra config needed.
-   PIN: 2026 (not secure by design, just keeps casual visitors out). */
-
 export async function onRequest(context) {
   const { request, next } = context;
   const url = new URL(request.url);
 
-  if (url.pathname === "/ka-auth" && request.method === "POST") {
-    const formData = await request.formData();
-    const pin = formData.get("pin");
-    if (pin === "2026") {
-      return new Response("OK", {
-        status: 302,
-        headers: {
-          "Set-Cookie": "ka_pin=2026; Path=/; Max-Age=86400; HttpOnly; SameSite=Lax",
-          Location: "/",
-        },
-      });
-    }
-    return new Response("Wrong PIN", { status: 403 });
-  }
-
   const cookie = request.headers.get("Cookie") || "";
   if (cookie.includes("ka_pin=2026")) {
     return context.next();
+  }
+
+  const pin = url.searchParams.get("pin");
+  if (pin === "2026") {
+    return new Response(
+      '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=/"><title>OK</title></head><body>Access granted.</body></html>',
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "text/html;charset=utf-8",
+          "Set-Cookie": "ka_pin=2026; Path=/; Max-Age=86400; SameSite=Lax",
+        },
+      }
+    );
   }
 
   return new Response(
@@ -44,7 +39,7 @@ button{width:100%;min-height:48px;background:#1B1815;color:#FAF7F1;border:0;bord
 </style>
 </head>
 <body>
-<form class="card" action="/ka-auth" method="POST">
+<form class="card" action="/" method="GET">
 <h1>Kraymer Art</h1>
 <p>Design mockup — enter PIN.</p>
 <input type="password" name="pin" placeholder="····" maxlength="10" autofocus>
@@ -52,9 +47,6 @@ button{width:100%;min-height:48px;background:#1B1815;color:#FAF7F1;border:0;bord
 </form>
 </body>
 </html>`,
-    {
-      status: 401,
-      headers: { "Content-Type": "text/html;charset=utf-8" },
-    }
+    { status: 401, headers: { "Content-Type": "text/html;charset=utf-8" } }
   );
 }
