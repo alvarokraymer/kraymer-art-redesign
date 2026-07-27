@@ -287,11 +287,17 @@ function openSearch() {
 function closeSearch() {
   document.querySelector("[data-search-overlay]").classList.remove("on");
 }
+function closeMenu() {
+  const menu = document.querySelector("[data-mob-nav]");
+  const ham = document.querySelector(".hamburger");
+  if (menu) menu.classList.remove("on");
+  if (ham) ham.classList.remove("on");
+}
 function runSearch(q) {
   const host = document.querySelector("[data-search-results]");
   q = q.trim().toLowerCase();
   if (q.length < 2) {
-    host.innerHTML = '<p class="search-hint">Try "Gojo", "Demon Slayer" or "sapphire".</p>';
+    host.innerHTML = '<p class="search__hint">Try "sapphire", "garnet" or "topaz".</p>';
     return;
   }
   const hits = PRODUCTS.filter((p) =>
@@ -299,7 +305,7 @@ function runSearch(q) {
       .join(" ").toLowerCase().includes(q));
   host.innerHTML = hits.length
     ? hits.map((p) => `<a href="producto.html?id=${p.handle}"><b>${p.title}</b><span>${COLLECTIONS[p.collection].name} · ${kaMoney(p.price)}</span></a>`).join("")
-    : '<p class="search-hint">No pieces match that search.</p>';
+    : '<p class="search__hint">No pieces match that search.</p>';
 }
 
 /* ---------------- 6. Modals ---------------- */
@@ -796,7 +802,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("click", (e) => {
     if (e.target.closest("[data-open-menu]")) { document.querySelector("[data-mob-nav]").classList.toggle("on"); document.querySelector(".hamburger").classList.toggle("on"); return; }
-    if (e.target.closest("[data-mob-nav] a")) { document.querySelector("[data-mob-nav]").classList.remove("on"); document.querySelector(".hamburger").classList.remove("on"); }
+    if (e.target.closest("[data-mob-nav] a") || e.target.closest(".mob-link") || e.target.closest("[data-open-search]")) { closeMenu(); }
     if (e.target.closest("[data-open-cart]")) openCart();
     if (e.target.closest("[data-close-cart]") || e.target.closest("[data-scrim]")) closeCart();
     if (e.target.closest("[data-close-search]")) { document.querySelector("[data-mob-nav]").classList.remove("on"); document.querySelector(".hamburger").classList.remove("on"); document.querySelector("[data-search-results]").innerHTML = ""; return; }

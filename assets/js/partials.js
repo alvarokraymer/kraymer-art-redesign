@@ -1,6 +1,6 @@
 /* ============================================================
-   KRAYMER ART — Shared partials v5
-   Logo (SVG), hamburger menu with search + theme switch.
+   KRAYMER ART — Shared partials v6
+   Elegant left-slide menu, search as link row, no wishlist icon.
    ============================================================ */
 
 const ICONS = {
@@ -15,7 +15,7 @@ const HEADER_HTML = `
   <span>10,000+ clients</span><span>&middot;</span>
   <span>Free delivery over $150</span><span>&middot;</span>
   <span>Lifetime warranty</span><span>&middot;</span>
-  <span>Handcrafted to order</span><span>&middot;</span>
+  <span>Handcrafted to order</span>
   <span>10,000+ clients</span><span>&middot;</span>
   <span>Free delivery over $150</span><span>&middot;</span>
   <span>Lifetime warranty</span><span>&middot;</span>
@@ -24,31 +24,55 @@ const HEADER_HTML = `
 <header class="site-header">
   <div class="hdr-bar">
     <button class="hamburger" data-open-menu aria-label="Menu"><span></span><span></span><span></span></button>
-    <a class="hdr-logo" href="index.html"><img src="assets/kraymer-logo.svg" alt="Kraymer" height="18"></a>
+    <a class="hdr-logo" href="index.html"><img src="assets/kraymer-logo.svg" alt="Kraymer" height="14"></a>
     <div class="hdr-actions">
       <a class="ico" href="#" aria-label="Account" title="Not in mockup">${ICONS.account}</a>
-      <button class="ico" data-open-wishlist aria-label="Wishlist">${ICONS.heart}<span class="n" data-wishlist-count hidden>0</span></button>
       <button class="ico" data-open-cart aria-label="Cart">${ICONS.bag}<span class="n" data-cart-count hidden>0</span></button>
     </div>
   </div>
 </header>
 <nav class="mob-nav" data-mob-nav>
-  <div class="mob-search">
-    <input type="search" placeholder="Search pieces..." data-search-input aria-label="Search">
-    <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 .75rem">&times;</button>
+  <button class="mob-search-row" data-open-search>
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5;flex:none"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    Search
+  </button>
+
+  <div class="mob-links">
+    <a class="mob-link" href="coleccion.html">All Collections</a>
+
+    <span class="mob-label">COLLECTIONS</span>
+    <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">Collection JJ</a>
+    <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">Collection KN</a>
+    <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Collection GI</a>
+    <a class="mob-link mob-link--sub" href="coleccion.html">Best Sellers</a>
+    <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
+
+    <a class="mob-link" href="#">Mystery Box</a>
+
+    <span class="mob-label">BRAND</span>
+    <a class="mob-link mob-link--sub" href="index.html#craft">Our Story</a>
+    <a class="mob-link mob-link--sub" href="index.html#craft">The Craft</a>
+    <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
+    <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
   </div>
-  <div data-search-results class="mob-results"></div>
-  <a href="coleccion.html">All Collections</a>
-  <a href="coleccion.html?collection=jjk">Collection JJ</a>
-  <a href="coleccion.html?collection=kny">Collection KN</a>
-  <a href="coleccion.html?collection=genshin">Collection GI</a>
-  <div class="mob-extra">
-    <div class="mob-extra-row">
+
+  <div class="mob-foot">
+    <div class="mob-foot-row">
       <span>Dark mode</span>
       <button class="toggle-sw" data-theme-toggle></button>
     </div>
   </div>
 </nav>
+<!-- Search overlay (lightbox) -->
+<div class="search" data-search-overlay>
+  <div class="search__bar">
+    <input type="search" placeholder="Search pieces..." data-search-input aria-label="Search" autofocus>
+    <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 1rem">&times;</button>
+  </div>
+  <div class="search__body" data-search-results>
+    <p class="search__hint">Try "sapphire", "garnet" or "topaz".</p>
+  </div>
+</div>
 `;
 
 const FOOTER_HTML = `
@@ -114,8 +138,6 @@ const CART_HTML = `
   </div>
 </aside>
 `;
-
-const SEARCH_HTML = ``;
 
 (function injectPartials() {
   const headerMount = document.getElementById("site-header");
