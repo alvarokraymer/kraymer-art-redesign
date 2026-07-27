@@ -337,7 +337,7 @@ const SIZE_GUIDE_HTML = `
 const CHECKOUT_MOCK_HTML = `
   <h3>This is a design mockup</h3>
   <p class="small muted">Checkout is intentionally not wired up. In the real build, this button hands off to the Shopify checkout. What matters here: this is the only CTA in the cart, and it stays dominant.</p>
-  <button class="btn btn--solid" data-close-modal style="margin-top:var(--space-4)">Back to the mockup</button>
+  <button class="btn btn--dark" data-close-modal style="margin-top:var(--space-4)">Back to the mockup</button>
 `;
 
 /* ---------------- 7. Accordions ---------------- */
@@ -388,12 +388,31 @@ function initCardActions() {
   });
 }
 
-/* ---- HOME ---- */
+/* ---- HOME (hero carousel) ---- */
 function initHome() {
-  /* Bestsellers strip, right under the hero */
+  /* Bestsellers */
   const best = PRODUCTS.filter((p) => p.badges.includes("bestseller") && !p.soldOut);
   const strip = document.querySelector("[data-bestsellers]");
   if (strip) strip.innerHTML = best.map(productCard).join("");
+
+  /* Hero carousel: 3 cards, auto-rotate every 4s, infinite loop */
+  const track = document.querySelector("[data-hc-track]");
+  const dots = document.querySelector("[data-hc-dots]");
+  if (track && dots) {
+    const total = track.children.length;
+    let current = 0;
+    const go = (i) => {
+      current = ((i % total) + total) % total;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.querySelectorAll("button").forEach((d, j) => d.classList.toggle("on", j === current));
+    };
+    dots.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      go(Array.from(dots.children).indexOf(btn));
+    });
+    setInterval(() => go(current + 1), 4000);
+  }
 
   /* Quiz: Find Your Domain (3 steps, series -> metal -> style) */
   const quiz = document.querySelector("[data-quiz]");
@@ -502,7 +521,7 @@ function initPLP() {
     inStock.sort(sorts[activeSort] || sorts.trending);
 
     const finalList = [...inStock, ...out];
-    grid.innerHTML = finalList.map(productCard).join("");
+    grid.innerHTML = `<div class="pgrid">${finalList.map(productCard).join("")}</div>`;
     countEl.textContent = `Showing ${finalList.length} handcrafted piece${finalList.length === 1 ? "" : "s"}`;
     syncWishUI();
   }
@@ -543,7 +562,7 @@ function initPLP() {
           <button class="quiz__opt" style="border-color:var(--line);color:var(--ink)">In stock</button>
           <button class="quiz__opt" style="border-color:var(--line);color:var(--ink)">Collector sets only</button>
         </div>
-        <button class="btn btn--solid" data-close-modal style="margin-top:var(--space-5)">Done</button>
+        <button class="btn btn--dark" data-close-modal style="margin-top:var(--space-5)">Done</button>
       `);
     });
   }
@@ -581,8 +600,8 @@ function initPDP() {
     </nav>
     <div class="pdp-layout">
       <div class="pdp-gallery">
-        <div class="gallery__main" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch })}</div>
-        <div class="gallery__thumbs">
+        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch })}</div>
+        <div class="gal--thumbs">
           ${galleryShots.map((s, i) => `
             <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</button>`).join("")}
         </div>
@@ -617,22 +636,22 @@ function initPDP() {
           ${isRing ? `<p class="size-reassure">Between sizes? <b>Free lifetime resizing</b> on every ring.</p>` : ""}
         </div>` : ""}
 
-        <div class="pdp-atc">
-          <button class="btn btn--solid" data-pdp-atc ${p.soldOut ? "disabled" : ""}>
+        <div class="atc-bar">
+          <button class="btn btn--dark" data-pdp-atc ${p.soldOut ? "disabled" : ""}>
             ${p.soldOut ? "Sold Out" : `Add to Cart · ${kaMoney(p.price)}`}
           </button>
-          <div class="hm-note">
+          <div class="atc-note">
             <b>Handcrafted to order</b>
             Ships in 9–20 days. You get photo updates while your piece is being made, then tracked shipping.
           </div>
-          <div class="pdp-trust-row">
+          <div class="trust-row-s">
             <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z"/></svg><b>Lifetime Warranty</b></div>
             <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><b>60-Day Returns</b></div>
             <div class="trust-item"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6"/></svg><b>Certificate Included</b></div>
           </div>
         </div>
 
-        <div class="spec-acc faq">
+        <div class="specs faq">
           <div class="acc__item">
             <button class="acc__btn">Specs &amp; Materials</button>
             <div class="acc__panel"><p>Solid 925 sterling silver${p.metals.some((m) => m.includes("Gold")) ? " or 18K gold plated over sterling silver" : ""}. Hand-set ${p.gem.toLowerCase()}, brilliant cut. Interior engraving available. Hypoallergenic and nickel free, always.</p></div>
@@ -732,7 +751,7 @@ function initPDP() {
   bar.innerHTML = `
     <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</div>
     <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
-    <button class="btn btn--solid" ${p.soldOut ? "disabled" : ""}>${p.soldOut ? "Sold Out" : "Add to Cart"}</button>`;
+    <button class="btn btn--dark" ${p.soldOut ? "disabled" : ""}>${p.soldOut ? "Sold Out" : "Add to Cart"}</button>`;
   document.body.appendChild(bar);
   bar.querySelector("button").addEventListener("click", () => {
     Cart.add(p.handle, selectedMetal, selectedSize);

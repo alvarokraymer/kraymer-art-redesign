@@ -91,7 +91,7 @@ const CART_HTML = `
   <div class="drawer__body" data-cart-body></div>
   <div class="drawer__bot" data-cart-foot hidden>
     <div class="drawer__sub"><span>Subtotal</span><b data-cart-subtotal>$0</b></div>
-    <button class="btn btn--solid" style="width:100%" data-checkout>Checkout</button>
+    <button class="btn btn--dark" style="width:100%" data-checkout>Checkout</button>
     <p class="drawer__note">Free shipping over $150 · 60-day returns</p>
   </div>
 </aside>
