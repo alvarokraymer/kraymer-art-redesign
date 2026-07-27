@@ -12,14 +12,62 @@
    ============================================================ */
 
 /* ---------------- 1. Placeholder imagery ---------------- */
-/* Mock "photography". Replace .ph blocks with real product
-   images in production. label = what the photo would show. */
+/* Editorial SVG illustrations replacing product photography.
+   Each product type gets a distinct minimal line drawing:
+   ring, necklace, earrings, bracelet, sets.
+   In production, swap these for real product images. */
+const PH_GOLD = "#A87E3F";
+
+function phSVG(type, gemColor) {
+  const g = gemColor || PH_GOLD;
+  const shapes = {
+    rings: [
+      `<circle cx="200" cy="280" r="72" fill="none" stroke="${PH_GOLD}" stroke-width="1.2"/>`,
+      `<path d="M200,208 l-9,-14 h18 z" fill="${g}"/>`,
+      `<circle cx="200" cy="192" r="7" fill="${g}"/>`,
+      `<line x1="200" y1="212" x2="200" y2="220" stroke="${PH_GOLD}" stroke-width="1"/>`,
+    ].join(""),
+    necklaces: [
+      `<path d="M90,140 Q200,50 310,140" fill="none" stroke="${PH_GOLD}" stroke-width="0.8"/>`,
+      `<path d="M250,180 Q255,250 240,320" fill="none" stroke="${PH_GOLD}" stroke-width="0.5"/>`,
+      `<circle cx="238" cy="330" r="18" fill="none" stroke="${PH_GOLD}" stroke-width="1.1"/>`,
+      `<circle cx="238" cy="330" r="6" fill="${g}"/>`,
+    ].join(""),
+    earrings: [
+      `<circle cx="155" cy="240" r="30" fill="none" stroke="${PH_GOLD}" stroke-width="1"/>`,
+      `<circle cx="245" cy="240" r="30" fill="none" stroke="${PH_GOLD}" stroke-width="1"/>`,
+      `<circle cx="155" cy="240" r="5" fill="${g}"/>`,
+      `<circle cx="245" cy="240" r="5" fill="${g}"/>`,
+      `<line x1="155" y1="210" x2="155" y2="182" stroke="${PH_GOLD}" stroke-width="0.7"/>`,
+      `<line x1="245" y1="210" x2="245" y2="182" stroke="${PH_GOLD}" stroke-width="0.7"/>`,
+      `<path d="M148,182 Q155,175 162,182" fill="none" stroke="${PH_GOLD}" stroke-width="0.7"/>`,
+      `<path d="M238,182 Q245,175 252,182" fill="none" stroke="${PH_GOLD}" stroke-width="0.7"/>`,
+    ].join(""),
+    bracelets: [
+      `<path d="M115,270 Q110,175 200,150 Q290,175 285,270" fill="none" stroke="${PH_GOLD}" stroke-width="1.2"/>`,
+      `<circle cx="200" cy="145" r="6" fill="${g}"/>`,
+      `<line x1="200" y1="145" x2="200" y2="155" stroke="${PH_GOLD}" stroke-width="1"/>`,
+    ].join(""),
+    sets: [
+      `<rect x="75" y="80" width="250" height="340" rx="3" fill="none" stroke="${PH_GOLD}" stroke-width="0.6" stroke-dasharray="3,4"/>`,
+      `<circle cx="160" cy="230" r="40" fill="none" stroke="${PH_GOLD}" stroke-width="1"/>`,
+      `<circle cx="160" cy="230" r="4.5" fill="${g}"/>`,
+      `<path d="M250,200 Q265,230 250,260" fill="none" stroke="${PH_GOLD}" stroke-width="0.8"/>`,
+      `<circle cx="250" cy="265" r="8" fill="none" stroke="${PH_GOLD}" stroke-width="1"/>`,
+      `<circle cx="250" cy="265" r="2.5" fill="${g}"/>`,
+      `<text x="200" y="385" text-anchor="middle" fill="${PH_GOLD}" font-size="9" font-family="Inter,sans-serif" letter-spacing="2.5" opacity=".6">COLLECTOR BOX</text>`,
+    ].join(""),
+  };
+  return shapes[type] || shapes.rings;
+}
+
 function ph(label, opts = {}) {
-  const cls = ["ph"];
-  if (opts.light) cls.push("ph--light");
-  const metal = opts.metal ? ` data-metal="${opts.metal}"` : "";
+  const type = opts.type || "rings";
+  const gemColor = opts.gemColor || PH_GOLD;
+  const svg = phSVG(type, gemColor);
   const tag = opts.tag ? `<span class="ph__tag">${opts.tag}</span>` : "";
-  return `<div class="${cls.join(" ")}"${metal} role="img" aria-label="Placeholder image: ${label}">
+  return `<div class="ph" role="img" aria-label="${label}">
+    <svg class="ph__svg" viewBox="0 0 400 500" fill="none">${svg}</svg>
     <span class="ph__label">${label}</span>${tag}</div>`;
 }
 
@@ -51,17 +99,14 @@ function priceHTML(p) {
 
 function productCard(p) {
   const col = COLLECTIONS[p.collection];
-  const dots = p.metals.map((m) =>
-    `<i class="${m.includes("Gold") ? "gold" : ""}" title="${m}"></i>`).join("");
+  const gemColor = accentColors[p.collection] || PH_GOLD;
   const cta = p.soldOut
     ? `<button class="p-card__add" data-notify="${p.handle}">Notify Me</button>`
     : `<button class="p-card__add" data-add="${p.handle}">Add to Cart</button>`;
   return `
   <article class="p-card ${p.soldOut ? "p-card--out" : ""}" data-handle="${p.handle}">
     <a class="p-card__media" href="producto.html?id=${p.handle}" aria-label="${p.title}">
-      ${ph(p.title, { tag: p.soldOut ? "Sold out" : "Studio shot" })}
-      <span class="p-card__badges">${cardBadges(p)}</span>
-      <span class="p-card__dots" title="Available in ${p.metals.length} metal${p.metals.length > 1 ? "s" : ""}">${dots}</span>
+      ${ph(p.title, { type: p.type, gemColor, tag: p.soldOut ? "Sold out" : p.batch })}
     </a>
     <button class="p-card__wish" data-wish="${p.handle}" aria-label="Add to wishlist">
       <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
@@ -138,7 +183,7 @@ function renderCart() {
         <div class="cart-empty__recs">
           ${recs.map((p) => `
             <div>
-              <a class="p-card__media" href="producto.html?id=${p.handle}" style="display:block">${ph(p.title)}</a>
+              <a class="p-card__media" href="producto.html?id=${p.handle}" style="display:block">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</a>
               <div class="p-card__body">
                 <span class="p-card__series">${COLLECTIONS[p.collection].name}</span>
                 <h3 class="p-card__title" style="font-size:.9rem"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
@@ -157,7 +202,7 @@ function renderCart() {
     const variant = [i.metal, i.size ? `Size ${i.size}` : null].filter(Boolean).join(" · ");
     return `
     <div class="cart-item">
-      <a class="cart-item__media" href="producto.html?id=${p.handle}">${ph(p.title)}</a>
+      <a class="cart-item__media" href="producto.html?id=${p.handle}">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</a>
       <div class="cart-item__meta">
         <b>${p.title}</b>
         <span class="variant">${variant}</span>
@@ -531,10 +576,10 @@ function initPDP() {
     </nav>
     <div class="pdp">
       <div class="pdp-gallery">
-        <div class="pdp-gallery__main" data-gallery-main>${ph(galleryShots[0].label, { metal: p.metals[0], tag: p.batch })}</div>
+        <div class="pdp-gallery__main" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch })}</div>
         <div class="pdp-gallery__thumbs">
           ${galleryShots.map((s, i) => `
-            <button data-thumb="${i}" class="${i === 0 ? "is-active" : ""}" aria-label="View: ${s.tag}">${ph(s.label)}</button>`).join("")}
+            <button data-thumb="${i}" class="${i === 0 ? "is-active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</button>`).join("")}
         </div>
       </div>
       <div class="pdp-info">
@@ -640,19 +685,18 @@ function initPDP() {
   host.querySelectorAll("[data-thumb]").forEach((btn) => {
     btn.addEventListener("click", () => {
       activeShot = Number(btn.dataset.thumb);
-      main.innerHTML = ph(galleryShots[activeShot].label, { metal: selectedMetal, tag: p.batch });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch });
       host.querySelectorAll("[data-thumb]").forEach((b) => b.classList.toggle("is-active", b === btn));
     });
   });
 
-  /* Variant selectors (clear hierarchy, distinct from ATC) */
   let selectedMetal = p.metals[0];
   let selectedSize = p.sizes[0] || null;
   host.querySelectorAll("[data-metal]").forEach((btn) => {
     btn.addEventListener("click", () => {
       selectedMetal = btn.dataset.metal;
       host.querySelectorAll("[data-metal]").forEach((b) => b.classList.toggle("is-selected", b === btn));
-      main.innerHTML = ph(galleryShots[activeShot].label, { metal: selectedMetal, tag: p.batch });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch });
     });
   });
   host.querySelectorAll("[data-size]").forEach((btn) => {
@@ -681,7 +725,7 @@ function initPDP() {
   const bar = document.createElement("div");
   bar.className = "sticky-atc";
   bar.innerHTML = `
-    <div class="sticky-atc__thumb">${ph(p.title)}</div>
+    <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD })}</div>
     <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
     <button class="btn btn--primary" ${p.soldOut ? "disabled" : ""}>${p.soldOut ? "Sold Out" : "Add to Cart"}</button>`;
   document.body.appendChild(bar);
