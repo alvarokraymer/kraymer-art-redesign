@@ -138,6 +138,7 @@ input,select{font:inherit}
 [data-theme="dark"] .ico svg{stroke:var(--dark)}
 [data-theme="dark"] .marquee{background:var(--light)}
 [data-theme="dark"] .hamburger span{background:var(--dark)}
+[data-theme="dark"] .hdr-logo img{filter:invert(1)}
 .marquee{background:var(--dark);color:rgba(252,248,247,.75);overflow:hidden;height:30px;display:flex;align-items:center;font-family:var(--body)}
 .marquee__track{display:flex;gap:2rem;animation:marquee 22s linear infinite;white-space:nowrap;will-change:transform}
 .marquee__track span{font-size:.58rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
@@ -153,9 +154,7 @@ input,select{font:inherit}
 .hs-content p{font-size:1rem;color:rgba(252,248,247,.75);line-height:1.5;margin-bottom:1.5rem;max-width:30ch}
 .hs-content .btn{min-height:50px;padding:0 1.75rem;font-size:.8rem}
 
-/* ── Hero page indicator ── */
-.hs-page{position:absolute;bottom:2rem;right:var(--gutter);z-index:3;font-family:var(--display);font-size:.85rem;font-weight:300;color:rgba(252,248,247,.65);letter-spacing:.08em}
-.hs-page span{color:var(--accent)}
+
 
 /* ── Placeholders ── */
 .ph{position:relative;display:flex;align-items:center;justify-content:center;background:#F4EEEB;border-radius:var(--radius-sm);overflow:hidden}

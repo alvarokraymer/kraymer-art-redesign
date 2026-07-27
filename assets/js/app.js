@@ -408,17 +408,15 @@ function initHome() {
   const strip = document.querySelector("[data-bestsellers]");
   if (strip) strip.innerHTML = best.map(productCard).join("");
 
-  /* Hero slider: auto-rotate every 5s, touch swipe, text page indicator */
+  /* Hero slider: auto-rotate every 5s, touch swipe */
   const track = document.querySelector("[data-hs-track]");
-  const pageEl = document.querySelector("[data-hs-page]");
-  if (track && pageEl) {
+  if (track) {
     const total = track.children.length;
     let current = 0;
     let auto = setInterval(() => go(current + 1), 5000);
     const go = (i) => {
       current = ((i % total) + total) % total;
       track.style.transform = `translateX(-${current * 100}%)`;
-      pageEl.innerHTML = `${String(current + 1).padStart(2,"0")} <span>/</span> ${String(total).padStart(2,"0")}`;
     };
 
     /* Touch swipe */
