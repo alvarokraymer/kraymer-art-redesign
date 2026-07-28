@@ -120,9 +120,9 @@ function productCard(p) {
     ? `<span class="badge">Sold Out</span>`
     : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
   return `
-  <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}">
+  <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}"${p.images && p.images.length > 1 && p.images[1] !== "placeholder" ? ` style="--img2:url(${p.images[1]})"` : ""}>
     <a class="card__img" href="producto.html?id=${p.handle}" aria-label="${p.title}" style="position:relative">
-      ${ph(p.title, { type: p.type, gemColor, img: "assets/placeholder_" + (p.phId || ((PRODUCTS.indexOf(p) % 4) + 1)) + ".jpg" })}
+      ${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}
       ${badge}
     </a>
     <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
@@ -516,10 +516,17 @@ function initPLP() {
   const col = colParam ? COLLECTIONS[colParam] : null;
   const heroTitle = col ? col.name : (typeParam === "sets" ? "Collector Sets" : "All Collections");
   const heroDesc = col
-    ? `Fine jewelry inspired by ${col.name}. Handcrafted in small batches, never mass produced merch.`
-    : "Fine anime jewelry, handcrafted in small batches. Every piece is made to order in solid 925 sterling silver and 18K gold.";
+    ? `Handcrafted jewelry, designed for those who know.`
+    : (typeParam === "sets" ? "Curated sets and limited editions." : "Everything we make, in one place.");
   hero.querySelector("h1").textContent = heroTitle;
   hero.querySelector("[data-plp-desc]").textContent = heroDesc;
+
+  /* Collection-specific hero gradient */
+  const heroBg = hero;
+  if (colParam === "jjk") { heroBg.style.background = "linear-gradient(135deg, #1A1C2E 0%, #2A2F4F 50%, #1E2035 100%)"; heroBg.style.color = "#FCF8F7"; heroBg.style.padding = "3.5rem 0 2.5rem"; heroBg.style.borderRadius = "0 0 16px 16px"; heroBg.style.marginBottom = "1rem"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
+  else if (colParam === "kny") { heroBg.style.background = "linear-gradient(135deg, #2E1C1A 0%, #4F2F2A 50%, #35201E 100%)"; heroBg.style.color = "#FCF8F7"; heroBg.style.padding = "3.5rem 0 2.5rem"; heroBg.style.borderRadius = "0 0 16px 16px"; heroBg.style.marginBottom = "1rem"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
+  else if (colParam === "genshin") { heroBg.style.background = "linear-gradient(135deg, #1E1A2E 0%, #3A2F4F 50%, #252035 100%)"; heroBg.style.color = "#FCF8F7"; heroBg.style.padding = "3.5rem 0 2.5rem"; heroBg.style.borderRadius = "0 0 16px 16px"; heroBg.style.marginBottom = "1rem"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
+  else { heroBg.style.background = ""; heroBg.style.color = ""; heroBg.style.padding = ""; heroBg.style.borderRadius = ""; heroBg.style.marginBottom = ""; if (hero.querySelector(".eyebrow")) hero.querySelector(".eyebrow").style.color = ""; }
 
   /* Mark active nav item */
   document.querySelectorAll(".nav-strip a").forEach((a) => {
@@ -627,7 +634,7 @@ function initPDP() {
   const hasCompare = !!p.compareAt;
 
   const galleryShots = (p.images && p.images.length > 0 && p.images[0] !== "placeholder")
-    ? p.images.slice(0, 4).map((url, i) => ({
+    ? p.images.slice(0, 8).map((url, i) => ({
         label: `${p.title} · View ${i + 1}`,
         tag: `View ${i + 1}`,
         file: url,
