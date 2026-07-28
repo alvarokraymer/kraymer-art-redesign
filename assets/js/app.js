@@ -114,8 +114,8 @@ function productCard(p) {
   const gemColor = accentColors[p.collection] || PH_GOLD;
   const dot = `<span class="card__dot" style="background:${gemColor}"></span>`;
   const cta = p.soldOut
-    ? `<button class="card__buy card__buy--out" data-notify="${p.handle}" aria-label="Notify me"><i data-lucide="bell" style="pointer-events:none"></i></button>`
-    : `<button class="card__buy" data-add="${p.handle}" aria-label="Add to cart"><i data-lucide="shopping-bag" style="pointer-events:none"></i></button>`;
+    ? `<button class="card__buy card__buy--out" data-notify="${p.handle}" aria-label="Notify me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>`
+    : `<button class="card__buy" data-add="${p.handle}" aria-label="Add to cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>`;
   const badge = p.soldOut
     ? `<span class="badge">Sold Out</span>`
     : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
