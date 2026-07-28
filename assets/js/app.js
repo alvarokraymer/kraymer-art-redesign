@@ -639,37 +639,36 @@ function initPLP() {
     <div class="fp__bot"><button class="btn btn--dark btn--full" data-apply-filters>Apply filters</button></div>
   `;
   document.body.appendChild(filterPanel);
+  filterPanel.insertAdjacentHTML("beforebegin", `<div class="scrim fp-scrim" data-close-fp></div>`);
+  const fpScrim = document.querySelector(".fp-scrim");
   const fpCount = document.querySelector("[data-filter-count]");
 
+  function closeFP() { filterPanel.classList.remove("on"); fpScrim.classList.remove("on"); }
   function updateFilterUI() {
     filterPanel.querySelectorAll(".v-chip").forEach((c) => {
-      const grp = c.closest("[data-fil-group]").dataset.filGroup;
-      const val = c.dataset.filVal;
+      const grp = c.closest("[data-fil-group]").dataset.filGroup, val = c.dataset.filVal;
       c.classList.toggle("selected",
-        (grp === "mat" && filterMat === val) ||
-        (grp === "price" && filterPrice === val) ||
-        (grp === "avail" && filterAvail === val)
-      );
+        (grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
     });
     const n = (filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
-    fpCount.textContent = n;
-    fpCount.classList.toggle("show", n > 0);
+    fpCount.textContent = n; fpCount.classList.toggle("show", n > 0);
   }
 
   filterPanel.addEventListener("click", (e) => {
     const chip = e.target.closest("[data-fil-val]");
     if (chip) {
       const grp = chip.closest("[data-fil-group]").dataset.filGroup, val = chip.dataset.filVal;
-      if (grp === "mat") filterMat = filterMat === val ? null : val;
-      else if (grp === "price") filterPrice = filterPrice === val ? null : val;
-      else if (grp === "avail") filterAvail = filterAvail === val ? null : val;
+      if (grp==="mat") filterMat = filterMat===val?null:val;
+      else if (grp==="price") filterPrice = filterPrice===val?null:val;
+      else if (grp==="avail") filterAvail = filterAvail===val?null:val;
       updateFilterUI(); return;
     }
-    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=null; updateFilterUI(); apply(); filterPanel.classList.remove("on"); return; }
-    if (e.target.closest("[data-apply-filters]")) { filterPanel.classList.remove("on"); apply(); return; }
+    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=null; updateFilterUI(); apply(); closeFP(); return; }
+    if (e.target.closest("[data-apply-filters]")) { closeFP(); apply(); return; }
   });
 
-  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); updateFilterUI(); });
+  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); fpScrim.classList.add("on"); updateFilterUI(); });
+  fpScrim.addEventListener("click", closeFP);
 
   /* Load more: visual progress only */
   const loadBtn = document.querySelector("[data-load-more]");
