@@ -593,22 +593,27 @@ function initPLP() {
   if (filterBtn) {
     filterBtn.addEventListener("click", () => {
       openModal(`
-        <h3>Filters</h3>
-        <p class="small muted" style="margin-bottom:var(--space-3)">Visual only in this mockup. In the Horizon build these become real storefront filters.</p>
-        <p class="eyebrow eyebrow--ink" style="margin-bottom:var(--space-2)">Character</p>
-        <div class="quiz__opts" style="margin-bottom:var(--space-4)">
-          ${["Gojo Satoru", "Sukuna", "Tanjiro", "Nezuko", "Raiden", "Zhongli"].map((c) => `<button class="quiz__opt" style="border-color:var(--line);color:var(--ink)">${c}</button>`).join("")}
+        <h3 style="font-weight:300;margin-bottom:.5rem">Filters</h3>
+        <p class="sm muted" style="margin-bottom:1.5rem">Refine by material, price and more.</p>
+        <div class="v-group">
+          <p class="v-label">Material</p>
+          <div class="v-row" style="margin-bottom:1.5rem">
+            ${["925 Silver", "18K Gold", "Mixed"].map((m) => `<button class="v-chip">${m}</button>`).join("")}
+          </div>
         </div>
-        <p class="eyebrow eyebrow--ink" style="margin-bottom:var(--space-2)">Gemstone</p>
-        <div class="quiz__opts" style="margin-bottom:var(--space-4)">
-          ${["Sapphire", "Garnet", "Amethyst", "Onyx", "Topaz"].map((c) => `<button class="quiz__opt" style="border-color:var(--line);color:var(--ink)">${c}</button>`).join("")}
+        <div class="v-group">
+          <p class="v-label">Price range</p>
+          <div class="v-row" style="margin-bottom:1.5rem">
+            ${["Under $100", "$100–$200", "$200–$300", "$300+"].map((m) => `<button class="v-chip">${m}</button>`).join("")}
+          </div>
         </div>
-        <p class="eyebrow eyebrow--ink" style="margin-bottom:var(--space-2)">Availability</p>
-        <div class="quiz__opts">
-          <button class="quiz__opt" style="border-color:var(--line);color:var(--ink)">In stock</button>
-          <button class="quiz__opt" style="border-color:var(--line);color:var(--ink)">Collector sets only</button>
+        <div class="v-group">
+          <p class="v-label">Availability</p>
+          <div class="v-row" style="margin-bottom:1.5rem">
+            ${["In stock", "Pre-order", "Sold out"].map((m) => `<button class="v-chip">${m}</button>`).join("")}
+          </div>
         </div>
-        <button class="btn btn--dark" data-close-modal style="margin-top:var(--space-5)">Done</button>
+        <button class="btn btn--dark" data-close-modal style="margin-top:.5rem">Show results</button>
       `);
     });
   }

@@ -183,8 +183,8 @@ input,select{font:inherit}
 .card__price s{color:var(--muted);font-weight:400;margin-left:.5rem}
 .sold{opacity:.4}
 .sold .ph svg{filter:grayscale(1)}
-.badge{font-size:.45rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:var(--light);color:var(--dark);position:absolute;top:.5rem;left:.5rem;z-index:2}
-.badge--a{background:var(--accent);color:#fff}
+.badge{font-size:.45rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:rgba(252,248,247,.92);color:var(--dark);position:absolute;top:.5rem;left:.5rem;z-index:2;backdrop-filter:blur(4px);box-shadow:0 1px 3px rgba(20,17,16,.08)}
+.badge--a{background:var(--accent);color:#fff;box-shadow:none}
 .heart{position:absolute;top:.5rem;right:.5rem;z-index:3;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.88);border-radius:50%;transition:transform .15s}
 .heart:active{transform:scale(.88)}
 .heart svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:1.6}

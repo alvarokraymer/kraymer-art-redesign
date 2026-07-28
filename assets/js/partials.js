@@ -1,6 +1,6 @@
 /* ============================================================
-   KRAYMER ART — Shared partials v6
-   Elegant left-slide menu, search as link row, no wishlist icon.
+   KRAYMER ART — Shared partials v7
+   Announce bar (not sticky) before header.
    ============================================================ */
 
 const ICONS = {
@@ -10,7 +10,7 @@ const ICONS = {
   bag: '<svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12.2a1.8 1.8 0 0 1-1.8 1.8H8a1.8 1.8 0 0 1-1.8-1.8L5 8z"/><path d="M8.5 10V6.5a3.5 3.5 0 0 1 7 0V10"/></svg>',
 };
 
-const HEADER_HTML = `
+const ANNOUNCE_HTML = `
 <div class="marquee"><div class="marquee__track">
   <span>10,000+ clients</span><span>&middot;</span>
   <span>Free delivery over $150</span><span>&middot;</span>
@@ -20,7 +20,9 @@ const HEADER_HTML = `
   <span>Free delivery over $150</span><span>&middot;</span>
   <span>Lifetime warranty</span><span>&middot;</span>
   <span>Handcrafted to order</span>
-</div></div>
+</div></div>`;
+
+const HEADER_HTML = `
 <header class="site-header">
   <div class="hdr-bar">
     <button class="hamburger" data-open-menu aria-label="Menu"><span></span><span></span><span></span></button>
@@ -36,21 +38,17 @@ const HEADER_HTML = `
     <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5;flex:none"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     Search
   </button>
-
   <div class="mob-links">
     <a class="mob-link" href="coleccion.html">All Collections</a>
-
     <button class="mob-label-btn" data-mob-collapse>COLLECTIONS <span class="mob-arrow"></span></button>
     <div class="mob-sub" data-mob-sub>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">Collection JJ</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">Collection KN</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Collection GI</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">JJK</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">KNY</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin</a>
       <a class="mob-link mob-link--sub" href="coleccion.html">Best Sellers</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
     </div>
-
     <a class="mob-link" href="#">Mystery Box</a>
-
     <button class="mob-label-btn" data-mob-collapse>BRAND <span class="mob-arrow"></span></button>
     <div class="mob-sub" data-mob-sub>
       <a class="mob-link mob-link--sub" href="index.html#craft">Our Story</a>
@@ -59,7 +57,6 @@ const HEADER_HTML = `
       <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
     </div>
   </div>
-
   <div class="mob-foot">
     <div class="mob-foot-row">
       <span>Dark mode</span>
@@ -94,9 +91,9 @@ const FOOTER_HTML = `
       <div>
         <h3>Shop</h3>
         <a href="coleccion.html">All Collections</a>
-        <a href="coleccion.html?collection=jjk">Collection JJ</a>
-        <a href="coleccion.html?collection=kny">Collection KN</a>
-        <a href="coleccion.html?collection=genshin">Collection GI</a>
+        <a href="coleccion.html?collection=jjk">JJK</a>
+        <a href="coleccion.html?collection=kny">KNY</a>
+        <a href="coleccion.html?collection=genshin">Genshin</a>
         <a href="coleccion.html?type=sets">Collector Sets</a>
       </div>
       <div>
@@ -146,7 +143,10 @@ const CART_HTML = `
 (function injectPartials() {
   const headerMount = document.getElementById("site-header");
   const footerMount = document.getElementById("site-footer");
-  if (headerMount) headerMount.innerHTML = HEADER_HTML;
+  if (headerMount) {
+    headerMount.insertAdjacentHTML("beforebegin", ANNOUNCE_HTML);
+    headerMount.innerHTML = HEADER_HTML;
+  }
   if (footerMount) footerMount.innerHTML = FOOTER_HTML;
   const cartHost = document.createElement("div");
   cartHost.innerHTML = CART_HTML;
