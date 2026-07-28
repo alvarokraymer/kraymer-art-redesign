@@ -251,12 +251,12 @@ function openCart() {
   renderCart();
   document.querySelector("[data-cart-drawer]").classList.add("on");
   document.querySelector("[data-scrim]").classList.add("on");
-  document.body.style.overflow = "hidden";
+  lockScroll();
 }
 function closeCart() {
   document.querySelector("[data-cart-drawer]").classList.remove("on");
   document.querySelector("[data-scrim]").classList.remove("on");
-  document.body.style.overflow = "";
+  unlockScroll();
 }
 
 /* ---------------- 4. Wishlist ---------------- */
@@ -293,11 +293,14 @@ function closeSearch() {
   const res = document.querySelector("[data-search-results]");
   if (res) res.innerHTML = '<p class="search__hint">Try "sapphire", "garnet" or "topaz".</p>';
 }
+function lockScroll() { document.body.style.overflow = "hidden"; }
+function unlockScroll() {
+  if (!document.querySelector(".drawer.on,.fp.on,.mob-nav.on")) document.body.style.overflow = "";
+}
 function closeMenu() {
-  const menu = document.querySelector("[data-mob-nav]");
-  const ham = document.querySelector(".hamburger");
-  if (menu) menu.classList.remove("on");
-  if (ham) ham.classList.remove("on");
+  document.querySelector("[data-mob-nav]").classList.remove("on");
+  document.querySelector(".hamburger").classList.remove("on");
+  unlockScroll();
 }
 function runSearch(q) {
   const host = document.querySelector("[data-search-results]");
@@ -643,7 +646,7 @@ function initPLP() {
   const fpScrim = document.querySelector(".fp-scrim");
   const fpCount = document.querySelector("[data-filter-count]");
 
-  function closeFP() { filterPanel.classList.remove("on"); fpScrim.classList.remove("on"); }
+  function closeFP() { filterPanel.classList.remove("on"); fpScrim.classList.remove("on"); document.body.style.overflow = ""; }
   function updateFilterUI() {
     filterPanel.querySelectorAll(".v-chip").forEach((c) => {
       const grp = c.closest("[data-fil-group]").dataset.filGroup, val = c.dataset.filVal;
@@ -667,7 +670,7 @@ function initPLP() {
     if (e.target.closest("[data-apply-filters]")) { closeFP(); apply(); return; }
   });
 
-  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); fpScrim.classList.add("on"); updateFilterUI(); });
+  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); fpScrim.classList.add("on"); lockScroll(); updateFilterUI(); });
   fpScrim.addEventListener("click", closeFP);
 
   /* Load more: visual progress only */
@@ -890,7 +893,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initAccordions();
 
   document.addEventListener("click", (e) => {
-    if (e.target.closest("[data-open-menu]")) { document.querySelector("[data-mob-nav]").classList.toggle("on"); document.querySelector(".hamburger").classList.toggle("on"); return; }
+    if (e.target.closest("[data-open-menu]")) { document.querySelector("[data-mob-nav]").classList.toggle("on"); document.querySelector(".hamburger").classList.toggle("on"); if (document.querySelector("[data-mob-nav]").classList.contains("on")) lockScroll(); else unlockScroll(); return; }
     if (e.target.closest("[data-mob-nav] a") || e.target.closest(".mob-link")) { closeMenu(); }
     if (e.target.closest("[data-open-search]")) { closeMenu(); openSearch(); return; }
     if (e.target.closest("[data-mob-collapse]")) { const btn = e.target.closest("[data-mob-collapse]"); btn.classList.toggle("open"); const sub = btn.nextElementSibling; if (sub && sub.matches("[data-mob-sub]")) sub.classList.toggle("open"); return; }
