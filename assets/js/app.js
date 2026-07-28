@@ -122,7 +122,7 @@ function productCard(p) {
   return `
   <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}"${p.images && p.images.length > 1 && p.images[1] !== "placeholder" ? ` style="--img2:url(${p.images[1]})"` : ""}>
     <div class="card__img">
-      <a href="producto.html?id=${p.handle}" aria-label="${p.title}" style="display:block;position:absolute;inset:0;z-index:1">${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}</a>
+      ${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}
       ${badge}
       <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
         <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
