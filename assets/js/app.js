@@ -22,6 +22,9 @@ const accentColors = { jjk: "#5B7FA5", kny: "#B55848", genshin: "#8A6DAE" };
 function imgPath(p, shot) {
   return p.imgDir ? `assets/${p.imgDir}/${shot}` : null;
 }
+function phImg(p) {
+  return "assets/placeholder_" + (p.phId || ((PRODUCTS.indexOf(p) % 4) + 1)) + ".jpg";
+}
 
 function phSVG(type, gemColor) {
   const g = gemColor || PH_GOLD;
@@ -118,7 +121,7 @@ function productCard(p) {
   return `
   <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}">
     <a class="card__img" href="producto.html?id=${p.handle}" aria-label="${p.title}" style="position:relative">
-      ${ph(p.title, { type: p.type, gemColor, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}
+      ${ph(p.title, { type: p.type, gemColor, img: "assets/placeholder_" + (p.phId || ((PRODUCTS.indexOf(p) % 4) + 1)) + ".jpg" })}
       ${badge}
     </a>
     <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
@@ -195,7 +198,7 @@ function renderCart() {
         <div class="cart-rec">
           ${recs.map((p) => `
             <div>
-              <a class="card__img" href="producto.html?id=${p.handle}" style="display:block;position:relative;margin-bottom:var(--s)">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</a>
+              <a class="card__img" href="producto.html?id=${p.handle}" style="display:block;position:relative;margin-bottom:var(--s)">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: phImg(p) })}</a>
               <div class="card__body">
                 <span class="card__series">${COLLECTIONS[p.collection].name}</span>
                 <h3 class="card__title" style="font-size:.9rem"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
@@ -214,7 +217,7 @@ function renderCart() {
     const variant = [i.metal, i.size ? `Size ${i.size}` : null].filter(Boolean).join(" · ");
     return `
     <div class="cart-row">
-      <a class="cart-row__img" href="producto.html?id=${p.handle}">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</a>
+      <a class="cart-row__img" href="producto.html?id=${p.handle}">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: phImg(p) })}</a>
       <div class="cart-row__info">
         <b>${p.title}</b>
         <span class="var">${variant}</span>
@@ -623,10 +626,10 @@ function initPDP() {
     </nav>
     <div class="pdp-layout">
       <div class="pdp-gallery">
-        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</div>
+        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: phImg(p) })}</div>
         <div class="gal--thumbs">
           ${galleryShots.map((s, i) => `
-            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</button>`).join("")}
+            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: phImg(p) })}</button>`).join("")}
         </div>
       </div>
       <div class="pdp-meta">
@@ -732,7 +735,7 @@ function initPDP() {
   host.querySelectorAll("[data-thumb]").forEach((btn) => {
     btn.addEventListener("click", () => {
       activeShot = Number(btn.dataset.thumb);
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: phImg(p) });
       host.querySelectorAll("[data-thumb]").forEach((b) => b.classList.toggle("active", b === btn));
     });
   });
@@ -743,7 +746,7 @@ function initPDP() {
     btn.addEventListener("click", () => {
       selectedMetal = btn.dataset.metal;
       host.querySelectorAll("[data-metal]").forEach((b) => b.classList.toggle("selected", b === btn));
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: phImg(p) });
     });
   });
   host.querySelectorAll("[data-size]").forEach((btn) => {
@@ -772,7 +775,7 @@ function initPDP() {
   const bar = document.createElement("div");
   bar.className = "sticky-atc";
   bar.innerHTML = `
-    <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: "assets/placeholder_" + ((PRODUCTS.indexOf(p) % 4) + 1) + ".jpg" })}</div>
+    <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: phImg(p) })}</div>
     <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
     <button class="btn btn--dark" ${p.soldOut ? "disabled" : ""}>${p.soldOut ? "Sold Out" : "Add to Cart"}</button>`;
   document.body.appendChild(bar);
@@ -804,7 +807,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("click", (e) => {
     if (e.target.closest("[data-open-menu]")) { document.querySelector("[data-mob-nav]").classList.toggle("on"); document.querySelector(".hamburger").classList.toggle("on"); return; }
-    if (e.target.closest("[data-mob-nav] a") || e.target.closest(".mob-link") || e.target.closest("[data-open-search]")) { closeMenu(); }
+    if (e.target.closest("[data-mob-nav] a") || e.target.closest(".mob-link")) { closeMenu(); }
+    if (e.target.closest("[data-open-search]")) { closeMenu(); openSearch(); return; }
     if (e.target.closest("[data-open-cart]")) openCart();
     if (e.target.closest("[data-close-cart]") || e.target.closest("[data-scrim]")) closeCart();
     if (e.target.closest("[data-close-search]")) { closeSearch(); document.querySelector("[data-search-results]").innerHTML = ""; return; }

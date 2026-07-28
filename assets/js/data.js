@@ -44,6 +44,7 @@ const PRODUCTS = [
     type: "rings",
     price: 18500, compareAt: 22000, pieces: 1,
     badges: ["bestseller"], batch: "Batch #04", soldOut: false,
+    phId: 1,
     metals: ["925 Sterling Silver", "18K Gold Plated"],
     sizes: ["5", "6", "7", "8", "9", "10", "11", "12"],
     line: "Inspired by Gojo Satoru's Limitless. Infinity, rendered as an unbroken circle of hand-set sapphire.",
@@ -108,6 +109,7 @@ const PRODUCTS = [
     sizes: [],
     line: "The dance of the fire god, caught in a flame-cut garnet that moves with you.",
     gem: "Garnet",
+    phId: 2,
     imgDir: "A_Ring_Results",
   },
   {
@@ -138,6 +140,7 @@ const PRODUCTS = [
     sizes: ["S", "M", "L"],
     line: "Bamboo, reimagined as a cuff. Gentle to look at, stubborn in the fire.",
     gem: "Pink Opal",
+    phId: 3,
     imgDir: "A_Ring_Results",
   },
   {
@@ -198,6 +201,7 @@ const PRODUCTS = [
     sizes: ["5", "6", "7", "8", "9", "10", "11", "12"],
     line: "A contract sealed in stone. Citrine set deep, the way Liyue sets its word.",
     gem: "Citrine",
+    phId: 4,
     imgDir: "A_Ring_Results",
   },
   {
