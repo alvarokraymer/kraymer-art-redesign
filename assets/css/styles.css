@@ -268,7 +268,7 @@ input,select{font:inherit}
 .ft-copy p+p{margin-top:.5rem}
 
 /* ── PLP ── */
-.plp-hero{width:100%;min-height:75vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:3rem 0;margin-bottom:0}
+.plp-hero{width:100%;min-height:85vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:3rem 0;margin-bottom:0}
 .plp-hero__inner{width:100%}
 .plp-hero .eyebrow{margin-bottom:.5rem;display:block}
 .plp-hero h1{margin-bottom:.5rem}
