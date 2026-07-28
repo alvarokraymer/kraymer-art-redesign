@@ -68,7 +68,7 @@ const HEADER_HTML = `
 <!-- Search overlay (lightbox) -->
 <div class="search" data-search-overlay>
   <div class="search__bar">
-    <input type="search" placeholder="Search pieces..." data-search-input aria-label="Search" autofocus>
+    <input type="search" placeholder="Search pieces..." data-search-input aria-label="Search">
     <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 1rem">&times;</button>
   </div>
   <div class="search__body" data-search-results>
