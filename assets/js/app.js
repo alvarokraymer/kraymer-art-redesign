@@ -321,9 +321,9 @@ function openModal(html) {
   host.className = "modal";
   host.setAttribute("data-modal", "");
   host.innerHTML = `
-    <div class="modal__scrim" data-close-modal></div>
-    <div class="modal__card" role="dialog" aria-modal="true">
-      <button class="modal__close" data-close-modal aria-label="Close">&times;</button>
+    <div class="modal__bg" data-close-modal></div>
+    <div class="modal__box" role="dialog" aria-modal="true">
+      <button class="modal__x" data-close-modal aria-label="Close">&times;</button>
       ${html}
     </div>`;
   document.body.appendChild(host);
