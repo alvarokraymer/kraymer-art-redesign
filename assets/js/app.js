@@ -380,26 +380,38 @@ function initAccordions(scope = document) {
 
 /* ---------------- 8. Page initializers ---------------- */
 
-/* Shared quick-add + wish + notify + image-swipe delegation (all pages) */
+/* Shared quick-add + wish + notify + image swipe (PLP only) */
 function initCardActions() {
+  /* Touch swipe tracking for card images */
+  let sx = 0, sy = 0, onCard = null;
+  document.addEventListener("touchstart", (e) => { onCard = e.target.closest(".card__img"); if (onCard) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; } }, {passive:true});
+  document.addEventListener("touchend", (e) => {
+    if (!onCard) return;
+    const card = onCard.closest(".card");
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    const wasSwipe = Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy);
+    if (wasSwipe && card && card.dataset.images) {
+      try {
+        const imgs = JSON.parse(card.dataset.images);
+        if (imgs.length > 1 && imgs[0] !== "placeholder") {
+          const ph = onCard.querySelector(".ph");
+          const cur = ph.style.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
+          let idx = cur ? imgs.indexOf(cur[1]) : 0;
+          idx = (idx < 0 ? 0 : idx + (dx > 0 ? -1 : 1) + imgs.length) % imgs.length;
+          ph.style.backgroundImage = `url(${imgs[idx]})`;
+        }
+      } catch {}
+    }
+    onCard = null;
+  }, {passive:true});
+
   document.addEventListener("click", (e) => {
-    /* Image cycle on card tap */
-    const imgDiv = e.target.closest(".card__img");
-    if (imgDiv && !e.target.closest("[data-add]") && !e.target.closest("[data-wish]") && !e.target.closest("[data-notify]")) {
-      const card = imgDiv.closest(".card");
-      if (card && card.dataset.images) {
-        try {
-          const imgs = JSON.parse(card.dataset.images);
-          if (imgs.length > 1 && imgs[0] !== "placeholder") {
-            const ph = imgDiv.querySelector(".ph");
-            const cur = ph.style.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
-            let idx = cur ? imgs.indexOf(cur[1]) : 0;
-            idx = (idx < 0 ? 0 : idx + 1) % imgs.length;
-            ph.style.backgroundImage = `url(${imgs[idx]})`;
-            return;
-          }
-        } catch {}
-      }
+    /* Tap card image → navigate to PDP */
+    const imgArea = e.target.closest(".card__img");
+    if (imgArea && !e.target.closest("[data-add]") && !e.target.closest("[data-wish]") && !e.target.closest("[data-notify]")) {
+      const card = imgArea.closest(".card");
+      if (card) { window.location = "producto.html?id=" + card.dataset.handle; return; }
     }
     const addBtn = e.target.closest("[data-add]");
     if (addBtn) {
