@@ -120,7 +120,7 @@ function productCard(p) {
     ? `<span class="badge">Sold Out</span>`
     : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
   return `
-  <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}"${p.images && p.images.length > 1 && p.images[1] !== "placeholder" ? ` style="--img2:url(${p.images[1]})"` : ""}>
+  <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}" data-images='${JSON.stringify(p.images || [])}'${p.images && p.images.length > 1 && p.images[1] !== "placeholder" ? ` style="--img2:url(${p.images[1]})"` : ""}>
     <div class="card__img">
       ${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}
       ${badge}
@@ -376,9 +376,26 @@ function initAccordions(scope = document) {
 
 /* ---------------- 8. Page initializers ---------------- */
 
-/* Shared quick-add + wish + notify delegation (all pages) */
+/* Shared quick-add + wish + notify + image-swipe delegation (all pages) */
 function initCardActions() {
   document.addEventListener("click", (e) => {
+    /* Image cycle on card tap */
+    const imgDiv = e.target.closest(".card__img");
+    if (imgDiv && !e.target.closest("[data-add]") && !e.target.closest("[data-wish]") && !e.target.closest("[data-notify]")) {
+      const card = imgDiv.closest(".card");
+      if (card && card.dataset.images) {
+        const imgs = JSON.parse(card.dataset.images);
+        if (imgs.length > 1 && imgs[0] !== "placeholder") {
+          const ph = imgDiv.querySelector(".ph");
+          const cur = ph.style.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
+          let curIdx = cur ? imgs.indexOf(cur[1]) : 0;
+          if (curIdx < 0) curIdx = 0;
+          curIdx = (curIdx + 1) % imgs.length;
+          ph.style.backgroundImage = `url(${imgs[curIdx]})`;
+          return;
+        }
+      }
+    }
     const addBtn = e.target.closest("[data-add]");
     if (addBtn) {
       e.preventDefault();
@@ -532,11 +549,12 @@ function initPLP() {
   if (!colParam) {
     const tiles = document.createElement("div");
     tiles.className = "w";
-    tiles.style.padding = "2rem 0 0";
-    tiles.innerHTML = `<div class="ftile-stack">
-      <a class="ftile" href="coleccion.html?collection=jjk" style="background:linear-gradient(135deg,#1A1C2E,#2A2F4F);min-height:150px"><div class="ftile__body"><span class="eyebrow">Collection</span><h3 style="color:#fff">JJK</h3><p>Precision and presence. Sapphire and silver, hand-finished.</p><span class="ftile__cta">Shop JJK</span></div></a>
-      <a class="ftile" href="coleccion.html?collection=kny" style="background:linear-gradient(135deg,#2E1C1A,#4F2F2A);min-height:150px"><div class="ftile__body"><span class="eyebrow">Collection</span><h3 style="color:#fff">KNY</h3><p>Forged in flame. Garnet and topaz, cut deep.</p><span class="ftile__cta">Shop KNY</span></div></a>
-      <a class="ftile" href="coleccion.html?collection=genshin" style="background:linear-gradient(135deg,#1E1A2E,#3A2F4F);min-height:150px"><div class="ftile__body"><span class="eyebrow">Collection</span><h3 style="color:#fff">Genshin</h3><p>Elemental weight. Amethyst, citrine and gold.</p><span class="ftile__cta">Shop Genshin</span></div></a>
+    tiles.style.padding = "1.5rem 0 0";
+    tiles.innerHTML = `<div class="scroll-row" style="display:flex;gap:.75rem;padding:.5rem var(--gutter) 0">
+      <a class="ftile" href="coleccion.html?collection=jjk" style="background:linear-gradient(135deg,#1A1C2E,#2A2F4F);min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">JJK</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Precision and presence</p></div></a>
+      <a class="ftile" href="coleccion.html?collection=kny" style="background:linear-gradient(135deg,#2E1C1A,#4F2F2A);min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">KNY</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Forged in flame</p></div></a>
+      <a class="ftile" href="coleccion.html?collection=genshin" style="background:linear-gradient(135deg,#1E1A2E,#3A2F4F);min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Genshin</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Elemental weight</p></div></a>
+      <a class="ftile" href="#" style="background:linear-gradient(135deg,#1C1816,#2A2520);min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#C4A882">Mystery Box</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Collector's Club</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Unreleased pieces. Every 4 weeks.</p></div></a>
     </div>`;
     hero.parentNode.insertBefore(tiles, hero.nextSibling);
   }
