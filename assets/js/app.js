@@ -23,6 +23,7 @@ function imgPath(p, shot) {
   return p.imgDir ? `assets/${p.imgDir}/${shot}` : null;
 }
 function phImg(p) {
+  if (p.images && p.images[0] && p.images[0] !== "placeholder") return p.images[0];
   return "assets/placeholder_" + (p.phId || ((PRODUCTS.indexOf(p) % 4) + 1)) + ".jpg";
 }
 
@@ -625,12 +626,18 @@ function initPDP() {
   const isRing = p.type === "rings" || (p.type === "sets" && p.sizes.length > 1);
   const hasCompare = !!p.compareAt;
 
-  const galleryShots = [
-    { label: `${p.title} · Studio`, tag: "Studio", file: "Front View.jpg" },
-    { label: "Stone setting, macro", tag: "Detail", file: "Hero 3_4 Angle.jpg" },
-    { label: "Worn on hand", tag: "On hand", file: "Scale Shot.jpg" },
-    { label: "Collector box & certificate", tag: "Packaging", file: "Detail_Function Shot.jpg" },
-  ];
+  const galleryShots = (p.images && p.images.length > 0 && p.images[0] !== "placeholder")
+    ? p.images.slice(0, 4).map((url, i) => ({
+        label: `${p.title} · View ${i + 1}`,
+        tag: `View ${i + 1}`,
+        file: url,
+      }))
+    : [
+        { label: `${p.title} · Studio`, tag: "Studio", file: null },
+        { label: "Detail view", tag: "Detail", file: null },
+        { label: "Worn on hand", tag: "On hand", file: null },
+        { label: "Packaging", tag: "Packaging", file: null },
+      ];
 
   host.innerHTML = `
     <nav class="bread" aria-label="Breadcrumb">
@@ -638,10 +645,10 @@ function initPDP() {
     </nav>
     <div class="pdp-layout">
       <div class="pdp-gallery">
-        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: phImg(p) })}</div>
+        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: galleryShots[0].file || phImg(p) })}</div>
         <div class="gal--thumbs">
           ${galleryShots.map((s, i) => `
-            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: phImg(p) })}</button>`).join("")}
+            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: s.file || phImg(p) })}</button>`).join("")}
         </div>
       </div>
       <div class="pdp-meta">
@@ -747,7 +754,7 @@ function initPDP() {
   host.querySelectorAll("[data-thumb]").forEach((btn) => {
     btn.addEventListener("click", () => {
       activeShot = Number(btn.dataset.thumb);
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: phImg(p) });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: galleryShots[activeShot].file || phImg(p) });
       host.querySelectorAll("[data-thumb]").forEach((b) => b.classList.toggle("active", b === btn));
     });
   });
@@ -758,7 +765,7 @@ function initPDP() {
     btn.addEventListener("click", () => {
       selectedMetal = btn.dataset.metal;
       host.querySelectorAll("[data-metal]").forEach((b) => b.classList.toggle("selected", b === btn));
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: phImg(p) });
+      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: galleryShots[activeShot].file || phImg(p) });
     });
   });
   host.querySelectorAll("[data-size]").forEach((btn) => {
