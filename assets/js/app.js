@@ -114,8 +114,8 @@ function productCard(p) {
   const gemColor = accentColors[p.collection] || PH_GOLD;
   const dot = `<span class="card__dot" style="background:${gemColor}"></span>`;
   const cta = p.soldOut
-    ? `<button class="card__buy" data-notify="${p.handle}">Notify Me</button>`
-    : `<button class="card__buy" data-add="${p.handle}">Add to Cart</button>`;
+    ? `<button class="card__buy card__buy--out" data-notify="${p.handle}" aria-label="Notify me"><i data-lucide="bell" style="pointer-events:none"></i></button>`
+    : `<button class="card__buy" data-add="${p.handle}" aria-label="Add to cart"><i data-lucide="shopping-bag" style="pointer-events:none"></i></button>`;
   const badge = p.soldOut
     ? `<span class="badge">Sold Out</span>`
     : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
@@ -565,6 +565,7 @@ function initPLP() {
   function apply() {
     let list = PRODUCTS.slice();
     if (colParam) list = list.filter((p) => p.collection === colParam);
+    else if (filterCol) list = list.filter((p) => p.collection === filterCol);
     if (activeType) list = list.filter((p) => p.type === activeType);
     if (filterMat) list = list.filter((p) => p.metals.some((m) => m.toLowerCase().includes(filterMat)));
     if (filterPrice) {
@@ -609,28 +610,37 @@ function initPLP() {
   });
 
   /* Filter state + panel */
-  let filterMat = null, filterPrice = null, filterAvail = null;
+  let filterMat = null, filterPrice = null, filterAvail = null, filterCol = null;
   const filterBtn = document.querySelector("[data-open-filters]");
   const filterPanel = document.createElement("div");
   filterPanel.className = "fp";
   filterPanel.innerHTML = `
     <div class="fp__top"><span class="fp__title">Sort &amp; Filter</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
     <div class="fp__body">
+      ${!colParam ? `
       <div class="v-group">
-        <p class="v-label">Sort by</p>
+        <p class="v-label"><i data-lucide="layers" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Collection</p>
+        <div class="v-row" data-fil-group="col">
+          <button class="v-chip" data-fil-val="jjk">JJK</button>
+          <button class="v-chip" data-fil-val="kny">KNY</button>
+          <button class="v-chip" data-fil-val="genshin">Genshin</button>
+        </div>
+      </div>` : ""}
+      <div class="v-group">
+        <p class="v-label"><i data-lucide="arrow-up-down" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Sort by</p>
         <div class="v-row" data-fil-group="sort">
           ${[["trending","Trending"],["price-asc","Price: Low"],["price-desc","Price: High"],["newest","Newest"]].map(([v,l]) => `<button class="v-chip${activeSort===v?' selected':''}" data-fil-val="${v}">${l}</button>`).join("")}
         </div>
       </div>
       <div class="v-group">
-        <p class="v-label">Material</p>
+        <p class="v-label"><i data-lucide="gem" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Material</p>
         <div class="v-row" data-fil-group="mat">
           <button class="v-chip" data-fil-val="silver">925 Silver</button>
           <button class="v-chip" data-fil-val="gold">18K Gold</button>
         </div>
       </div>
       <div class="v-group">
-        <p class="v-label">Price</p>
+        <p class="v-label"><i data-lucide="tag" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Price</p>
         <div class="v-row" data-fil-group="price">
           <button class="v-chip" data-fil-val="under100">Under $100</button>
           <button class="v-chip" data-fil-val="100-200">$100–$200</button>
@@ -639,7 +649,7 @@ function initPLP() {
         </div>
       </div>
       <div class="v-group">
-        <p class="v-label">Availability</p>
+        <p class="v-label"><i data-lucide="package-check" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Availability</p>
         <div class="v-row" data-fil-group="avail">
           <button class="v-chip" data-fil-val="in-stock">In stock</button>
           <button class="v-chip" data-fil-val="pre-order">Pre-order</button>
@@ -658,7 +668,7 @@ function initPLP() {
     filterPanel.querySelectorAll(".v-chip").forEach((c) => {
       const grp = c.closest("[data-fil-group]").dataset.filGroup, val = c.dataset.filVal;
       c.classList.toggle("selected",
-        (grp==="sort"&&activeSort===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
+        (grp==="col"&&filterCol===val)||(grp==="sort"&&activeSort===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
     });
     const n = (filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
     fpCount.textContent = n; fpCount.classList.toggle("show", n > 0);
@@ -668,13 +678,14 @@ function initPLP() {
     const chip = e.target.closest("[data-fil-val]");
     if (chip) {
       const grp = chip.closest("[data-fil-group]").dataset.filGroup, val = chip.dataset.filVal;
-      if (grp === "sort") { activeSort = val; updateFilterUI(); apply(); return; }
+      if (grp === "col") filterCol = filterCol === val ? null : val;
+      else if (grp === "sort") { activeSort = val; updateFilterUI(); apply(); return; }
       if (grp==="mat") filterMat = filterMat===val?null:val;
       else if (grp==="price") filterPrice = filterPrice===val?null:val;
       else if (grp==="avail") filterAvail = filterAvail===val?null:val;
       updateFilterUI(); return;
     }
-    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=null; updateFilterUI(); apply(); closeFP(); return; }
+    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=filterCol=null; updateFilterUI(); apply(); closeFP(); return; }
     if (e.target.closest("[data-apply-filters]")) { closeFP(); apply(); return; }
   });
 
