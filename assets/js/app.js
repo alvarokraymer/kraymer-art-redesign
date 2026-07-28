@@ -429,7 +429,12 @@ function initHome() {
   /* Bestsellers */
   const best = PRODUCTS.filter((p) => p.badges.includes("bestseller") && !p.soldOut);
   const strip = document.querySelector("[data-bestsellers]");
-  if (strip) strip.innerHTML = `<span style="flex:none;width:1.5rem"></span>` + best.map(productCard).join("") + `<span style="flex:none;width:1.5rem"></span>`;
+  if (strip) {
+    strip.innerHTML = best.map(productCard).join("");
+    strip.style.paddingLeft = "24px";
+    strip.style.paddingRight = "24px";
+    strip.style.scrollPaddingLeft = "24px";
+  }
 
   /* Hero slider: auto-rotate every 5s, touch swipe */
   const track = document.querySelector("[data-hs-track]");
@@ -580,11 +585,14 @@ function initPLP() {
     pins: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><line x1="12" y1="9" x2="12" y2="3"/><line x1="12" y1="15" x2="12" y2="21"/></svg>`,
   };
   subHost.innerHTML =
-    `<span style="flex:none;width:1.5rem"></span><button class="sub ${!activeType ? "active" : ""}" data-type="">${catIcons[""]}<b>All</b><span>${poolForCounts.length} pieces</span></button>` +
+    `<button class="sub ${!activeType ? "active" : ""}" data-type="">${catIcons[""]}<b>All</b><span>${poolForCounts.length} pieces</span></button>` +
     PRODUCT_TYPES.map((t) => {
       const n = poolForCounts.filter((p) => p.type === t.id).length;
       return `<button class="sub ${activeType === t.id ? "active" : ""}" data-type="${t.id}">${catIcons[t.id] || ""}<b>${t.name}</b><span>${n} piece${n === 1 ? "" : "s"}</span></button>`;
-    }).join("") + `<span style="flex:none;width:1.5rem"></span>`;
+    }).join("");
+  subHost.style.paddingLeft = "24px";
+  subHost.style.paddingRight = "24px";
+  subHost.style.scrollPaddingLeft = "24px";
 
   const grid = document.querySelector("[data-plp-grid]");
   const countEl = document.querySelector("[data-plp-count]");
