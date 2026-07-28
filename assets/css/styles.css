@@ -143,9 +143,9 @@ input,select{font:inherit}
 [data-theme="dark"] .marquee{background:var(--light)}
 [data-theme="dark"] .hamburger span{background:var(--dark)}
 [data-theme="dark"] .hdr-logo img{filter:invert(1)}
-.marquee{background:var(--dark);color:rgba(252,248,247,.75);overflow:hidden;height:30px;display:flex;align-items:center;font-family:var(--body)}
-.marquee__track{display:flex;gap:2rem;animation:marquee 22s linear infinite;white-space:nowrap;will-change:transform}
-.marquee__track span{font-size:.58rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.marquee{background:var(--dark);color:rgba(252,248,247,.85);overflow:hidden;height:36px;display:flex;align-items:center;font-family:var(--body);position:relative;z-index:1}
+.marquee__track{display:flex;gap:2.5rem;animation:marquee 28s linear infinite;white-space:nowrap;will-change:transform;padding:0 1rem}
+.marquee__track span{font-size:.65rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 /* ── Hero dots: thin elegant lines ── */
 .hs-dots{position:absolute;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:.6rem;align-items:center}
