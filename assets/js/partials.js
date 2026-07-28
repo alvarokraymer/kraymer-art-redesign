@@ -80,37 +80,45 @@ const FOOTER_HTML = `
 <footer class="ft">
   <div class="w">
     <div class="ft-news">
-      <h2>Join the Inner Circle</h2>
-      <p>Early access to limited batch drops, and 10% off your first piece.</p>
+      <h2>Join 10,000+ collectors</h2>
+      <p>First access to new pieces, private offers, and a look inside the workshop.</p>
       <form data-newsletter>
         <input type="email" placeholder="Your email" aria-label="Email" required>
-        <button type="submit">Join</button>
+        <button type="submit">Subscribe</button>
       </form>
     </div>
     <div class="ft-cols">
       <div>
         <h3>Shop</h3>
         <a href="coleccion.html">All Collections</a>
-        <a href="coleccion.html?collection=jjk">JJK</a>
-        <a href="coleccion.html?collection=kny">KNY</a>
-        <a href="coleccion.html?collection=genshin">Genshin</a>
+        <a href="coleccion.html?collection=jjk">JJ</a>
+        <a href="coleccion.html?collection=kny">KN</a>
+        <a href="coleccion.html?collection=genshin">GI</a>
         <a href="coleccion.html?type=sets">Collector Sets</a>
+        <a href="#">Mystery Box</a>
       </div>
       <div>
-        <h3>Support</h3>
+        <h3>Customer Care</h3>
         <a href="#" data-open-sizeguide>Ring Size Guide</a>
-        <a href="#">Shipping &amp; Handmade</a>
+        <a href="#">Shipping &amp; Handmade Timeline</a>
         <a href="#">60-Day Returns</a>
         <a href="#">Lifetime Warranty</a>
-        <a class="mail" href="mailto:support@kraymerart.com">support@kraymerart.com</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="mailto:support@kraymerart.com" class="mail">support@kraymerart.com</a>
       </div>
       <div>
         <h3>Brand</h3>
         <a href="index.html#craft">Our Story</a>
         <a href="index.html#craft">The Craft</a>
-        <a href="index.html#reviews">Reviews</a>
-        <a href="index.html#faq">FAQ</a>
+        <a href="index.html#reviews">Customer Reviews</a>
+        <a href="#">Instagram</a>
+        <a href="#">YouTube</a>
       </div>
+    </div>
+    <div class="ft-trust">
+      <span><i data-lucide="shield-check" style="width:16px;height:16px;stroke:var(--accent)"></i> Lifetime Warranty</span>
+      <span><i data-lucide="rotate-ccw" style="width:16px;height:16px;stroke:var(--accent)"></i> 60-Day Returns</span>
+      <span><i data-lucide="scroll-text" style="width:16px;height:16px;stroke:var(--accent)"></i> Certificate of Authenticity</span>
     </div>
     <div class="ft-pay">
       <span>VISA</span><span>MASTERCARD</span><span>AMEX</span>
@@ -118,7 +126,8 @@ const FOOTER_HTML = `
     </div>
     <div class="ft-copy">
       <p>&copy; 2026 Kraymer. All rights reserved.</p>
-      <p>Kraymer designs are original handcrafted works.</p>
+      <p>Privacy Policy &middot; Terms of Service &middot; Refund Policy</p>
+      <p style="margin-top:.75rem;opacity:.5">Kraymer designs are original handcrafted works.</p>
     </div>
   </div>
 </footer>
