@@ -143,10 +143,7 @@ const CART_HTML = `
 (function injectPartials() {
   const headerMount = document.getElementById("site-header");
   const footerMount = document.getElementById("site-footer");
-  if (headerMount) {
-    headerMount.insertAdjacentHTML("beforebegin", ANNOUNCE_HTML);
-    headerMount.innerHTML = HEADER_HTML;
-  }
+  if (headerMount) headerMount.innerHTML = HEADER_HTML;
   if (footerMount) footerMount.innerHTML = FOOTER_HTML;
   const cartHost = document.createElement("div");
   cartHost.innerHTML = CART_HTML;
