@@ -207,9 +207,10 @@ input,select{font:inherit}
 .card__buy.done{background:#4A7C59}
 
 /* scroll-row */
-.scroll-row{display:grid;grid-auto-flow:column;grid-auto-columns:62%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.5rem;scrollbar-width:none}
+.scroll-row{display:grid;grid-auto-flow:column;grid-auto-columns:62%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.5rem var(--gutter) 1rem;scrollbar-width:none;margin:0 calc(-1*var(--gutter))}
 .scroll-row::-webkit-scrollbar{display:none}
 .scroll-row>*{scroll-snap-align:start}
+.scroll-row::after{content:"";width:var(--gutter);flex:none}
 
 /* ── Fandom tiles ── */
 .ftile-stack{display:flex;flex-direction:column;gap:1rem}
@@ -283,8 +284,9 @@ input,select{font:inherit}
 .plp-hero h1{margin-bottom:.5rem}
 .plp-hero p{font-size:.875rem;color:var(--muted);margin-top:.5rem}
 .plp-n{font-size:.875rem;color:var(--accent);font-weight:600;margin-top:1rem}
-.sub-scroll{display:flex;gap:.65rem;overflow-x:auto;scrollbar-width:none;padding:1.25rem 0 1rem;scroll-snap-type:x proximity}
+.sub-scroll{display:flex;gap:.65rem;overflow-x:auto;scrollbar-width:none;padding:1.25rem var(--gutter) 1rem;scroll-snap-type:x proximity;margin:0 calc(-1*var(--gutter))}
 .sub-scroll::-webkit-scrollbar{display:none}
+.sub-scroll::after{content:"";min-width:var(--gutter);flex:none}
 .sub{flex:none;padding:.7rem 1.25rem;border:1.5px solid var(--line);border-radius:var(--radius-pill);font-size:.9rem;white-space:nowrap;cursor:pointer;transition:all .25s cubic-bezier(.25,.46,.45,.94);background:transparent;color:var(--muted);font-weight:450;scroll-snap-align:start;min-height:48px;display:flex;align-items:center;gap:.6rem}
 .sub b{font-weight:500;font-size:.875rem;transition:all .25s cubic-bezier(.25,.46,.45,.94)}
 .sub span{font-size:.6rem;color:var(--muted);opacity:.7;margin-left:1px;transition:all .25s cubic-bezier(.25,.46,.45,.94)}
