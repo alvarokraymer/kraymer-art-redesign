@@ -689,7 +689,7 @@ function initPLP() {
     if (e.target.closest("[data-apply-filters]")) { closeFP(); apply(); return; }
   });
 
-  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); fpScrim.classList.add("on"); lockScroll(); updateFilterUI(); });
+  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); fpScrim.classList.add("on"); lockScroll(); updateFilterUI(); if (typeof lucide !== "undefined") lucide.createIcons(); });
   fpScrim.addEventListener("click", closeFP);
 
   /* Load more: visual progress only */
