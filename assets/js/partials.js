@@ -49,6 +49,7 @@ const HEADER_HTML = `
       <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
     </div>
     <a class="mob-link" href="#">Mystery Box</a>
+    <a class="mob-link" href="#" data-open-wishlist>Wishlist</a>
     <button class="mob-label-btn" data-mob-collapse>BRAND <span class="mob-arrow"></span></button>
     <div class="mob-sub" data-mob-sub>
       <a class="mob-link mob-link--sub" href="index.html#craft">Our Story</a>

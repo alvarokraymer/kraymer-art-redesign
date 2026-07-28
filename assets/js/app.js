@@ -114,8 +114,8 @@ function productCard(p) {
   const gemColor = accentColors[p.collection] || PH_GOLD;
   const dot = `<span class="card__dot" style="background:${gemColor}"></span>`;
   const cta = p.soldOut
-    ? `<button class="btn btn--line sm" data-notify="${p.handle}" style="margin-top:var(--m)">Notify Me</button>`
-    : ``;
+    ? `<button class="btn btn--line sm" data-notify="${p.handle}" style="margin-top:var(--m);width:100%">Notify Me</button>`
+    : `<button class="card__buy" data-add="${p.handle}">Add to Cart · ${kaMoney(p.price)}</button>`;
   const badge = p.soldOut
     ? `<span class="badge">Sold Out</span>`
     : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
@@ -526,10 +526,10 @@ function initPLP() {
 
   /* Collection-specific hero gradient */
   const heroBg = hero;
-  if (colParam === "jjk") { heroBg.style.background = "linear-gradient(135deg, #1A1C2E 0%, #2A2F4F 50%, #1E2035 100%)"; heroBg.style.color = "#F6F6F6"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
-  else if (colParam === "kny") { heroBg.style.background = "linear-gradient(135deg, #2E1C1A 0%, #4F2F2A 50%, #35201E 100%)"; heroBg.style.color = "#F6F6F6"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
-  else if (colParam === "genshin") { heroBg.style.background = "linear-gradient(135deg, #1E1A2E 0%, #3A2F4F 50%, #252035 100%)"; heroBg.style.color = "#F6F6F6"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
-  else { heroBg.style.background = "linear-gradient(135deg, #1C1A1E 0%, #2A282D 50%, #201E22 100%)"; heroBg.style.color = "#F6F6F6"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
+  if (colParam === "jjk") { heroBg.style.background = "linear-gradient(135deg, #1A1C2E 0%, #2A2F4F 50%, #1E2035 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
+  else if (colParam === "kny") { heroBg.style.background = "linear-gradient(135deg, #2E1C1A 0%, #4F2F2A 50%, #35201E 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
+  else if (colParam === "genshin") { heroBg.style.background = "linear-gradient(135deg, #1E1A2E 0%, #3A2F4F 50%, #252035 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
+  else { heroBg.style.background = "linear-gradient(135deg, #1C1A1E 0%, #2A282D 50%, #201E22 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
 
   /* Mark active nav item */
   document.querySelectorAll(".nav-strip a").forEach((a) => {
