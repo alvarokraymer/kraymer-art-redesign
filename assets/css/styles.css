@@ -192,11 +192,11 @@ input,select{font:inherit}
 .card__price s{color:var(--muted);font-weight:400;margin-left:.5rem}
 .sold{opacity:.4}
 .sold .ph svg{filter:grayscale(1)}
-.card__buy{position:absolute;bottom:.65rem;right:.65rem;z-index:3;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--dark);color:var(--light);border:1.5px solid rgba(255,255,255,.3);border-radius:50%;cursor:pointer;transition:all .15s;box-shadow:0 2px 10px rgba(0,0,0,.3)}
-.card__buy svg{display:block}
-.card__buy:active{background:var(--accent);transform:scale(.9)}
+.card__buy{position:absolute;bottom:.75rem;right:.75rem;z-index:3;width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:var(--dark);color:#fff;border:2px solid rgba(255,255,255,.4);border-radius:50%;cursor:pointer;transition:all .15s;box-shadow:0 3px 12px rgba(0,0,0,.35)}
+.card__buy svg{display:block;width:17px;height:17px}
+.card__buy:active{background:var(--accent);transform:scale(.9);border-color:var(--accent)}
 .card__buy.done{background:#4A7C59;border-color:#4A7C59}
-.card__buy--out{background:rgba(0,0,0,.5);backdrop-filter:blur(6px)}
+.card__buy--out{background:rgba(0,0,0,.45);backdrop-filter:blur(6px)}
 .badge{font-size:.45rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius-pill);background:rgba(230,230,230,.88);color:var(--dark);position:absolute;top:.5rem;left:.5rem;z-index:3;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.6);box-shadow:0 1px 4px rgba(20,17,16,.06)}
 .badge--a{background:var(--accent);color:#fff;border:1px solid var(--accent);box-shadow:0 1px 4px rgba(20,17,16,.12)}
 .heart{position:absolute;top:.5rem;right:.5rem;z-index:3;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.88);border-radius:50%;transition:transform .15s;box-shadow:0 1px 3px rgba(20,17,16,.12)}
