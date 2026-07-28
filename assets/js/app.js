@@ -835,6 +835,25 @@ function initPDP() {
 
 /* ---------------- Global wiring ---------------- */
 document.addEventListener("DOMContentLoaded", () => {
+  /* Sticky header via JS: fixed when marquee is scrolled past */
+  const header = document.querySelector(".site-header");
+  const marquee = document.querySelector(".marquee");
+  if (header && marquee) {
+    const spacer = document.createElement("div");
+    spacer.style.cssText = "display:none;height:52px";
+    header.parentNode.insertBefore(spacer, header.nextSibling);
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) {
+        header.classList.add("is-fixed");
+        spacer.style.display = "block";
+      } else {
+        header.classList.remove("is-fixed");
+        spacer.style.display = "none";
+      }
+    }, { threshold: 0 });
+    observer.observe(marquee);
+  }
+
   /* Restore theme */
   if (localStorage.getItem("ka_theme") === "dark") {
     document.documentElement.setAttribute("data-theme","dark");
