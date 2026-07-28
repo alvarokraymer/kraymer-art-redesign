@@ -210,8 +210,8 @@ input,select{font:inherit}
 .scroll-row{display:flex;flex-wrap:nowrap;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;scrollbar-width:none}
 .scroll-row::-webkit-scrollbar{display:none}
 .scroll-row>*{flex:none;scroll-snap-align:start;width:62vw}
-.scroll-row::before{content:"";flex:none;width:var(--gutter)}
-.scroll-row::after{content:"";flex:none;width:var(--gutter)}
+.scroll-row::before{content:"";flex:none;width:1.5rem;min-width:1.5rem;display:block}
+.scroll-row::after{content:"";flex:none;width:1.5rem;min-width:1.5rem;display:block}
 
 /* ── Fandom tiles ── */
 .ftile-stack{display:flex;flex-direction:column;gap:1rem}
