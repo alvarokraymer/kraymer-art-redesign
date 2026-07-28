@@ -384,11 +384,7 @@ function initCardActions() {
       e.preventDefault();
       Cart.add(addBtn.dataset.add);
       addBtn.classList.add("done");
-      addBtn.textContent = "Added ✓";
-      setTimeout(() => {
-        addBtn.classList.remove("done");
-        addBtn.textContent = "Add to Cart";
-      }, 1500);
+      setTimeout(() => addBtn.classList.remove("done"), 1500);
       return;
     }
     const wishBtn = e.target.closest("[data-wish]");
