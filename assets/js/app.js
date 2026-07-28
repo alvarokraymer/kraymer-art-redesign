@@ -528,6 +528,19 @@ function initPLP() {
   else if (colParam === "genshin") { heroBg.style.background = "linear-gradient(135deg, #1E1A2E 0%, #3A2F4F 50%, #252035 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
   else { heroBg.style.background = "linear-gradient(135deg, #1C1A1E 0%, #2A282D 50%, #201E22 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
 
+  /* All Collections: insert collection promo tiles below hero */
+  if (!colParam) {
+    const tiles = document.createElement("div");
+    tiles.className = "w";
+    tiles.style.padding = "2rem 0 0";
+    tiles.innerHTML = `<div class="ftile-stack">
+      <a class="ftile" href="coleccion.html?collection=jjk" style="background:linear-gradient(135deg,#1A1C2E,#2A2F4F);min-height:150px"><div class="ftile__body"><span class="eyebrow">Collection</span><h3 style="color:#fff">JJK</h3><p>Precision and presence. Sapphire and silver, hand-finished.</p><span class="ftile__cta">Shop JJK</span></div></a>
+      <a class="ftile" href="coleccion.html?collection=kny" style="background:linear-gradient(135deg,#2E1C1A,#4F2F2A);min-height:150px"><div class="ftile__body"><span class="eyebrow">Collection</span><h3 style="color:#fff">KNY</h3><p>Forged in flame. Garnet and topaz, cut deep.</p><span class="ftile__cta">Shop KNY</span></div></a>
+      <a class="ftile" href="coleccion.html?collection=genshin" style="background:linear-gradient(135deg,#1E1A2E,#3A2F4F);min-height:150px"><div class="ftile__body"><span class="eyebrow">Collection</span><h3 style="color:#fff">Genshin</h3><p>Elemental weight. Amethyst, citrine and gold.</p><span class="ftile__cta">Shop Genshin</span></div></a>
+    </div>`;
+    hero.parentNode.insertBefore(tiles, hero.nextSibling);
+  }
+
   /* Mark active nav item */
   document.querySelectorAll(".nav-strip a").forEach((a) => {
     const nav = a.dataset.nav;
