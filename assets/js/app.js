@@ -431,9 +431,7 @@ function initHome() {
   const strip = document.querySelector("[data-bestsellers]");
   if (strip) {
     strip.innerHTML = best.map(productCard).join("");
-    strip.style.paddingLeft = "24px";
-    strip.style.paddingRight = "24px";
-    strip.style.scrollPaddingLeft = "24px";
+    strip.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important";
   }
 
   /* Hero slider: auto-rotate every 5s, touch swipe */
@@ -590,9 +588,7 @@ function initPLP() {
       const n = poolForCounts.filter((p) => p.type === t.id).length;
       return `<button class="sub ${activeType === t.id ? "active" : ""}" data-type="${t.id}">${catIcons[t.id] || ""}<b>${t.name}</b><span>${n} piece${n === 1 ? "" : "s"}</span></button>`;
     }).join("");
-  subHost.style.paddingLeft = "24px";
-  subHost.style.paddingRight = "24px";
-  subHost.style.scrollPaddingLeft = "24px";
+  subHost.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important";
 
   const grid = document.querySelector("[data-plp-grid]");
   const countEl = document.querySelector("[data-plp-count]");
