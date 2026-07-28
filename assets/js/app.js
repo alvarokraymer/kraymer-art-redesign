@@ -114,26 +114,26 @@ function productCard(p) {
   const gemColor = accentColors[p.collection] || PH_GOLD;
   const dot = `<span class="card__dot" style="background:${gemColor}"></span>`;
   const cta = p.soldOut
-    ? `<button class="btn btn--line sm" data-notify="${p.handle}" style="margin-top:var(--m);width:100%">Notify Me</button>`
-    : `<button class="card__buy" data-add="${p.handle}">Add to Cart · ${kaMoney(p.price)}</button>`;
+    ? `<button class="card__buy" data-notify="${p.handle}">Notify Me</button>`
+    : `<button class="card__buy" data-add="${p.handle}">Add to Cart</button>`;
   const badge = p.soldOut
     ? `<span class="badge">Sold Out</span>`
     : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
   return `
   <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}"${p.images && p.images.length > 1 && p.images[1] !== "placeholder" ? ` style="--img2:url(${p.images[1]})"` : ""}>
-    <a class="card__img" href="producto.html?id=${p.handle}" aria-label="${p.title}" style="position:relative">
-      ${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}
+    <div class="card__img">
+      <a href="producto.html?id=${p.handle}" aria-label="${p.title}" style="display:block;position:absolute;inset:0;z-index:1">${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}</a>
       ${badge}
-    </a>
-    <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
-      <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
-    </button>
-    <div class="card__body">
-      <span class="card__series">${col.name}</span>
-      <h3 class="card__title"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
-      ${priceHTML(p)}
+      <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
+        <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
+      </button>
       ${cta}
     </div>
+    <a class="card__body" href="producto.html?id=${p.handle}">
+      <span class="card__series">${col.name}</span>
+      <h3 class="card__title">${p.title}</h3>
+      ${priceHTML(p)}
+    </a>
   </article>`;
 }
 
@@ -613,8 +613,14 @@ function initPLP() {
   const filterPanel = document.createElement("div");
   filterPanel.className = "fp";
   filterPanel.innerHTML = `
-    <div class="fp__top"><span class="fp__title">Filters</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
+    <div class="fp__top"><span class="fp__title">Sort &amp; Filter</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
     <div class="fp__body">
+      <div class="v-group">
+        <p class="v-label">Sort by</p>
+        <div class="v-row" data-fil-group="sort">
+          ${[["trending","Trending"],["price-asc","Price: Low"],["price-desc","Price: High"],["newest","Newest"]].map(([v,l]) => `<button class="v-chip${activeSort===v?' selected':''}" data-fil-val="${v}">${l}</button>`).join("")}
+        </div>
+      </div>
       <div class="v-group">
         <p class="v-label">Material</p>
         <div class="v-row" data-fil-group="mat">
@@ -651,7 +657,7 @@ function initPLP() {
     filterPanel.querySelectorAll(".v-chip").forEach((c) => {
       const grp = c.closest("[data-fil-group]").dataset.filGroup, val = c.dataset.filVal;
       c.classList.toggle("selected",
-        (grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
+        (grp==="sort"&&activeSort===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
     });
     const n = (filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
     fpCount.textContent = n; fpCount.classList.toggle("show", n > 0);
@@ -661,6 +667,7 @@ function initPLP() {
     const chip = e.target.closest("[data-fil-val]");
     if (chip) {
       const grp = chip.closest("[data-fil-group]").dataset.filGroup, val = chip.dataset.filVal;
+      if (grp === "sort") { activeSort = val; updateFilterUI(); apply(); return; }
       if (grp==="mat") filterMat = filterMat===val?null:val;
       else if (grp==="price") filterPrice = filterPrice===val?null:val;
       else if (grp==="avail") filterAvail = filterAvail===val?null:val;
