@@ -259,9 +259,11 @@ input,select{font:inherit}
 .ft-copy p+p{margin-top:.5rem}
 
 /* ── PLP ── */
-.plp-head{padding:2.5rem 0 1.5rem;text-align:center}
-.plp-head .eyebrow{margin-bottom:.5rem}
-.plp-head p{font-size:.875rem;color:var(--muted);margin-top:.5rem}
+.plp-hero{width:100%;min-height:45vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:3rem 0;border-radius:0 0 16px 16px;margin-bottom:1.5rem}
+.plp-hero__inner{width:100%}
+.plp-hero .eyebrow{margin-bottom:.5rem;display:block}
+.plp-hero h1{margin-bottom:.5rem}
+.plp-hero p{font-size:.875rem;color:var(--muted);margin-top:.5rem}
 .plp-n{font-size:.875rem;color:var(--accent);font-weight:600;margin-top:1rem}
 .sub-scroll{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding-bottom:1rem}
 .sub-scroll::-webkit-scrollbar{display:none}
