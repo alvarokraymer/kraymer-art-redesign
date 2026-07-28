@@ -93,8 +93,8 @@ input,select{font:inherit}
 .btn--full{width:100%}
 
 /* ── Header + hamburger ── */
-.site-header{position:static;z-index:60;background:var(--light);border-bottom:1px solid var(--line);will-change:transform}
-.site-header.is-fixed{position:fixed;top:0;left:0;right:0;box-shadow:0 2px 8px rgba(20,17,16,.08)}
+#site-header{display:contents}
+.site-header{position:sticky;top:0;z-index:60;background:var(--light);border-bottom:1px solid var(--line);will-change:transform}
 .hdr-bar{height:var(--header-h);display:flex;align-items:center;padding:0 var(--gutter);gap:1rem}
 .hdr-logo{display:flex;align-items:center}
 .hdr-logo img{display:block}
