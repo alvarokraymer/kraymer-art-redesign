@@ -181,7 +181,7 @@ input,select{font:inherit}
 .pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem}
 .card{display:flex;flex-direction:column}
 .card__img{aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden;background:#DDD;position:relative}
-.card__img .ph{position:absolute;inset:0;transition:opacity .3s ease}
+.card__img .ph{position:absolute;inset:0;z-index:0}
 .card[style*="--img2"] .card__img:hover .ph{opacity:0}
 .card[style*="--img2"] .card__img:hover::after{content:"";position:absolute;inset:0;background-image:var(--img2);background-size:cover;background-position:center;border-radius:var(--radius)}
 .card__body{padding-top:.75rem;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:inherit}
@@ -192,11 +192,10 @@ input,select{font:inherit}
 .card__price s{color:var(--muted);font-weight:400;margin-left:.5rem}
 .sold{opacity:.4}
 .sold .ph svg{filter:grayscale(1)}
-.card__buy{-webkit-appearance:none;appearance:none;position:absolute;bottom:.9rem;right:.9rem;z-index:10;width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 30%,#3D3733,#181514 80%);color:#fff;border:1.5px solid rgba(255,255,255,.2);border-radius:50%;cursor:pointer;transition:all .15s;box-shadow:0 4px 14px rgba(0,0,0,.45),inset 0 -2px 3px rgba(0,0,0,.3);outline:0}
-.card__buy svg{display:block;width:18px;height:18px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.4))}
-.card__buy:active{background:radial-gradient(circle at 35% 30%,#D4BA90,#A87E3F 80%);border-color:var(--accent);transform:scale(.9)}
-.card__buy.done{background:radial-gradient(circle at 35% 30%,#6BAF7E,#3E6B4E 80%);border-color:#5A9A6E}
-.card__buy--out{background:radial-gradient(circle at 35% 30%,rgba(60,55,50,.8),rgba(20,16,14,.85) 80%);border-color:rgba(255,255,255,.15)}
+.card__buy{-webkit-appearance:none;appearance:none;position:absolute;bottom:.75rem;right:.75rem;z-index:5;width:42px;height:42px;padding:0;display:flex;align-items:center;justify-content:center;background:#181514;color:#fff;border:1.5px solid rgba(255,255,255,.25);border-radius:50%;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);outline:0}
+.card__buy svg{width:17px;height:17px;display:block}
+.card__buy:active{background:#C4A882;border-color:#C4A882;transform:scale(.92)}
+.card__buy.done{background:#4A7C59;border-color:#4A7C59}
 .badge{font-size:.45rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius-pill);background:rgba(230,230,230,.88);color:var(--dark);position:absolute;top:.5rem;left:.5rem;z-index:3;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.6);box-shadow:0 1px 4px rgba(20,17,16,.06)}
 .badge--a{background:var(--accent);color:#fff;border:1px solid var(--accent);box-shadow:0 1px 4px rgba(20,17,16,.12)}
 .heart{position:absolute;top:.5rem;right:.5rem;z-index:3;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.88);border-radius:50%;transition:transform .15s;box-shadow:0 1px 3px rgba(20,17,16,.12)}
