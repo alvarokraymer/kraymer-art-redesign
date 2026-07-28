@@ -207,9 +207,11 @@ input,select{font:inherit}
 .card__buy.done{background:#4A7C59}
 
 /* scroll-row */
-.scroll-row{display:grid;grid-auto-flow:column;grid-auto-columns:62%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--gutter) 1rem;scrollbar-width:none}
+.scroll-row{display:flex;flex-wrap:nowrap;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;scrollbar-width:none}
 .scroll-row::-webkit-scrollbar{display:none}
-.scroll-row>*{scroll-snap-align:start}
+.scroll-row>*{flex:none;scroll-snap-align:start;width:62vw}
+.scroll-row::before{content:"";flex:none;width:var(--gutter)}
+.scroll-row::after{content:"";flex:none;width:var(--gutter)}
 
 /* ── Fandom tiles ── */
 .ftile-stack{display:flex;flex-direction:column;gap:1rem}
