@@ -4,10 +4,10 @@
    ============================================================ */
 
 const ICONS = {
-  search: '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
-  account: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 5-5.5 8-5.5s6.5 1.5 8 5.5"/></svg>',
-  heart: '<svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>',
-  bag: '<svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12.2a1.8 1.8 0 0 1-1.8 1.8H8a1.8 1.8 0 0 1-1.8-1.8L5 8z"/><path d="M8.5 10V6.5a3.5 3.5 0 0 1 7 0V10"/></svg>',
+  search: '<i data-lucide="search" style="width:20px;height:20px"></i>',
+  account: '<i data-lucide="user" style="width:20px;height:20px"></i>',
+  heart: '<i data-lucide="heart" style="width:20px;height:20px"></i>',
+  bag: '<i data-lucide="shopping-bag" style="width:20px;height:20px"></i>',
 };
 
 const ANNOUNCE_HTML = `
@@ -151,4 +151,5 @@ const CART_HTML = `
   const cartHost = document.createElement("div");
   cartHost.innerHTML = CART_HTML;
   document.body.appendChild(cartHost);
+  if (typeof lucide !== "undefined") lucide.createIcons();
 })();

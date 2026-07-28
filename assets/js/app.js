@@ -830,6 +830,7 @@ function initPDP() {
 
   initAccordions(host);
   syncWishUI();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 }
 
 /* ---------------- Global wiring ---------------- */
@@ -891,4 +892,5 @@ document.addEventListener("DOMContentLoaded", () => {
   if (page === "home") initHome();
   if (page === "plp") initPLP();
   if (page === "pdp") initPDP();
+  if (typeof lucide !== "undefined") lucide.createIcons();
 });
