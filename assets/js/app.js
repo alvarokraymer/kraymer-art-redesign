@@ -536,14 +536,23 @@ function initPLP() {
     }
   });
 
-  /* Subcategory tiles (the missing intermediate step) */
+  /* Subcategory tiles with elegant SVG icons */
   const subHost = document.querySelector("[data-subcats]");
   const poolForCounts = colParam ? PRODUCTS.filter((p) => p.collection === colParam) : PRODUCTS;
+  const catIcons = {
+    "": `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`,
+    rings: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg>`,
+    necklaces: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6c0-2 2-3 6-3s6 1 6 3"/><path d="M6 6c0 4 2 4 6 10"/><path d="M18 6c0 4-2 4-6 10"/></svg>`,
+    earrings: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="14" r="4"/><circle cx="16" cy="14" r="4"/><line x1="8" y1="10" x2="8" y2="6"/><line x1="16" y1="10" x2="16" y2="6"/></svg>`,
+    bracelets: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 16c0-5 2-10 5-10s5 5 5 10"/><path d="M7 16c0 2 2 4 5 4s5-2 5-4"/></svg>`,
+    sets: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/><path d="M4 4l5 5"/><path d="M20 4l-5 5"/><path d="M4 20l5-5"/><path d="M20 20l-5-5"/></svg>`,
+    pins: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><line x1="12" y1="9" x2="12" y2="3"/><line x1="12" y1="15" x2="12" y2="21"/></svg>`,
+  };
   subHost.innerHTML =
-    `<button class="subcat ${!activeType ? "active" : ""}" data-type=""><b>All</b><span>${poolForCounts.length} pieces</span></button>` +
+    `<button class="sub ${!activeType ? "active" : ""}" data-type="">${catIcons[""]}<b>All</b><span>${poolForCounts.length} pieces</span></button>` +
     PRODUCT_TYPES.map((t) => {
       const n = poolForCounts.filter((p) => p.type === t.id).length;
-      return `<button class="subcat ${activeType === t.id ? "active" : ""}" data-type="${t.id}"><b>${t.name}</b><span>${n} piece${n === 1 ? "" : "s"}</span></button>`;
+      return `<button class="sub ${activeType === t.id ? "active" : ""}" data-type="${t.id}">${catIcons[t.id] || ""}<b>${t.name}</b><span>${n} piece${n === 1 ? "" : "s"}</span></button>`;
     }).join("");
 
   const grid = document.querySelector("[data-plp-grid]");
