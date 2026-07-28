@@ -192,7 +192,7 @@ input,select{font:inherit}
 .card__price s{color:var(--muted);font-weight:400;margin-left:.5rem}
 .sold{opacity:.4}
 .sold .ph svg{filter:grayscale(1)}
-.card__buy{-webkit-appearance:none;appearance:none;position:absolute;bottom:.75rem;right:.75rem;z-index:10;width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;background:var(--dark);color:#fff;border:2px solid rgba(255,255,255,.35);border-radius:50%;cursor:pointer;transition:all .15s;box-shadow:0 3px 14px rgba(0,0,0,.35);outline:0}
+.card__buy{-webkit-appearance:none;appearance:none;position:absolute;bottom:.9rem;right:.9rem;z-index:10;width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;background:var(--dark);color:#fff;border:2px solid rgba(255,255,255,.35);border-radius:50%;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px rgba(0,0,0,.4);outline:0}
 .card__buy svg{display:block;width:18px;height:18px;pointer-events:none}
 .card__buy:active{background:var(--accent);border-color:var(--accent);transform:scale(.9)}
 .card__buy.done{background:#4A7C59;border-color:#4A7C59}
