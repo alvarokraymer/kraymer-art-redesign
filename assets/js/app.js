@@ -440,6 +440,18 @@ function initHome() {
     }, {passive:true});
   }
 
+  /* Reviews carousel */
+  const revTrack = document.querySelector("[data-rev-track]");
+  const revDots = document.querySelector("[data-rev-dots]");
+  if (revTrack && revDots) {
+    const rTotal = revTrack.children.length;
+    let rCur = 0;
+    const rGo = (i) => { rCur = ((i % rTotal) + rTotal) % rTotal; revTrack.style.transform = `translateX(-${rCur * 100}%)`; revDots.querySelectorAll("button").forEach((d,j) => d.classList.toggle("on", j === rCur)); };
+    revDots.addEventListener("click", (e) => { const btn = e.target.closest("button"); if (!btn) return; rGo(Array.from(revDots.children).indexOf(btn)); });
+    document.querySelector("[data-rev-prev]").addEventListener("click", () => rGo(rCur - 1));
+    document.querySelector("[data-rev-next]").addEventListener("click", () => rGo(rCur + 1));
+  }
+
   /* Quiz: Find Your Domain (3 steps, series -> metal -> style) */
   const quiz = document.querySelector("[data-quiz]");
   if (quiz) {
@@ -809,6 +821,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.closest("[data-open-menu]")) { document.querySelector("[data-mob-nav]").classList.toggle("on"); document.querySelector(".hamburger").classList.toggle("on"); return; }
     if (e.target.closest("[data-mob-nav] a") || e.target.closest(".mob-link")) { closeMenu(); }
     if (e.target.closest("[data-open-search]")) { closeMenu(); openSearch(); return; }
+    if (e.target.closest("[data-mob-collapse]")) { const btn = e.target.closest("[data-mob-collapse]"); btn.classList.toggle("open"); const sub = btn.nextElementSibling; if (sub && sub.matches("[data-mob-sub]")) sub.classList.toggle("open"); return; }
     if (e.target.closest("[data-open-cart]")) openCart();
     if (e.target.closest("[data-close-cart]") || e.target.closest("[data-scrim]")) closeCart();
     if (e.target.closest("[data-close-search]")) { closeSearch(); document.querySelector("[data-search-results]").innerHTML = ""; return; }

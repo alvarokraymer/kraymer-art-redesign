@@ -40,20 +40,24 @@ const HEADER_HTML = `
   <div class="mob-links">
     <a class="mob-link" href="coleccion.html">All Collections</a>
 
-    <span class="mob-label">COLLECTIONS</span>
-    <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">Collection JJ</a>
-    <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">Collection KN</a>
-    <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Collection GI</a>
-    <a class="mob-link mob-link--sub" href="coleccion.html">Best Sellers</a>
-    <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
+    <button class="mob-label-btn" data-mob-collapse>COLLECTIONS <span class="mob-arrow"></span></button>
+    <div class="mob-sub" data-mob-sub>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">Collection JJ</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">Collection KN</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Collection GI</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html">Best Sellers</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
+    </div>
 
     <a class="mob-link" href="#">Mystery Box</a>
 
-    <span class="mob-label">BRAND</span>
-    <a class="mob-link mob-link--sub" href="index.html#craft">Our Story</a>
-    <a class="mob-link mob-link--sub" href="index.html#craft">The Craft</a>
-    <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
-    <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
+    <button class="mob-label-btn" data-mob-collapse>BRAND <span class="mob-arrow"></span></button>
+    <div class="mob-sub" data-mob-sub>
+      <a class="mob-link mob-link--sub" href="index.html#craft">Our Story</a>
+      <a class="mob-link mob-link--sub" href="index.html#craft">The Craft</a>
+      <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
+      <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
+    </div>
   </div>
 
   <div class="mob-foot">

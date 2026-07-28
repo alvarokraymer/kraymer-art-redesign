@@ -121,7 +121,11 @@ input,select{font:inherit}
 .mob-link{display:block;padding:.85rem 0;font-family:var(--display);font-size:1.35rem;font-weight:300;color:var(--dark);letter-spacing:-.01em;transition:opacity .15s}
 .mob-link:active{opacity:.5}
 .mob-link--sub{padding:.65rem 0;font-size:1.05rem;color:var(--muted)}
-.mob-label{display:block;padding:1.25rem 0 .25rem;font-family:var(--body);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.mob-sub{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.25,.46,.45,.94)}
+.mob-sub.open{max-height:300px}
+.mob-label-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.85rem 0;font-family:var(--body);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;background:0;border:0;cursor:pointer}
+.mob-arrow{width:8px;height:8px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transition:transform .3s cubic-bezier(.25,.46,.45,.94)}
+.mob-label-btn.open .mob-arrow{transform:rotate(-135deg);margin-top:-4px}
 .mob-nav .mob-foot{margin-top:auto;padding-top:1rem;border-top:1px solid var(--line)}
 .mob-foot-row{display:flex;align-items:center;justify-content:space-between}
 .mob-foot-row span{font-size:.875rem;color:var(--muted)}
@@ -308,8 +312,29 @@ input,select{font:inherit}
 .trust-row-s span b{display:block;color:var(--dark);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
 .specs{margin-top:1.5rem}
 
-/* ── Reviews ── */
-.rv{padding:1.5rem;background:var(--light);border-radius:var(--radius);box-shadow:0 1px 3px rgba(35,31,32,.05)}
+/* ── Post cards (horizontal slide) ── */
+.post-scroll{display:grid;grid-auto-flow:column;grid-auto-columns:75%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.5rem;scrollbar-width:none}
+.post-scroll::-webkit-scrollbar{display:none}
+.post-scroll>*{scroll-snap-align:start}
+.post-card{background:var(--surface);border-radius:var(--radius);padding:1.5rem;box-shadow:0 1px 3px rgba(24,21,20,.06)}
+.post-icon{width:36px;height:36px;margin-bottom:1rem}
+.post-icon svg{width:100%;height:100%}
+.post-card h3{font-family:var(--display);font-size:1.1rem;font-weight:400;margin-bottom:.25rem}
+
+/* ── Reviews carousel ── */
+.rev-carousel{position:relative;overflow:hidden}
+.rev-track{display:flex;transition:transform .5s cubic-bezier(.25,.46,.45,.94)}
+.rev-slide{flex:0 0 100%;padding:0 .5rem}
+.rev-slide .rv{min-height:140px;display:flex;flex-direction:column;justify-content:center}
+.rev-arrows{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;padding:0 0;transform:translateY(-50%);pointer-events:none}
+.rev-arrows button{pointer-events:auto;width:36px;height:36px;border-radius:50%;background:var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:1.25rem;transition:background .15s;border:0}
+.rev-arrows button:active{background:var(--accent);color:#fff}
+.rev-dots{display:flex;justify-content:center;gap:.4rem;margin-top:1rem}
+.rev-dots button{width:6px;height:6px;border-radius:50%;background:var(--line);border:0;transition:background .2s}
+.rev-dots button.on{background:var(--accent);width:18px;border-radius:3px}
+
+/* ── Surfaces ── */
+.rv{padding:1.5rem;background:var(--surface);border-radius:var(--radius);background:var(--surface)}
 .rv+.rv{margin-top:1rem}
 .rv h4{font-family:var(--body);font-weight:600;font-size:.875rem;margin:.5rem 0 2px}
 .rv p{font-size:.875rem;color:var(--muted)}
