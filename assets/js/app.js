@@ -381,6 +381,7 @@ function initCardActions() {
   document.addEventListener("click", (e) => {
     const addBtn = e.target.closest("[data-add]");
     if (addBtn) {
+      e.preventDefault();
       Cart.add(addBtn.dataset.add);
       addBtn.classList.add("done");
       addBtn.textContent = "Added ✓";
@@ -391,7 +392,7 @@ function initCardActions() {
       return;
     }
     const wishBtn = e.target.closest("[data-wish]");
-    if (wishBtn) { Wishlist.toggle(wishBtn.dataset.wish); return; }
+    if (wishBtn) { e.preventDefault(); Wishlist.toggle(wishBtn.dataset.wish); return; }
     const notifyBtn = e.target.closest("[data-notify]");
     if (notifyBtn) {
       notifyBtn.textContent = "We'll email you";
