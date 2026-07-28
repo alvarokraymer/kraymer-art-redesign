@@ -320,10 +320,10 @@ input,select{font:inherit}
 .gal{aspect-ratio:1;border-radius:var(--radius);overflow:hidden;background:#F4EEEB;position:relative}
 .gal .ph{position:absolute;inset:0;background:#F4EEEB}
 .gal .ph svg{width:45%}
-.gal--thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin-top:1rem}
-.gal--thumbs button{aspect-ratio:1;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--line);padding:0;background:#F4EEEB;position:relative}
-.gal--thumbs button.on,.gal--thumbs button.active{border-color:var(--accent)}
-.gal--thumbs .ph{position:absolute;inset:0;background:#F4EEEB}
+.gal-strip{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding:.75rem 0;scroll-snap-type:x proximity}
+.gal-strip::-webkit-scrollbar{display:none}
+.gal-strip button{flex:none;width:72px;height:72px;border-radius:var(--radius-sm);background-size:cover;background-position:center;border:1.5px solid transparent;cursor:pointer;padding:0;transition:border-color .15s;background-color:#DDD}
+.gal-strip button.on{border-color:var(--accent)}
 .pdp-meta{padding-top:2rem}
 .pdp-meta .eyebrow{display:block;margin-bottom:.5rem}
 .pdp-title{font-size:1.75rem;font-weight:300}

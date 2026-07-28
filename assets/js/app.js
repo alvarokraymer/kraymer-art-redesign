@@ -26,6 +26,10 @@ function phImg(p) {
   if (p.images && p.images[0] && p.images[0] !== "placeholder") return p.images[0];
   return "assets/placeholder_" + (p.phId || ((PRODUCTS.indexOf(p) % 4) + 1)) + ".jpg";
 }
+function phImgList(p) {
+  if (p.images && p.images.length > 0 && p.images[0] !== "placeholder") return p.images;
+  return [];
+}
 
 function phSVG(type, gemColor) {
   const g = gemColor || PH_GOLD;
@@ -384,16 +388,17 @@ function initCardActions() {
     if (imgDiv && !e.target.closest("[data-add]") && !e.target.closest("[data-wish]") && !e.target.closest("[data-notify]")) {
       const card = imgDiv.closest(".card");
       if (card && card.dataset.images) {
-        const imgs = JSON.parse(card.dataset.images);
-        if (imgs.length > 1 && imgs[0] !== "placeholder") {
-          const ph = imgDiv.querySelector(".ph");
-          const cur = ph.style.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
-          let curIdx = cur ? imgs.indexOf(cur[1]) : 0;
-          if (curIdx < 0) curIdx = 0;
-          curIdx = (curIdx + 1) % imgs.length;
-          ph.style.backgroundImage = `url(${imgs[curIdx]})`;
-          return;
-        }
+        try {
+          const imgs = JSON.parse(card.dataset.images);
+          if (imgs.length > 1 && imgs[0] !== "placeholder") {
+            const ph = imgDiv.querySelector(".ph");
+            const cur = ph.style.backgroundImage.match(/url\(["']?([^"')]+)["']?\)/);
+            let idx = cur ? imgs.indexOf(cur[1]) : 0;
+            idx = (idx < 0 ? 0 : idx + 1) % imgs.length;
+            ph.style.backgroundImage = `url(${imgs[idx]})`;
+            return;
+          }
+        } catch {}
       }
     }
     const addBtn = e.target.closest("[data-add]");
@@ -743,30 +748,18 @@ function initPDP() {
   const isRing = p.type === "rings" || (p.type === "sets" && p.sizes.length > 1);
   const hasCompare = !!p.compareAt;
 
-  const galleryShots = (p.images && p.images.length > 0 && p.images[0] !== "placeholder")
-    ? p.images.slice(0, 8).map((url, i) => ({
-        label: `${p.title} · View ${i + 1}`,
-        tag: `View ${i + 1}`,
-        file: url,
-      }))
-    : [
-        { label: `${p.title} · Studio`, tag: "Studio", file: null },
-        { label: "Detail view", tag: "Detail", file: null },
-        { label: "Worn on hand", tag: "On hand", file: null },
-        { label: "Packaging", tag: "Packaging", file: null },
-      ];
+  const imgs = phImgList(p);
+  const hasImgs = imgs.length > 1;
+  const mainImg = imgs[0] || phImg(p);
 
   host.innerHTML = `
     <nav class="bread" aria-label="Breadcrumb">
-      <a href="index.html">Home</a><span></span><a href="coleccion.html?collection=${p.collection}">${col.name}</a><span></span><b>${p.title}</b>
+      <a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b>
     </nav>
     <div class="pdp-layout">
-      <div class="pdp-gallery">
-        <div class="gal" data-gallery-main>${ph(galleryShots[0].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: galleryShots[0].file || phImg(p) })}</div>
-        <div class="gal--thumbs">
-          ${galleryShots.map((s, i) => `
-            <button data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="View: ${s.tag}">${ph(s.label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: s.file || phImg(p) })}</button>`).join("")}
-        </div>
+      <div>
+        <div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom"${hasImgs ? ` data-gal-imgs='${JSON.stringify(imgs)}'` : ""}> </div>
+        ${hasImgs ? `<div class="gal-strip" data-gal-strip>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : ""}
       </div>
       <div class="pdp-meta">
         <span class="eyebrow">${col.name}</span>
@@ -865,16 +858,27 @@ function initPDP() {
   const cross = PRODUCTS.filter((x) => x.handle !== p.handle && !x.soldOut && (x.character === p.character || x.collection === p.collection)).slice(0, 4);
   host.querySelector("[data-crosssell]").innerHTML = cross.map(productCard).join("");
 
-  /* Gallery thumbs */
+  /* Gallery: thumbs + swipe on main image */
   const main = host.querySelector("[data-gallery-main]");
-  let activeShot = 0;
-  host.querySelectorAll("[data-thumb]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      activeShot = Number(btn.dataset.thumb);
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: galleryShots[activeShot].file || phImg(p) });
-      host.querySelectorAll("[data-thumb]").forEach((b) => b.classList.toggle("active", b === btn));
+  if (main && hasImgs) {
+    let galIdx = 0;
+    const goGal = (i) => {
+      galIdx = ((i % imgs.length) + imgs.length) % imgs.length;
+      main.style.backgroundImage = `url(${imgs[galIdx]})`;
+      host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => b.classList.toggle("on", j===galIdx));
+    };
+    host.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-gal-thumb]");
+      if (btn) { goGal(Number(btn.dataset.galThumb)); return; }
     });
-  });
+    /* Touch swipe on main image */
+    let gx = 0;
+    main.addEventListener("touchstart", (e) => { gx = e.changedTouches[0].screenX; }, {passive:true});
+    main.addEventListener("touchend", (e) => {
+      const dx = gx - e.changedTouches[0].screenX;
+      if (Math.abs(dx) > 40) goGal(galIdx + (dx > 0 ? 1 : -1));
+    }, {passive:true});
+  }
 
   let selectedMetal = p.metals[0];
   let selectedSize = p.sizes[0] || null;
@@ -882,7 +886,6 @@ function initPDP() {
     btn.addEventListener("click", () => {
       selectedMetal = btn.dataset.metal;
       host.querySelectorAll("[data-metal]").forEach((b) => b.classList.toggle("selected", b === btn));
-      main.innerHTML = ph(galleryShots[activeShot].label, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, tag: p.batch, img: galleryShots[activeShot].file || phImg(p) });
     });
   });
   host.querySelectorAll("[data-size]").forEach((btn) => {
