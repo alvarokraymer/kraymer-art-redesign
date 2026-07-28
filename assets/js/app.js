@@ -835,23 +835,29 @@ function initPDP() {
 
 /* ---------------- Global wiring ---------------- */
 document.addEventListener("DOMContentLoaded", () => {
-  /* Sticky header via JS: fixed when marquee is scrolled past */
+  /* Sticky header: solid scroll-based approach */
   const header = document.querySelector(".site-header");
-  const marquee = document.querySelector(".marquee");
-  if (header && marquee) {
+  const marqueeH = document.querySelector(".marquee");
+  if (header && marqueeH) {
     const spacer = document.createElement("div");
     spacer.style.cssText = "display:none;height:52px";
     header.parentNode.insertBefore(spacer, header.nextSibling);
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) {
-        header.classList.add("is-fixed");
-        spacer.style.display = "block";
-      } else {
-        header.classList.remove("is-fixed");
-        spacer.style.display = "none";
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (window.scrollY > 36) {
+            header.classList.add("is-fixed");
+            spacer.style.display = "block";
+          } else {
+            header.classList.remove("is-fixed");
+            spacer.style.display = "none";
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
-    }, { threshold: 0 });
-    observer.observe(marquee);
+    }, { passive: true });
   }
 
   /* Restore theme */
