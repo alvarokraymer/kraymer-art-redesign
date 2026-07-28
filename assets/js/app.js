@@ -562,6 +562,13 @@ function initPLP() {
     let list = PRODUCTS.slice();
     if (colParam) list = list.filter((p) => p.collection === colParam);
     if (activeType) list = list.filter((p) => p.type === activeType);
+    if (filterMat) list = list.filter((p) => p.metals.some((m) => m.toLowerCase().includes(filterMat)));
+    if (filterPrice) {
+      const r = { under100: [0, 9999], "100-200": [10000, 19999], "200-300": [20000, 29999], "300+": [30000, 999999] };
+      list = list.filter((p) => p.price >= r[filterPrice][0] && p.price <= r[filterPrice][1]);
+    }
+    if (filterAvail === "in-stock") list = list.filter((p) => !p.soldOut);
+    if (filterAvail === "pre-order") list = list.filter((p) => p.metals.length === 0 || p.badges.includes("pre-order"));
 
     /* In-stock first, sold out always sinks to the end, dimmed */
     const inStock = list.filter((p) => !p.soldOut);
@@ -597,35 +604,72 @@ function initPLP() {
     });
   });
 
-  /* Filter button: mockup-level sheet (visual interaction only) */
+  /* Filter state + panel */
+  let filterMat = null, filterPrice = null, filterAvail = null;
   const filterBtn = document.querySelector("[data-open-filters]");
-  if (filterBtn) {
-    filterBtn.addEventListener("click", () => {
-      openModal(`
-        <h3 style="font-weight:300;margin-bottom:.5rem">Filters</h3>
-        <p class="sm muted" style="margin-bottom:1.5rem">Refine by material, price and more.</p>
-        <div class="v-group">
-          <p class="v-label">Material</p>
-          <div class="v-row" style="margin-bottom:1.5rem">
-            ${["925 Silver", "18K Gold", "Mixed"].map((m) => `<button class="v-chip">${m}</button>`).join("")}
-          </div>
+  const filterPanel = document.createElement("div");
+  filterPanel.className = "fp";
+  filterPanel.innerHTML = `
+    <div class="fp__top"><span class="fp__title">Filters</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
+    <div class="fp__body">
+      <div class="v-group">
+        <p class="v-label">Material</p>
+        <div class="v-row" data-fil-group="mat">
+          <button class="v-chip" data-fil-val="silver">925 Silver</button>
+          <button class="v-chip" data-fil-val="gold">18K Gold</button>
         </div>
-        <div class="v-group">
-          <p class="v-label">Price range</p>
-          <div class="v-row" style="margin-bottom:1.5rem">
-            ${["Under $100", "$100–$200", "$200–$300", "$300+"].map((m) => `<button class="v-chip">${m}</button>`).join("")}
-          </div>
+      </div>
+      <div class="v-group">
+        <p class="v-label">Price</p>
+        <div class="v-row" data-fil-group="price">
+          <button class="v-chip" data-fil-val="under100">Under $100</button>
+          <button class="v-chip" data-fil-val="100-200">$100–$200</button>
+          <button class="v-chip" data-fil-val="200-300">$200–$300</button>
+          <button class="v-chip" data-fil-val="300+">$300+</button>
         </div>
-        <div class="v-group">
-          <p class="v-label">Availability</p>
-          <div class="v-row" style="margin-bottom:1.5rem">
-            ${["In stock", "Pre-order", "Sold out"].map((m) => `<button class="v-chip">${m}</button>`).join("")}
-          </div>
+      </div>
+      <div class="v-group">
+        <p class="v-label">Availability</p>
+        <div class="v-row" data-fil-group="avail">
+          <button class="v-chip" data-fil-val="in-stock">In stock</button>
+          <button class="v-chip" data-fil-val="pre-order">Pre-order</button>
         </div>
-        <button class="btn btn--dark" data-close-modal style="margin-top:.5rem">Show results</button>
-      `);
+      </div>
+    </div>
+    <div class="fp__bot"><button class="btn btn--dark btn--full" data-apply-filters>Apply filters</button></div>
+  `;
+  document.body.appendChild(filterPanel);
+  const fpCount = document.querySelector("[data-filter-count]");
+
+  function updateFilterUI() {
+    filterPanel.querySelectorAll(".v-chip").forEach((c) => {
+      const grp = c.closest("[data-fil-group]").dataset.filGroup;
+      const val = c.dataset.filVal;
+      c.classList.toggle("selected",
+        (grp === "mat" && filterMat === val) ||
+        (grp === "price" && filterPrice === val) ||
+        (grp === "avail" && filterAvail === val)
+      );
     });
+    const n = (filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
+    fpCount.textContent = n;
+    fpCount.classList.toggle("show", n > 0);
   }
+
+  filterPanel.addEventListener("click", (e) => {
+    const chip = e.target.closest("[data-fil-val]");
+    if (chip) {
+      const grp = chip.closest("[data-fil-group]").dataset.filGroup, val = chip.dataset.filVal;
+      if (grp === "mat") filterMat = filterMat === val ? null : val;
+      else if (grp === "price") filterPrice = filterPrice === val ? null : val;
+      else if (grp === "avail") filterAvail = filterAvail === val ? null : val;
+      updateFilterUI(); return;
+    }
+    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=null; updateFilterUI(); apply(); filterPanel.classList.remove("on"); return; }
+    if (e.target.closest("[data-apply-filters]")) { filterPanel.classList.remove("on"); apply(); return; }
+  });
+
+  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); updateFilterUI(); });
 
   /* Load more: visual progress only */
   const loadBtn = document.querySelector("[data-load-more]");
