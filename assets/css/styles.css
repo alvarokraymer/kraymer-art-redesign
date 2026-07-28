@@ -40,7 +40,7 @@
 /* ── Tokens ── */
 :root {
   --dark:    #181514;
-  --light:   #FCF8F7;
+  --light:   #F6F6F6;
   --muted:   #8D847E;
   --muted-d: #A09892;
   --accent:  #C4A882;
@@ -136,7 +136,7 @@ input,select{font:inherit}
 .toggle-sw.on::after{transform:translateX(20px);background:#fff}
 
 /* ── Dark theme ── */
-[data-theme="dark"]{--dark:#FCF8F7;--light:#181514;--muted:#978F85;--muted-d:#6C6360;--line:#3D3839}
+[data-theme="dark"]{--dark:#F6F6F6;--light:#181514;--muted:#978F85;--muted-d:#6C6360;--line:#3D3839}
 [data-theme="dark"] .sec--dark{background:#12100E;color:var(--light)}
 [data-theme="dark"] .sec--warm{background:#2D2929}
 [data-theme="dark"] .site-header{border-bottom-color:var(--line)}
@@ -268,7 +268,7 @@ input,select{font:inherit}
 .ft-copy p+p{margin-top:.5rem}
 
 /* ── PLP ── */
-.plp-hero{width:100%;min-height:45vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:3rem 0;border-radius:0 0 16px 16px;margin-bottom:1.5rem}
+.plp-hero{width:100%;min-height:75vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:3rem 0;margin-bottom:0}
 .plp-hero__inner{width:100%}
 .plp-hero .eyebrow{margin-bottom:.5rem;display:block}
 .plp-hero h1{margin-bottom:.5rem}
