@@ -96,10 +96,10 @@ input,select{font:inherit}
 /* ── Header + hamburger ── */
 #site-header{display:contents}
 .site-header{position:sticky;top:0;z-index:60;background:#fff;border-bottom:1px solid var(--line);will-change:transform}
-.hdr-bar{height:var(--header-h);display:flex;align-items:center;padding:0 var(--gutter);justify-content:space-between}
-.hdr-logo{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center}
+.hdr-bar{height:var(--header-h);display:flex;align-items:center;padding:0 var(--gutter);gap:1rem}
+.hdr-logo{display:flex;align-items:center}
 .hdr-logo img{display:block}
-.hdr-actions{display:flex;align-items:center;gap:2px}
+.hdr-actions{margin-left:auto;display:flex;align-items:center;gap:2px}
 .ico{position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm)}
 .ico:active{background:var(--line)}
 .ico svg{width:20px;height:20px;stroke:var(--dark);fill:none;stroke-width:1.5}
