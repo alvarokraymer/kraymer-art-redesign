@@ -803,7 +803,7 @@ function initPDP() {
 
         <div class="atc-bar">
           <button class="btn btn--dark" data-pdp-atc ${p.soldOut ? "disabled" : ""}>
-            ${p.soldOut ? "Sold Out" : `Add to Cart · ${kaMoney(p.price)}`}
+            ${p.soldOut ? "Sold Out" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="margin-right:.5rem"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Add to Cart · ${kaMoney(p.price)}`}
           </button>
           <div class="atc-note">
             <b>Handcrafted to order</b>

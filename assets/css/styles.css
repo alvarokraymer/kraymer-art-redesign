@@ -328,17 +328,18 @@ input,select{font:inherit}
 .gal-strip button.on{border-color:var(--accent)}
 .pdp-meta{padding-top:2rem}
 .pdp-meta .eyebrow{display:block;margin-bottom:.5rem}
-.pdp-headline{display:flex;align-items:last-baseline;justify-content:space-between;gap:1rem;margin-bottom:.5rem}
-.pdp-title{font-size:1.75rem;font-weight:300}
-.pdp-desc{font-family:var(--display);font-size:1.25rem;line-height:1.35;color:var(--muted);margin-bottom:1rem}
+.pdp-headline{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.5rem}
+.pdp-title{font-size:1.75rem;font-weight:300;flex:1}
+.pdp-desc{font-family:var(--display);font-size:1.35rem;font-weight:300;line-height:1.3;color:var(--muted);margin-bottom:1rem}
 .pdp-rating{font-size:.9rem;color:var(--muted);margin-bottom:1.5rem}
 .pdp-rating .stars{color:var(--accent);letter-spacing:.04em;font-size:1.15rem}
 .pdp-rating a{text-decoration:underline;text-underline-offset:2px;color:var(--muted)}
-.pdp-price{font-family:var(--display);font-size:1.75rem;font-weight:300}
+.pdp-price{font-family:var(--display);font-size:1.75rem;font-weight:700;flex:none}
 .pdp-config{padding:1.25rem;background:var(--surface-soft);border-radius:var(--radius-sm);margin-bottom:1.5rem}
 .pdp-config .v-group:last-child{margin-bottom:0}
-/* ATC capsule */
-.atc-bar .btn--dark{border-radius:var(--radius-pill);min-height:56px;font-size:.85rem;letter-spacing:.04em;font-weight:600}
+.pdp-config .v-chip{min-height:44px;padding:0 1.5rem;border:1.5px solid #D0D0D0;border-radius:var(--radius-pill);font-size:.875rem;color:var(--muted);background:#fff;transition:all .15s;cursor:pointer}
+.pdp-config .v-chip.selected{background:var(--dark);border-color:var(--dark);color:#fff}
+.atc-bar .btn--dark{border-radius:var(--radius-pill);min-height:56px;font-size:.85rem;letter-spacing:.04em;font-weight:600;width:100%}
 .v-group{margin-bottom:1.25rem}
 .v-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:flex;justify-content:space-between}
 .v-label button{color:var(--accent);font-weight:500}
