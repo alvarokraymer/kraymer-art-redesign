@@ -612,7 +612,6 @@ function initPLP() {
 
   function apply() {
     let list = PRODUCTS.slice();
-    list.sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     if (colParam) list = list.filter((p) => p.collection === colParam);
     else if (filterCol) list = list.filter((p) => p.collection === filterCol);
     if (activeType) list = list.filter((p) => p.type === activeType);
@@ -637,6 +636,7 @@ function initPLP() {
     inStock.sort(sorts[activeSort] || sorts.trending);
 
     const finalList = [...inStock, ...out];
+    finalList.sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     grid.innerHTML = `<div class="pgrid">${finalList.map(productCard).join("")}</div>`;
     countEl.textContent = `Showing ${finalList.length} handcrafted piece${finalList.length === 1 ? "" : "s"}`;
     syncWishUI();
