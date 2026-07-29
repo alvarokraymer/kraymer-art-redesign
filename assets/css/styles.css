@@ -328,12 +328,15 @@ input,select{font:inherit}
 .gal-strip button.on{border-color:var(--accent)}
 .pdp-meta{padding-top:2rem}
 .pdp-meta .eyebrow{display:block;margin-bottom:.5rem}
-.pdp-title{font-size:1.75rem;font-weight:300;margin-bottom:.5rem}
+.pdp-headline{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:.5rem}
+.pdp-title{font-size:1.75rem;font-weight:300}
 .pdp-desc{font-family:var(--display);font-size:1.15rem;line-height:1.4;color:var(--muted);margin-bottom:1rem;font-style:italic}
-.pdp-rating{font-size:.85rem;color:var(--muted);margin-bottom:.75rem}
+.pdp-rating{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem}
 .pdp-rating .stars{color:var(--accent);letter-spacing:.06em;font-size:1rem}
 .pdp-rating a{text-decoration:underline;text-underline-offset:2px;color:var(--muted)}
-.pdp-price{font-size:1.35rem;font-weight:600;margin-bottom:1.5rem}
+.pdp-price{font-size:1.35rem;font-weight:600}
+.pdp-config{padding:1.25rem;background:var(--surface-soft);border-radius:var(--radius-sm);margin-bottom:1.5rem}
+.pdp-config .v-group:last-child{margin-bottom:0}
 .v-group{margin-bottom:1.25rem}
 .v-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:flex;justify-content:space-between}
 .v-label button{color:var(--accent);font-weight:500}

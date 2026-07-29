@@ -778,11 +778,11 @@ function initPDP() {
         ${hasImgs ? `<div class="gal-strip" data-gal-strip>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : ""}
       </div>
       <div class="pdp-meta">
-        <h1 class="pdp-title">${p.title}</h1>
+        <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1><span class="pdp-price">${kaMoney(p.price)}</span></div>
         <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, subtle enough for those who know.</div>
         <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
-        <div class="pdp-price">${kaMoney(p.price)}</div>
 
+        <div class="pdp-config">
         ${p.metals.length ? `
         <div class="v-group">
           <p class="v-label">Metal</p>
@@ -799,6 +799,7 @@ function initPDP() {
           </div>
           ${isRing ? `<p class="sm muted" style="margin-top:.5rem">Free lifetime resizing on every ring.</p>` : ""}
         </div>` : ""}
+        </div>
 
         <div class="atc-bar">
           <button class="btn btn--dark" data-pdp-atc ${p.soldOut ? "disabled" : ""}>
