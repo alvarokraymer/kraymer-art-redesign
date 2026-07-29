@@ -328,9 +328,12 @@ input,select{font:inherit}
 .gal-strip button.on{border-color:var(--accent)}
 .pdp-meta{padding-top:2rem}
 .pdp-meta .eyebrow{display:block;margin-bottom:.5rem}
-.pdp-title{font-size:1.75rem;font-weight:300}
+.pdp-title{font-size:1.75rem;font-weight:300;margin-bottom:.3rem}
+.pdp-rating{font-size:.8rem;color:var(--muted);margin-bottom:.75rem}
+.pdp-rating .stars{color:var(--accent);letter-spacing:.08em}
+.pdp-rating a{text-decoration:underline;text-underline-offset:2px;color:var(--muted)}
 .pdp-line{font-family:var(--display);font-style:italic;font-size:1.05rem;margin:1.25rem 0;line-height:1.5}
-.pdp-price{font-size:1.25rem;font-weight:600;margin-bottom:1.25rem}
+.pdp-price{font-size:1.35rem;font-weight:600;margin-bottom:1.25rem}
 .v-group{margin-bottom:1.25rem}
 .v-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:flex;justify-content:space-between}
 .v-label button{color:var(--accent);font-weight:500}
