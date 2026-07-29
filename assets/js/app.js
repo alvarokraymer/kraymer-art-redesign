@@ -124,7 +124,7 @@ function productCard(p) {
     ? `<span class="badge">Sold Out</span>`
     : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
   return `
-  <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}" data-images='${JSON.stringify(p.images || [])}'${p.images && p.images.length > 1 && p.images[1] !== "placeholder" ? ` style="--img2:url(${p.images[1]})"` : ""}>
+  <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}" data-images='${JSON.stringify(p.images || [])}'>
     <div class="card__img">
       ${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}
       ${badge}

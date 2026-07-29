@@ -186,8 +186,6 @@ input,select{font:inherit}
 .card{display:flex;flex-direction:column}
 .card__img{aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden;background:#DDD;position:relative;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 .card__img .ph{position:absolute;inset:0;z-index:0}
-.card[style*="--img2"] .card__img:hover .ph{opacity:0}
-.card[style*="--img2"] .card__img:hover::after{content:"";position:absolute;inset:0;background-image:var(--img2);background-size:cover;background-position:center;border-radius:var(--radius)}
 .card__body{padding-top:.75rem;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:inherit}
 .card__body:hover .card__title{text-decoration:underline;text-underline-offset:3px}
 .card__series{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
