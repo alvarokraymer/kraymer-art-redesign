@@ -778,6 +778,7 @@ function initPDP() {
         ${hasImgs ? `<div class="gal-strip" data-gal-strip>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : ""}
       </div>
       <div class="pdp-meta">
+        <span class="pdp-tag">${col.name}</span>
         <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1><span class="pdp-price">${kaMoney(p.price)}</span></div>
         <div class="pdp-desc">A piece that carries <i>quiet meaning.</i> Designed for those who wear their world close, without needing to explain it.</div>
         <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
@@ -786,8 +787,8 @@ function initPDP() {
         ${p.metals.length ? `
         <div class="v-group">
           <p class="v-label">Metal</p>
-          <div class="v-row" data-metal-opts>
-            ${p.metals.map((m, i) => `<button class="v-chip ${i === 0 ? "selected" : ""}" data-metal="${m}">${m}</button>`).join("")}
+          <div class="metal-cards" data-metal-opts>
+            ${p.metals.map((m, i) => `<button class="metal-card ${i === 0 ? "selected" : ""}" data-metal="${m}"><span>${m}</span></button>`).join("")}
           </div>
         </div>` : ""}
 
