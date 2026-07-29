@@ -779,7 +779,7 @@ function initPDP() {
       </div>
       <div class="pdp-meta">
         <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1><span class="pdp-price">${kaMoney(p.price)}</span></div>
-        <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, subtle enough for those who know.</div>
+        <div class="pdp-desc">A piece that carries <i>quiet meaning.</i> Designed for those who wear their world close, without needing to explain it.</div>
         <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
 
         <div class="pdp-config">
@@ -842,6 +842,7 @@ function initPDP() {
   /* Cross-sell: same character first, then same collection */
   const cross = PRODUCTS.filter((x) => x.handle !== p.handle && !x.soldOut && (x.character === p.character || x.collection === p.collection)).slice(0, 4);
   host.querySelector("[data-crosssell]").innerHTML = cross.map(productCard).join("");
+  host.querySelector("[data-crosssell]").querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
 
   /* Gallery: thumbs + swipe on main image */
   const main = host.querySelector("[data-gallery-main]");
