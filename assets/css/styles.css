@@ -328,12 +328,12 @@ input,select{font:inherit}
 .gal-strip button.on{border-color:var(--accent)}
 .pdp-meta{padding-top:2rem}
 .pdp-meta .eyebrow{display:block;margin-bottom:.5rem}
-.pdp-title{font-size:1.75rem;font-weight:300;margin-bottom:.3rem}
-.pdp-rating{font-size:.8rem;color:var(--muted);margin-bottom:.75rem}
-.pdp-rating .stars{color:var(--accent);letter-spacing:.08em}
+.pdp-title{font-size:1.75rem;font-weight:300;margin-bottom:.5rem}
+.pdp-desc{font-family:var(--display);font-size:1.15rem;line-height:1.4;color:var(--muted);margin-bottom:1rem;font-style:italic}
+.pdp-rating{font-size:.85rem;color:var(--muted);margin-bottom:.75rem}
+.pdp-rating .stars{color:var(--accent);letter-spacing:.06em;font-size:1rem}
 .pdp-rating a{text-decoration:underline;text-underline-offset:2px;color:var(--muted)}
-.pdp-line{font-family:var(--display);font-style:italic;font-size:1.05rem;margin:1.25rem 0;line-height:1.5}
-.pdp-price{font-size:1.35rem;font-weight:600;margin-bottom:1.25rem}
+.pdp-price{font-size:1.35rem;font-weight:600;margin-bottom:1.5rem}
 .v-group{margin-bottom:1.25rem}
 .v-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:flex;justify-content:space-between}
 .v-label button{color:var(--accent);font-weight:500}
@@ -347,6 +347,12 @@ input,select{font:inherit}
 .trust-row-s{display:flex;gap:.5rem;margin-top:1rem}
 .trust-row-s span{flex:1;text-align:center;padding:.75rem .5rem;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:.75rem;color:var(--muted)}
 .trust-row-s span b{display:block;color:var(--dark);font-size:.65rem;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.pdp-guarantee{display:flex;flex-direction:column;gap:.7rem;margin-top:1rem;padding:1.1rem;background:var(--surface-soft);border-radius:var(--radius-sm)}
+.pdp-guarantee__item{display:flex;align-items:center;gap:.75rem}
+.pdp-guarantee__item svg{flex:none}
+.pdp-guarantee__item span{display:flex;flex-direction:column}
+.pdp-guarantee__item b{font-size:.75rem;font-weight:600;color:var(--dark)}
+.pdp-guarantee__item small{font-size:.6rem;color:var(--muted)}
 .specs{margin-top:1.5rem}
 
 /* ── Post cards (horizontal slide) ── */

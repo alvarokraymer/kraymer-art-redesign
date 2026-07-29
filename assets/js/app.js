@@ -772,15 +772,17 @@ function initPDP() {
     <nav class="bread" aria-label="Breadcrumb">
       <a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b>
     </nav>
-    <h1 class="pdp-title">${p.title}</h1>
-    <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
-    <div class="pdp-price">${kaMoney(p.price)}</div>
     <div class="pdp-layout">
       <div>
         <div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5"${hasImgs ? ` data-gal-imgs='${JSON.stringify(imgs)}'` : ""}> </div>
         ${hasImgs ? `<div class="gal-strip" data-gal-strip>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : ""}
       </div>
       <div class="pdp-meta">
+        <h1 class="pdp-title">${p.title}</h1>
+        <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, subtle enough for those who know.</div>
+        <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
+        <div class="pdp-price">${kaMoney(p.price)}</div>
+
         ${p.metals.length ? `
         <div class="v-group">
           <p class="v-label">Metal</p>
@@ -806,10 +808,10 @@ function initPDP() {
             <b>Handcrafted to order</b>
             Ships in 9–20 days. You get photo updates while your piece is being made, then tracked shipping.
           </div>
-          <div class="trust-row-s">
-            <span><b>Lifetime Warranty</b>Every piece</span>
-            <span><b>60-Day Returns</b>No questions</span>
-            <span><b>Certificate Included</b>Numbered by hand</span>
+          <div class="pdp-guarantee">
+            <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span><b>Lifetime Warranty</b><small>Every piece, forever</small></span></div>
+            <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span><b>60-Day Returns</b><small>No questions asked</small></span></div>
+            <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg><span><b>Certificate of Authenticity</b><small>Numbered by hand</small></span></div>
           </div>
         </div>
 
