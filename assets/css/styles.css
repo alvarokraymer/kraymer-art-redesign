@@ -95,12 +95,11 @@ input,select{font:inherit}
 
 /* ── Header + hamburger ── */
 #site-header{display:contents}
-.site-header{position:sticky;top:0;z-index:60;background:var(--light);border-bottom:1px solid var(--line);will-change:transform}
-.hdr-bar{height:var(--header-h);display:flex;align-items:center;padding:0 var(--gutter);gap:1rem}
-.hdr-logo{display:flex;align-items:center}
+.site-header{position:sticky;top:0;z-index:60;background:#fff;border-bottom:1px solid var(--line);will-change:transform}
+.hdr-bar{height:var(--header-h);display:flex;align-items:center;padding:0 var(--gutter);justify-content:space-between}
+.hdr-logo{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center}
 .hdr-logo img{display:block}
-.hdr-logo i{font-style:italic;color:var(--accent)}
-.hdr-actions{margin-left:auto;display:flex;align-items:center;gap:2px}
+.hdr-actions{display:flex;align-items:center;gap:2px}
 .ico{position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm)}
 .ico:active{background:var(--line)}
 .ico svg{width:20px;height:20px;stroke:var(--dark);fill:none;stroke-width:1.5}
@@ -134,10 +133,11 @@ input,select{font:inherit}
 .mob-soc{font-size:.8rem;font-weight:600;letter-spacing:.06em;color:var(--muted);text-decoration:none}
 .mob-scrim{z-index:58!important}
 .mob-foot-row span{font-size:.875rem;color:var(--muted)}
-.toggle-sw{position:relative;width:44px;height:24px;background:var(--line);border-radius:12px;cursor:pointer;transition:background .2s;flex:none}
-.toggle-sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--dark);transition:transform .2s}
-.toggle-sw.on{background:var(--accent)}
-.toggle-sw.on::after{transform:translateX(20px);background:#fff}
+.theme-btn{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:transparent;border:1px solid var(--line);cursor:pointer;color:var(--muted);flex:none}
+.theme-btn .theme-sun{display:block}
+.theme-btn .theme-moon{display:none}
+.theme-btn.on .theme-sun{display:none}
+.theme-btn.on .theme-moon{display:block}
 
 /* ── Dark theme ── */
 [data-theme="dark"]{--dark:#E6E6E6;--light:#181514;--muted:#978F85;--muted-d:#6C6360;--line:#3D3839}
