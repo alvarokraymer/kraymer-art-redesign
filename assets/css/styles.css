@@ -341,7 +341,7 @@ input,select{font:inherit}
 .pdp-rating .stars{color:var(--accent);letter-spacing:.04em;font-size:1.15rem}
 .pdp-rating a{text-decoration:underline;text-underline-offset:2px;color:var(--muted)}
 .pdp-price{font-family:var(--body);font-size:1.75rem;font-weight:700;flex:none}
-.pdp-config{padding:1rem;background:var(--surface-soft);border-radius:var(--radius-sm);margin-bottom:1.5rem}
+.pdp-config{padding:.8rem;background:var(--surface-soft);border-radius:var(--radius-sm);margin-bottom:1.5rem}
 .pdp-config .v-group:last-child{margin-bottom:0}
 .pdp-config .v-chip{min-height:44px;padding:0 1.5rem;border:1.5px solid #D0D0D0;border-radius:var(--radius-pill);font-size:.875rem;color:var(--muted);background:#fff;transition:all .15s;cursor:pointer}
 .pdp-config .v-chip.selected{background:var(--dark);border-color:var(--dark);color:#fff}
