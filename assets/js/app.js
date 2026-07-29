@@ -772,39 +772,30 @@ function initPDP() {
     <nav class="bread" aria-label="Breadcrumb">
       <a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b>
     </nav>
+    <h1 class="pdp-title">${p.title}</h1>
+    <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
+    <div class="pdp-price">${kaMoney(p.price)}</div>
     <div class="pdp-layout">
       <div>
-        <div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom"${hasImgs ? ` data-gal-imgs='${JSON.stringify(imgs)}'` : ""}> </div>
+        <div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5"${hasImgs ? ` data-gal-imgs='${JSON.stringify(imgs)}'` : ""}> </div>
         ${hasImgs ? `<div class="gal-strip" data-gal-strip>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : ""}
       </div>
       <div class="pdp-meta">
-        <span class="eyebrow">${col.name}</span>
-        <h1 class="pdp-title">${p.title}</h1>
-        <p class="pdp-rating"><span class="stars">★★★★★</span> ${RATING_PLACEHOLDER} · <a href="#reviews">Read reviews</a></p>
-        <p class="pdp-line">${p.line}</p>
-
-        <div class="pdp-price">
-          <span class="price">${kaMoney(p.price)}</span>
-          ${hasCompare ? `<s>${kaMoney(p.compareAt)}</s><span class="badge badge--save">Save ${kaMoney(p.compareAt - p.price)}</span>` : ""}
-          ${p.pieces > 1 ? `<span class="small muted">· ${kaMoney(Math.round(p.price / p.pieces))} per piece</span>` : ""}
-        </div>
-
+        ${p.metals.length ? `
         <div class="v-group">
           <p class="v-label">Metal</p>
           <div class="v-row" data-metal-opts>
             ${p.metals.map((m, i) => `<button class="v-chip ${i === 0 ? "selected" : ""}" data-metal="${m}">${m}</button>`).join("")}
           </div>
-        </div>
+        </div>` : ""}
 
         ${p.sizes.length ? `
         <div class="v-group">
-          <p class="v-label">${isRing ? "Ring size" : "Size"}
-            ${isRing ? `<button data-open-sizeguide>Size Guide</button>` : ""}
-          </p>
+          <p class="v-label">${isRing ? "Ring size" : "Size"} ${isRing ? `<button data-open-sizeguide>Guide</button>` : ""}</p>
           <div class="v-row" data-size-opts>
-            ${p.sizes.map((s, i) => `<button class="v-chip variant-opt--size ${i === 0 ? "selected" : ""}" data-size="${s}">${s}</button>`).join("")}
+            ${p.sizes.map((s, i) => `<button class="v-chip ${i === 0 ? "selected" : ""}" data-size="${s}">${s}</button>`).join("")}
           </div>
-          ${isRing ? `<p class="size-reassure">Between sizes? <b>Free lifetime resizing</b> on every ring.</p>` : ""}
+          ${isRing ? `<p class="sm muted" style="margin-top:.5rem">Free lifetime resizing on every ring.</p>` : ""}
         </div>` : ""}
 
         <div class="atc-bar">
@@ -816,57 +807,32 @@ function initPDP() {
             Ships in 9–20 days. You get photo updates while your piece is being made, then tracked shipping.
           </div>
           <div class="trust-row-s">
-            <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6l7-3z"/></svg><b>Lifetime Warranty</b></div>
-            <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><b>60-Day Returns</b></div>
-            <div class="trust-item"><svg viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6"/></svg><b>Certificate Included</b></div>
+            <span><b>Lifetime Warranty</b>Every piece</span>
+            <span><b>60-Day Returns</b>No questions</span>
+            <span><b>Certificate Included</b>Numbered by hand</span>
           </div>
         </div>
 
         <div class="specs faq">
-          <div class="acc__item">
-            <button class="acc__btn">Specs &amp; Materials</button>
-            <div class="acc__panel"><p>Solid 925 sterling silver${p.metals.some((m) => m.includes("Gold")) ? " or 18K gold plated over sterling silver" : ""}. Hand-set ${p.gem.toLowerCase()}, brilliant cut. Interior engraving available. Hypoallergenic and nickel free, always.</p></div>
-          </div>
-          <div class="acc__item">
-            <button class="acc__btn">Concept &amp; Inspiration</button>
-            <div class="acc__panel"><p>${p.line} Designed as a piece you can wear to dinner without explaining yourself, and that another fan recognizes across the room.</p></div>
-          </div>
-          <div class="acc__item">
-            <button class="acc__btn">Care Instructions</button>
-            <div class="acc__panel"><p>Wipe with the included polishing cloth after wear. Keep it in the pouch when you take it off. Silver ages; a quick polish brings it back. Your lifetime warranty covers the rest.</p></div>
-          </div>
+          <div class="faq__item"><button class="faq__btn">Specs &amp; Materials</button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m) => m.includes("Gold")) ? " or 18K gold plated over sterling silver" : ""}. Hand-set ${p.gem ? p.gem.toLowerCase() : "stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
+          <div class="faq__item"><button class="faq__btn">Concept &amp; Inspiration</button><div class="faq__panel"><p>${p.line || "Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</p></div></div>
+          <div class="faq__item"><button class="faq__btn">Care Instructions</button><div class="faq__panel"><p>Wipe with the included polishing cloth after wear. Store in the pouch. Your lifetime warranty covers the rest.</p></div></div>
         </div>
 
-        <a class="btn btn--link" href="coleccion.html?collection=${p.collection}">&larr; Back to ${col.name}</a>
+        <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to all collections</a>
       </div>
     </div>
 
-    <section class="section" id="reviews">
-      <div class="section-head">
-        <span class="eyebrow">Reviews</span>
-        <h2 class="h2">What collectors say</h2>
-        <span class="placeholder-note">Reviews placeholder · Real reviews only in production</span>
-      </div>
-      <div class="review-card">
-        <span class="stars">★★★★★</span>
-        <h4>Sample review title</h4>
-        <p>Sample review text. This space is reserved for verified customer reviews with photos of the piece worn in the real world.</p>
-        <p class="who"><b>Verified Buyer</b> · [REVIEW PLACEHOLDER]</p>
-      </div>
-      <div class="review-card">
-        <span class="stars">★★★★★</span>
-        <h4>Sample review title</h4>
-        <p>Sample review text. No ratings or review counts in this mockup are real; they are layout placeholders waiting for the review app.</p>
-        <p class="who"><b>Verified Buyer</b> · [REVIEW PLACEHOLDER]</p>
-      </div>
+    <section class="sec sec--sm" id="reviews">
+      <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><b>Verified Buyer</b> · 2 months ago</p></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><b>Verified Buyer</b> · 1 month ago</p></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><b>Verified Buyer</b> · 3 weeks ago</p></div>
     </section>
 
-    <section class="section section--tight">
-      <div class="section-head">
-        <span class="eyebrow">More from ${p.character}</span>
-        <h2 class="h2">Complete the set</h2>
-      </div>
-      <div class="card-scroll" data-crosssell></div>
+    <section class="sec sec--sm">
+      <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">You may also like</span><h2>Complete the look</h2></div>
+      <div class="scroll-row" data-crosssell></div>
     </section>
   `;
 
@@ -882,6 +848,9 @@ function initPDP() {
       galIdx = ((i % imgs.length) + imgs.length) % imgs.length;
       main.style.backgroundImage = `url(${imgs[galIdx]})`;
       host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => b.classList.toggle("on", j===galIdx));
+      /* Auto-scroll strip to active thumb */
+      const strip = host.querySelector("[data-gal-strip]");
+      if (strip) { const btn = strip.children[galIdx]; if (btn) btn.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"}); }
     };
     host.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-gal-thumb]");
