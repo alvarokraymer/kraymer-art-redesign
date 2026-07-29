@@ -34,7 +34,7 @@ const HEADER_HTML = `
   </div>
 </header>
 <nav class="mob-nav" data-mob-nav>
-  <button class="mob-search-row" data-open-search>
+  <button class="mob-search-row" data-open-search style="margin-top:1.5rem">
     <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5;flex:none"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     Search
   </button>
@@ -59,6 +59,12 @@ const HEADER_HTML = `
     </div>
   </div>
   <div class="mob-foot">
+    <div class="mob-foot-row"><a href="#" data-open-wishlist>Wishlist</a></div>
+    <div class="mob-foot-icons">
+      <a href="https://instagram.com/kraymer.art" target="_blank" rel="noopener" aria-label="Instagram" class="mob-soc">IG</a>
+      <a href="https://youtube.com/@KraymerArt" target="_blank" rel="noopener" aria-label="YouTube" class="mob-soc">YT</a>
+      <a href="https://tiktok.com/@kraymer.art" target="_blank" rel="noopener" aria-label="TikTok" class="mob-soc">TK</a>
+    </div>
     <div class="mob-foot-row">
       <span>Dark mode</span>
       <button class="toggle-sw" data-theme-toggle></button>
@@ -156,7 +162,7 @@ const CART_HTML = `
   if (headerMount) headerMount.innerHTML = HEADER_HTML;
   if (footerMount) footerMount.innerHTML = FOOTER_HTML;
   const cartHost = document.createElement("div");
-  cartHost.innerHTML = CART_HTML;
+  cartHost.innerHTML = CART_HTML + `<div class="scrim mob-scrim" data-close-menu></div>`;
   document.body.appendChild(cartHost);
   if (typeof lucide !== "undefined") lucide.createIcons();
 })();
