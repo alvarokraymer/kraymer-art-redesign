@@ -780,7 +780,7 @@ function initPDP() {
       <div class="pdp-meta">
         <span class="pdp-tag">${col.name}</span>
         <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1><span class="pdp-price">${kaMoney(p.price)}</span></div>
-        <div class="pdp-desc">A piece that carries <i>quiet meaning.</i> Designed for those who wear their world close, without needing to explain it.</div>
+        <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
         <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
 
         <div class="pdp-config">
