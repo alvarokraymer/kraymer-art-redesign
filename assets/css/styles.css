@@ -183,8 +183,7 @@ input,select{font:inherit}
 /* ── Product cards ── */
 .pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem}
 .card{display:flex;flex-direction:column}
-.card__img{aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden;background:#DDD;position:relative;-webkit-tap-highlight-color:transparent;transition:transform .15s ease;user-select:none;-webkit-user-select:none}
-.card__img:active{transform:scale(.97)}
+.card__img{aspect-ratio:3/4;border-radius:var(--radius);overflow:hidden;background:#DDD;position:relative;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 .card__img .ph{position:absolute;inset:0;z-index:0}
 .card[style*="--img2"] .card__img:hover .ph{opacity:0}
 .card[style*="--img2"] .card__img:hover::after{content:"";position:absolute;inset:0;background-image:var(--img2);background-size:cover;background-position:center;border-radius:var(--radius)}
