@@ -88,15 +88,6 @@ function ph(label, opts = {}) {
 }
 
 /* ---------------- 2. Product card renderer ---------------- */
-function cardBadges(p) {
-  const out = [];
-  if (p.soldOut) out.push('<span class="badge badge--out">Sold Out</span>');
-  if (p.badges.includes("bestseller") && !p.soldOut) out.push('<span class="badge badge--gold">Bestseller</span>');
-  if (p.badges.includes("collector-set")) out.push('<span class="badge badge--ink">Collector Set</span>');
-  if (p.compareAt && !p.soldOut) out.push(`<span class="badge badge--save">Save ${kaMoney(p.compareAt - p.price)}</span>`);
-  if (p.batch && !p.soldOut) out.push(`<span class="badge">${p.batch}</span>`);
-  return out.join("");
-}
 
 function priceHTML(p) {
   const discount = p.compareAt ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
@@ -148,14 +139,19 @@ function productCard(p, opts = {}) {
     ? `<span class="badge badge--sale">-${Math.round((1 - p.price / p.compareAt) * 100)}%</span>`
     : "";
 
+  /* Catalog tags are additive too — never override the primary state */
+  const tagBadge = p.badges.includes("collector-set") ? '<span class="badge badge--ink">Collector Set</span>'
+    : (p.badges.includes("bestseller") && !p.soldOut) ? '<span class="badge badge--gold">Bestseller</span>'
+    : "";
+
   /* CTA: notify for sold-out & coming-soon, standard ATC otherwise */
   const cta = (p.soldOut || p.comingSoon)
     ? `<button class="card__buy card__buy--notify" data-notify="${p.handle}" aria-label="Notify me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>`
     : `<button class="card__buy" data-add="${p.handle}" aria-label="Add to cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>`;
 
-  /* Badge wrap: primary state + optional sale */
-  const badgesWrap = (stateBadge || saleBadge)
-    ? `<div class="card__badges">${stateBadge}${saleBadge}</div>` : "";
+  /* Badge wrap: primary state + optional sale + optional catalog tag */
+  const badgesWrap = (stateBadge || saleBadge || tagBadge)
+    ? `<div class="card__badges">${stateBadge}${tagBadge}${saleBadge}</div>` : "";
 
   return `
   <article class="card${approachClass} ${stateClass}" data-handle="${p.handle}" data-images='${JSON.stringify(p.images || [])}'>
@@ -390,7 +386,7 @@ const SIZE_GUIDE_HTML = `
     <tr><td>11</td><td>64</td><td>V</td><td>20.6</td></tr>
     <tr><td>12</td><td>67</td><td>X</td><td>21.4</td></tr>
   </table>
-  <p class="small" style="margin-top:var(--space-3)"><b style="color:var(--gold)">Free lifetime resizing.</b> <span class="muted">If it does not fit, we adjust it. Forever, at no cost.</span></p>
+  <p class="small" style="margin-top:var(--space-3)"><b style="color:var(--accent)">Free lifetime resizing.</b> <span class="muted">If it does not fit, we adjust it. Forever, at no cost.</span></p>
 `;
 
 /* MOCKUP ONLY: this modal simulates checkout. There is no real
@@ -561,7 +557,7 @@ function initHome() {
         <div class="quiz__result">
           <p class="eyebrow">Your piece</p>
           <h3 class="card__title">${pick.title}</h3>
-          <p class="small" style="margin:var(--space-2) 0 var(--space-3);opacity:.8">${pick.line}</p>
+          <p class="small" style="margin:var(--space-sm) 0 var(--space-3);opacity:.8">${pick.line}</p>
           <a href="producto.html?id=${pick.handle}">View the piece &rarr;</a>
         </div>`;
     };
@@ -862,9 +858,9 @@ function initPDP() {
   const reviewsHTML = `
     <section class="sec sec--sm" id="reviews">
       <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><b>Verified Buyer</b> · 2 months ago</p></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><b>Verified Buyer</b> · 1 month ago</p></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><b>Verified Buyer</b> · 3 weeks ago</p></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who">[REVIEWER 1 PLACEHOLDER]</p></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who">[REVIEWER 2 PLACEHOLDER]</p></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who">[REVIEWER 3 PLACEHOLDER]</p></div>
     </section>`;
   const crossHTML = `
     <section class="sec sec--sm">
@@ -991,7 +987,7 @@ function initPDP() {
           <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
           ${pdpPrice('style="margin-bottom:.75rem"')}
           <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
-          <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
+          <div class="pdp-rating"><span class="stars">★★★★★</span> ${RATING_PLACEHOLDER} · <a href="#reviews">Read reviews</a></div>
           <div class="pdp-config">
             ${variantsHTML("chips","metal-cards","metal-cards")}
           </div>

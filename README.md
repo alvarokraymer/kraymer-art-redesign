@@ -1,8 +1,10 @@
-# Kraymer Art — Redesign Mockup v1
+# Kraymer Art — Redesign Mockup
 
 Mockup visual e interactivo para decidir la dirección de diseño del rebuild de
 kraymerart.com. **No es producción ni Shopify**: es una maqueta navegable para
-iterar rápido. Un desarrollador Shopify portará las decisiones a Horizon después.
+iterar rápido, y se trata como un **documento de diseño ejecutable**: las
+reglas de `AGENTS.md` describen el estado real y verificado del código, no
+aspiraciones. Un desarrollador Shopify portará las decisiones a Horizon después.
 
 ## Cómo verlo
 
@@ -10,49 +12,71 @@ Opción rápida: doble clic en `index.html` (funciona desde `file://`).
 
 Opción recomendada (más parecida al deploy):
 
-```powershell
-cd A:\Kraymer\02_Website\liveDesign
-python -m http.server 8000
-# abre http://localhost:8000
+```bash
+npx http-server -p 8000 .
 ```
 
-Mira todo en **vista móvil** (DevTools → 375–414px). Ese es el diseño real;
-desktop es solo una cortesía.
+Abre `http://localhost:8000`. (No hay Python instalado en este entorno — no
+uses `python -m http.server`.)
+
+Mira todo en **vista móvil** (DevTools → 375–414px) **y prueba el toggle de
+dark mode** (menú hamburguesa → "Dark mode"). Ese es el diseño real; desktop es
+solo una cortesía, y varias secciones solo se rompen visualmente en dark mode
+si no las revisas con el toggle activado.
 
 ## Qué contiene
 
 | Página | Archivo | URLs de ejemplo |
 |---|---|---|
 | Home | `index.html` | `/` |
-| Colección (PLP) | `coleccion.html` | `/coleccion.html`, `?collection=jjk`, `?collection=kny`, `?collection=genshin`, `?type=sets` |
-| Producto (PDP) | `producto.html` | `?id=the-limitless-ring`, `?id=hinokami-kagura-pendant`, `?id=vision-gemstone-collector-box` |
+| Colección (PLP) | `coleccion.html` | `?collection=jjk`, `?collection=kny`, `?collection=genshin`, `?type=sets` |
+| Producto (PDP) | `producto.html` | `?id=<handle>&approach=1\|2\|3\|4` — 4 layouts distintos, ver `AGENTS.md` |
 
 Componentes transversales: header con buscador funcional, wishlist, drawer de
 carrito con una sola CTA (checkout **simulado**: es un mock, está marcado en el
-código), quiz "Find Your Domain", guía de tallas, sticky add-to-cart en PDP.
+código), quiz "Find Your Domain", guía de tallas, sticky add-to-cart en PDP,
+toggle de dark mode.
 
-Carrito y wishlist persisten en `localStorage`. Para reiniciarlos: DevTools →
-Application → Local Storage → borrar `ka_cart` y `ka_wishlist`.
+Carrito, wishlist y el tema (claro/oscuro) persisten en `localStorage`. Para
+reiniciarlos: DevTools → Application → Local Storage → borrar `ka_cart`,
+`ka_wishlist` y la clave de tema.
 
 ## Placeholders (intencionados)
 
 - Imágenes: bloques oscuros `.ph` con etiqueta de qué foto iría ahí.
-- Ratings/reviews/cifras sociales: marcados como `[RATING PLACEHOLDER]`,
-  `[SOCIAL PROOF PLACEHOLDER]`, etc. **Nunca** poner cifras inventadas que
-  parezcan reales.
+- Ratings/reviews/cifras sociales: marcados como `RATING_PLACEHOLDER`,
+  `[REVIEWER N PLACEHOLDER]`, `[SOCIAL PROOF PLACEHOLDER]`,
+  `[QUOTE N PLACEHOLDER]`. **Nunca** poner cifras o nombres inventados que
+  parezcan reales — esto ya se regresó una vez (una PDP con "5.0" y reseñas
+  falsas de "Verified Buyer") y se corrigió el 2026-07-30.
 - Checkout: modal simulado, sin integración real.
+
+Nota: el marquee/footer afirman "10,000+ clients/collectors" en cada página,
+mientras la sección del fundador dice "more than 2,000 collectors" y la
+sección de confianza usa `[SOCIAL PROOF PLACEHOLDER]`. Esas tres cifras no
+coinciden entre sí — es una decisión de contenido pendiente (qué cifra real
+usar en todos lados), no algo para resolver inventando un número.
 
 ## Cómo iterar (esto es lo importante)
 
 Todo el look vive en variables CSS en `:root` dentro de `assets/css/styles.css`:
-colores, tipografías, espaciados, radios. Para cambios de dirección visual, toca
-la variable, no las reglas. Los productos se editan en `assets/js/data.js`.
+colores, tipografías, espaciados, radios. Para cambios de dirección visual,
+toca la variable, no las reglas — y antes de borrar una variable, busca
+`var(--nombre)` tanto en `assets/css` como en `assets/js` (varias solo se usan
+desde `style=""` inline en el JS). El listado completo y actualizado de tokens
+está en `AGENTS.md`, no aquí, para no duplicar y desincronizarse otra vez.
+
+Los productos se editan en `assets/js/data.js`.
 
 Ejemplos de cambios típicos y dónde van:
 
-- "Otro tono de dorado" → `--gold` en `styles.css`.
-- "Más aire entre secciones" → `--space-7` / clases `.section`.
-- "Otro producto / precio / badge" → `PRODUCTS` en `assets/js/data.js`.
+- "Otro tono de dorado" → `--accent` en `styles.css` (no `--gold`, se
+  consolidó en `--accent` el 2026-07-30, mismo valor).
+- "Más aire entre secciones" → clases `.sec` y variantes.
+- "Otro producto / precio / badge" → `PRODUCTS` en `assets/js/data.js`. Si
+  añades un campo nuevo (otra badge, otro estado), confirma que realmente se
+  vea en algún lado antes de darlo por terminado — un campo de datos que no
+  renderiza en ningún sitio es un bug, no un gancho para el futuro.
 - "Mover un bloque de la home" → reordenar `<section>` en `index.html`.
 
 ## Portar a Shopify Horizon (para el developer)
@@ -66,27 +90,19 @@ Ejemplos de cambios típicos y dónde van:
 - El drawer de carrito y el sticky ATC describen el UX esperado del drawer/ATC
   de Horizon.
 
-## Deploy a Cloudflare Pages (cuando validemos la v1)
+## Deploy a Cloudflare Pages
 
-1. Crear repo en GitHub (usuario y nombre a decidir) y hacer push de esta carpeta:
-   ```powershell
-   git init
-   git add -A
-   git commit -m "Kraymer Art redesign mockup v1"
-   git remote add origin https://github.com/<usuario>/<repo>.git
-   git push -u origin main
-   ```
-2. En Cloudflare Dashboard → **Workers & Pages → Create → Pages → Connect to Git**.
-3. Elegir el repo. Config: framework **None**, build command **vacío**,
-   output directory **`/`** (raíz del repo).
-4. Deploy. Cada `git push` a `main` redespliega solo (iteración live).
-
-No hace falta compartir tokens ni claves: la conexión GitHub↔Cloudflare se hace
-desde el dashboard con la cuenta propia.
+Ya en marcha: `.github/workflows/deploy.yml` despliega a Cloudflare Pages
+(proyecto `kraymer-art-redesign`) en cada push a `master`, sin build, output
+dir la raíz del repo. El sitio en vivo está protegido con una pantalla de PIN
+(`functions/_middleware.js`) — es opacidad intencional para que sea privado,
+no una vulnerabilidad que corregir.
 
 ## Decisiones de diseño ya tomadas (no deshacer sin hablarlo)
 
 Mobile-first, navegación por fandom con nombres completos, una CTA dominante,
 sin temporizadores falsos, sold-out al final atenuado, timeline de fabricación
 (9–20 días) bajo el botón de compra, copy sin la palabra "premium" y sin guiones
-como puntuación. Contexto completo en `AGENTS.md`.
+como puntuación. Contexto completo, tokens reales y el detalle de cómo funciona
+el dark mode (y su trampa más común) están en `AGENTS.md` — léelo antes de
+tocar colores o fondos de sección.
