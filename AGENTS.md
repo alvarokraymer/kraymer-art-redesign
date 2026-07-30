@@ -33,8 +33,10 @@ Horizon**. See "Shopify Horizon portability" at the end.
 index.html            Home           (body[data-page="home"])
 coleccion.html         PLP, driven by ?collection=jjk|kny|genshin and ?type=sets
 producto.html          PDP, driven by ?id=<handle>&approach=1|2|3|4 (see below)
+blog.html              Journal index (body[data-page="blog"]) — grid of BLOG_POSTS
+about.html             Our Story (body[data-page="about"]) — founder + craft + CTA
 assets/css/styles.css  ALL styles. Tokens in :root, mobile-first, min-width only
-assets/js/data.js      Mock catalog. Object shape mirrors Shopify `product`
+assets/js/data.js      Mock catalog + BLOG_POSTS. Product shape mirrors Shopify `product`
 assets/js/partials.js  Header/footer/cart drawer/search overlay (template strings)
 assets/js/app.js       All interactions, numbered sections (see file header)
 AGENTS.md              This file — the design system, agent-facing
@@ -116,13 +118,48 @@ pattern already used for `.marquee`:
 [data-theme="dark"] .marquee{ background:var(--light) }
 ```
 
+The same trap bit `.sec--dark` and the hero itself, found in a later pass
+(2026-07-30): `[data-theme="dark"] .sec--dark{color:var(--light)}` used
+`var(--light)` expecting "the light literal" but got the dark literal instead —
+fixed by swapping to `color:var(--dark)` (which *is* the light literal in dark
+mode — that inversion is the whole trick, use the "wrong-looking" token on
+purpose). Separately, `.hs-content h2` (hero slide headline) sits over a
+gradient overlay that is a **hardcoded** dark rgba, not a token — so its text
+must also be a **hardcoded** light value (`#F6F6F6`), never `var(--light)`,
+or it silently goes dark-on-dark in dark mode while staying legible by
+accident over light-toned photos and unreadable over dark ones.
+
 **Rule going forward:** any new section that hardcodes a background/text pair
 instead of pairing two tokens must get a `[data-theme="dark"]` override in the
 same change, and must be checked with the theme toggle on before calling it
-done — not just in light mode.
+done — not just in light mode. If a background is a photo + a permanently-dark
+gradient (like the hero or the fandom tiles), its text must be a **hardcoded**
+light color, never a token, since the token swaps but the photo doesn't.
 
 ## Component inventory
 
+- **Base `.card`** (no approach class — used by home Bestsellers and PDP
+  cross-sell only, via `productCard(p, {approach:false})`): a real card
+  container (`--surface-soft` fill, radius, subtle shadow), not a bare image +
+  text flow. The three PLP "approach" variants each fully override
+  background/radius/shadow, so changes here are invisible on `coleccion.html` —
+  that's by design, don't chase parity between the two.
+- **Shop by Collection** (`.ftile` on `index.html`, right after Bestsellers):
+  full-bleed real product photography per collection (not `.ph` placeholders —
+  rule 9 explicitly allows real photography for shipped pieces) with a
+  hardcoded dark gradient overlay (`.ftile::after`) for legible text regardless
+  of theme. Text inside must stay on tokens that are *paired* with the tile's
+  own background (`.ftile__body h3{color:var(--light)}` pairs with the
+  `::after` gradient being permanently dark) — don't add a hardcoded-photo
+  section without also adding its gradient overlay.
+- **Journal / blog** (`postCard()` + `renderPosts()` in `app.js`, `BLOG_POSTS`
+  in `data.js`): one card renderer, two mounts — `[data-posts-home]` (first 3,
+  horizontal scroll on `index.html`) and `[data-posts-all]` (all, grid on
+  `blog.html`). Each post gets `id="<slug>"` on its own card so
+  `blog.html#slug` (used by "Read more" links and the home preview) scrolls to
+  it directly — there are no separate per-post detail pages, by design; the
+  excerpt shown IS the full content, same low-fidelity-content convention as
+  the rest of this mockup.
 - **Product cards** (`productCard()` in `app.js`): one shared renderer, three
   visual "approaches" (`bold` / `clean` / `genshin`→`soft`) selected by the
   **active collection page**, not by the product's own collection — every card

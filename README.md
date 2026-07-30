@@ -31,6 +31,8 @@ si no las revisas con el toggle activado.
 | Home | `index.html` | `/` |
 | Colección (PLP) | `coleccion.html` | `?collection=jjk`, `?collection=kny`, `?collection=genshin`, `?type=sets` |
 | Producto (PDP) | `producto.html` | `?id=<handle>&approach=1\|2\|3\|4` — 4 layouts distintos, ver `AGENTS.md` |
+| Journal / blog | `blog.html` | grid de `BLOG_POSTS` (`assets/js/data.js`); `blog.html#slug` va directo a un post |
+| Our Story | `about.html` | fundador, "The Craft", CTA a colecciones |
 
 Componentes transversales: header con buscador funcional, wishlist, drawer de
 carrito con una sola CTA (checkout **simulado**: es un mock, está marcado en el

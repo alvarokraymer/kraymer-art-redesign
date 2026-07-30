@@ -171,6 +171,24 @@ function productCard(p, opts = {}) {
   </article>`;
 }
 
+/* ---------------- 2b. Journal / blog post cards ---------------- */
+function postCard(post) {
+  return `
+  <a class="post-card" id="${post.slug}" href="blog.html#${post.slug}">
+    <div class="post-card__img"><img src="${post.image}" alt="${post.title}" loading="lazy"></div>
+    <div class="post-card__body">
+      <span class="eyebrow">${post.category}</span>
+      <h3>${post.title}</h3>
+      <p class="sm muted">${post.excerpt}</p>
+      <span class="post-card__link">Read more &rarr;</span>
+    </div>
+  </a>`;
+}
+function renderPosts(selector, posts) {
+  const host = document.querySelector(selector);
+  if (host) host.innerHTML = posts.map(postCard).join("");
+}
+
 /* ---------------- 3. Cart ---------------- */
 const Cart = {
   key: "ka_cart",
@@ -484,6 +502,9 @@ function initHome() {
 
   }
 
+  /* Journal preview: first 3 posts */
+  renderPosts("[data-posts-home]", BLOG_POSTS.slice(0, 3));
+
   /* Hero slider: auto-rotate every 5s, touch swipe */
   const track = document.querySelector("[data-hs-track]");
   const dots = document.querySelector("[data-hs-dots]");
@@ -570,6 +591,15 @@ function initHome() {
       renderStep();
     });
     renderStep();
+  }
+}
+
+/* ---- Blog ---- */
+function initBlog() {
+  renderPosts("[data-posts-all]", BLOG_POSTS);
+  if (location.hash) {
+    const target = document.querySelector(location.hash);
+    if (target) target.scrollIntoView({ block: "start" });
   }
 }
 
@@ -1185,5 +1215,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (page === "home") initHome();
   if (page === "plp") initPLP();
   if (page === "pdp") initPDP();
+  if (page === "blog") initBlog();
   if (typeof lucide !== "undefined") lucide.createIcons();
 });
