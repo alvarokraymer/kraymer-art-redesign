@@ -55,6 +55,16 @@
   --radius-pill: 999px;
   --gutter:  1.5rem;
   --header-h: 52px;
+
+  --surface:      #F4EEEB;
+  --surface-soft: #F9F6F3;
+  --gold:         #C4A882;
+  --gold-soft:    #D4C0A2;
+  --s:            0.75rem;
+  --space-sm:     0.5rem;
+  --space-2:      0.5rem;
+  --space-3:      1rem;
+  --space-4:      1.5rem;
 }
 
 /* ── Reset ── */
@@ -204,9 +214,93 @@ input,select{font:inherit}
 .heart:active{transform:scale(.88)}
 .heart svg{width:15px;height:15px;stroke:var(--dark);fill:none;stroke-width:1.6}
 .heart.active svg{fill:var(--accent);stroke:var(--accent)}
-.card__buy{display:block;width:100%;margin-top:.75rem;padding:.6rem 0;background:var(--dark);color:var(--light);border:0;border-radius:var(--radius-sm);font-size:.75rem;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:all .15s}
-.card__buy:active{background:var(--accent)}
-.card__buy.done{background:#4A7C59}
+
+/* ── Collection card variants ── */
+
+/* Badge wrapper (replaces absolute positioning on individual badges) */
+.card__badges{position:absolute;top:.5rem;left:.5rem;z-index:3;display:flex;flex-direction:column;gap:4px}
+.card__badges .badge{position:static}
+
+/* JJK: Dark luxury — full dark bg, light text, gold accents */
+.card--jjk{background:var(--dark);color:var(--light);border-radius:var(--radius);overflow:hidden}
+.card--jjk .card__img{border-radius:0}
+.card--jjk .card__body{padding:.85rem;color:var(--light)}
+.card--jjk .card__series{color:var(--accent)}
+.card--jjk .card__title{color:var(--light)}
+.card--jjk .card__price{color:var(--light)}
+.card--jjk .card__price s{color:var(--muted-d);font-weight:400}
+.card--jjk .heart{background:rgba(255,255,255,.1);box-shadow:none}
+.card--jjk .heart svg{stroke:rgba(255,255,255,.65)}
+.card--jjk .heart.active svg{fill:var(--accent);stroke:var(--accent)}
+.card--jjk .badge{color:var(--accent);border-color:var(--accent)}
+.card--jjk.card--featured{box-shadow:inset 0 2px 0 var(--accent)}
+.card--jjk .badge--agotado{color:var(--muted-d);border-color:var(--muted-d)}
+.card--jjk .badge--pocos{color:#D4A54A;border-color:#D4A54A}
+
+/* KNY: Framed — clean white, warm border, decorative line between img & body */
+.card--kny{background:#fff;border:1px solid #EDE5E2;border-radius:var(--radius);overflow:hidden}
+.card--kny .card__img{border-radius:0;border-bottom:1px solid #F0E3DE}
+.card--kny .card__body{padding:1rem}
+.card--kny .card__series{color:#B55848}
+.card--kny .card__price s{color:#C5A099}
+.card--kny .badge{color:#B55848;border-color:#B55848}
+.card--kny.card--featured{border-color:#DDB5AE;box-shadow:0 2px 12px rgba(181,88,72,.08)}
+
+/* Genshin: Glow — subtle gradient, rounded inner img, purple accent, soft shadow */
+.card--genshin{background:linear-gradient(180deg,#fff 0%,#FAF8FC 100%);border-radius:var(--radius);overflow:visible;box-shadow:0 2px 10px rgba(138,109,174,.06)}
+.card--genshin .card__img{border-radius:var(--radius-sm);margin:.45rem .45rem 0}
+.card--genshin .card__body{padding:.75rem 1rem 1rem}
+.card--genshin .card__series{color:#8A6DAE}
+.card--genshin .badge{color:#8A6DAE;border-color:#8A6DAE}
+.card--genshin.card--featured{box-shadow:0 3px 18px rgba(138,109,174,.14)}
+
+/* ── State badges ── */
+.badge--destacado{background:var(--accent);color:#fff;border-color:var(--accent)}
+.badge--nuevo{color:#3A7D5A;border-color:#3A7D5A}
+.badge--oferta{color:#B5453A;border-color:#B5453A}
+.badge--pocos{color:#C0852F;border-color:#C0852F}
+.badge--proximamente{color:var(--muted);border:1px dashed var(--muted)}
+.badge--agotado{color:var(--muted);border-color:var(--muted)}
+
+/* ── State indicators ── */
+
+/* Coming soon: dashed outline on image */
+.card--coming-soon .card__img{
+  outline:2px dashed var(--muted);
+  outline-offset:-3px
+}
+
+/* Low stock: partial amber bar at bottom of image */
+.card--low-stock .card__img::after{
+  content:"";
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg,#C0852F 65%,transparent 65%);
+  z-index:4
+}
+
+/* Sold out: dim card, grayscale placeholder SVGs */
+.card.sold{opacity:.45}
+.card.sold .ph svg{filter:grayscale(1)}
+
+/* Sale: discount % badge next to price */
+.card__discount{
+  display:inline-block;
+  font-size:.65rem;
+  font-weight:600;
+  color:#B5453A;
+  margin-left:.35rem;
+  vertical-align:middle
+}
+
+/* Notify CTA (sold out / coming soon) */
+.card__buy--notify{
+  background:transparent!important;
+  border:1px dashed var(--muted)!important;
+  color:var(--muted)!important
+}
+.card__buy--notify svg{stroke:var(--muted)!important}
 
 /* scroll-row */
 .scroll-row{display:flex;flex-wrap:nowrap;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;scrollbar-width:none;scroll-padding-left:24px;scroll-padding-right:24px}
@@ -343,16 +437,13 @@ input,select{font:inherit}
 .pdp-price{font-family:var(--body);font-size:1.75rem;font-weight:700;flex:none}
 .pdp-config{padding:.8rem 0;margin-bottom:1.5rem;background:var(--surface-soft);border-radius:var(--radius-sm)}
 .pdp-config .v-group:last-child{margin-bottom:0}
-.pdp-config .v-chip{min-height:44px;padding:0 1.5rem;border:1.5px solid #D0D0D0;border-radius:var(--radius-pill);font-size:.875rem;color:var(--muted);background:#fff;transition:all .15s;cursor:pointer}
-.pdp-config .v-chip.selected{background:var(--dark);border-color:var(--dark);color:#fff}
-.atc-bar .btn--dark{border-radius:var(--radius-pill);min-height:56px;font-size:.85rem;letter-spacing:.04em;font-weight:600;width:100%}
 .v-group{margin-bottom:1.25rem}
 .v-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:flex;justify-content:space-between}
 .v-label button{color:var(--accent);font-weight:500}
 .v-row{display:flex;flex-wrap:wrap;gap:.5rem}
 .pdp-config .v-chip{min-height:44px;padding:0 1.5rem;border:1px solid #CCC;border-radius:var(--radius-pill);font-size:.875rem;color:var(--muted);background:transparent;transition:all .15s}
 .pdp-config .v-chip.selected{background:var(--dark);border-color:var(--dark);color:var(--light)}
-.atc-bar .btn--dark{min-height:56px}
+.atc-bar .btn--dark{border-radius:var(--radius-pill);min-height:56px;font-size:.85rem;letter-spacing:.04em;font-weight:600;width:100%}
 .atc-bar .btn--dark.done{background:#4A7C59}
 .atc-note{margin-top:.75rem;padding:1rem;background:#F4EEEB;border-radius:var(--radius-sm);font-size:.875rem}
 .atc-note b{display:block;color:var(--accent);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}

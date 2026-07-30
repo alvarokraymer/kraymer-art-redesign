@@ -99,35 +99,69 @@ function cardBadges(p) {
 }
 
 function priceHTML(p) {
+  const discount = p.compareAt ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
   if (p.pieces > 1) {
     const per = Math.round(p.price / p.pieces);
-    return `<div class="p-card__price">
+    return `<div class="card__price">
       <span>${kaMoney(per)} <span class="per-piece">per piece</span></span>
-      ${p.compareAt ? `<s>${kaMoney(Math.round(p.compareAt / p.pieces))}</s>` : ""}
+      ${p.compareAt ? `<s>${kaMoney(Math.round(p.compareAt / p.pieces))}</s><span class="card__discount">-${discount}%</span>` : ""}
       <span class="per-piece">· ${kaMoney(p.price)} set</span>
     </div>`;
   }
-  return `<div class="p-card__price">
+  return `<div class="card__price">
     <span>${kaMoney(p.price)}</span>
-    ${p.compareAt ? `<s>${kaMoney(p.compareAt)}</s>` : ""}
+    ${p.compareAt ? `<s>${kaMoney(p.compareAt)}</s><span class="card__discount">-${discount}%</span>` : ""}
   </div>`;
 }
 
 function productCard(p) {
   const col = COLLECTIONS[p.collection];
   const gemColor = accentColors[p.collection] || PH_GOLD;
-  const dot = `<span class="card__dot" style="background:${gemColor}"></span>`;
-  const cta = p.soldOut
-    ? `<button class="card__buy card__buy--out" data-notify="${p.handle}" aria-label="Notify me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>`
-    : `<button class="card__buy" data-add="${p.handle}" aria-label="Add to cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>`;
-  const badge = p.soldOut
-    ? `<span class="badge">Sold Out</span>`
-    : (p.badges.includes("bestseller") ? `<span class="badge badge--acc">Bestseller</span>` : ``);
+
+  /* Determine primary state (mutually exclusive, one badge slot) */
+  let stateClass = "";
+  let stateBadge = "";
+
+  if (p.soldOut) {
+    stateClass = "sold";
+    stateBadge = '<span class="badge badge--agotado">Agotado</span>';
+  } else if (p.comingSoon) {
+    stateClass = "card--coming-soon";
+    stateBadge = '<span class="badge badge--proximamente">Próximamente</span>';
+  } else if (p.lowStock) {
+    stateClass = "card--low-stock";
+    stateBadge = '<span class="badge badge--pocos">Quedan pocos</span>';
+  } else if (p.isNew) {
+    stateClass = "card--new";
+    stateBadge = '<span class="badge badge--nuevo">Nuevo</span>';
+  } else if (p.isFeatured) {
+    stateClass = "card--featured";
+    stateBadge = '<span class="badge badge--destacado">Destacado</span>';
+  }
+
+  /* Sale is additive — show discount badge only if not sold out or coming soon */
+  const saleBadge = (!p.soldOut && !p.comingSoon && p.compareAt)
+    ? `<span class="badge badge--oferta">-${Math.round((1 - p.price / p.compareAt) * 100)}%</span>`
+    : "";
+
+  /* Collection-specific card class (all stays vanilla) */
+  const collClass = (p.collection === "jjk" || p.collection === "kny" || p.collection === "genshin")
+    ? ` card--${p.collection}` : "";
+
+  /* CTA: notify-me for sold out & coming soon; standard ATC otherwise */
+  const cta = (p.soldOut || p.comingSoon)
+    ? `<button class="card__buy card__buy--notify" data-notify="${p.handle}" aria-label="Avísame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>`
+    : `<button class="card__buy" data-add="${p.handle}" aria-label="Añadir al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>`;
+
+  /* Badges wrap: state + optional sale */
+  const badgesWrap = (stateBadge || saleBadge)
+    ? `<div class="card__badges">${stateBadge}${saleBadge}</div>` : "";
+
   return `
-  <article class="card ${p.soldOut ? "sold" : ""}" data-handle="${p.handle}" data-images='${JSON.stringify(p.images || [])}'>
+  <article class="card${collClass} ${stateClass}" data-handle="${p.handle}" data-images='${JSON.stringify(p.images || [])}'>
     <div class="card__img">
       ${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}
-      ${badge}
+      ${badgesWrap}
       <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
         <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
       </button>
@@ -626,20 +660,20 @@ function initPLP() {
     if (filterAvail === "in-stock") list = list.filter((p) => !p.soldOut);
     if (filterAvail === "pre-order") list = list.filter((p) => p.metals.length === 0 || p.badges.includes("pre-order"));
 
-    /* In-stock first, sold out always sinks to the end, dimmed */
-    const inStock = list.filter((p) => !p.soldOut);
+    /* Available first, then coming soon, then sold out (always last) */
+    const available = list.filter((p) => !p.soldOut && !p.comingSoon);
+    const coming = list.filter((p) => p.comingSoon && !p.soldOut);
     const out = list.filter((p) => p.soldOut);
 
     const sorts = {
-      "trending": (a, b) => (b.badges.includes("bestseller") - a.badges.includes("bestseller")),
+      "trending": (a, b) => ((b.isFeatured ? 1 : 0) + (b.badges.includes("bestseller") ? 1 : 0)) - ((a.isFeatured ? 1 : 0) + (a.badges.includes("bestseller") ? 1 : 0)),
       "price-asc": (a, b) => a.price - b.price,
       "price-desc": (a, b) => b.price - a.price,
-      "newest": (a, b) => b.batch.localeCompare(a.batch),
+      "newest": (a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0),
     };
-    inStock.sort(sorts[activeSort] || sorts.trending);
+    available.sort(sorts[activeSort] || sorts.trending);
 
-    const finalList = [...inStock, ...out];
-    finalList.sort((a,b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+    const finalList = [...available, ...coming, ...out];
     grid.innerHTML = `<div class="pgrid">${finalList.map(productCard).join("")}</div>`;
     countEl.textContent = `Showing ${finalList.length} handcrafted piece${finalList.length === 1 ? "" : "s"}`;
     syncWishUI();
