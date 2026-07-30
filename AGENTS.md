@@ -64,10 +64,11 @@ search.
 --muted       #8D847E   /* secondary text */
 --muted-d     #A09892   /* secondary text on dark backgrounds */
 --accent      #C4A882   /* gold — accent only, never a big fill */
+--pink        #D98CA3   /* liked/active wishlist heart ONLY — nowhere else */
 --line        #E8E2DE   /* hairline borders */
 
---surface       #F4EEEB /* warm off-white card/section fill */
---surface-soft  #F9F6F3 /* lighter variant, e.g. guarantee box */
+--surface       #F0F0EF /* neutral card/section fill — NOT cream, see note below */
+--surface-soft  #F6F6F5 /* lighter neutral variant, e.g. guarantee box */
 --gold-soft     #D4C0A2 /* softer accent, distinct from --accent */
 
 --display  'Nantes', 'Georgia', 'Times New Roman', serif   /* headings, local woff2 */
@@ -91,6 +92,12 @@ only read `README.md`/old docs: there is **no** `--bg`, `--ink`, `--gold`
 (that name was merged into `--accent`, same hex), or per-fandom color
 variables (`--jjk`/`--kny`/`--genshin`). Fandom differentiation is done via the
 **card approach system** below, not color tokens.
+
+`--surface`/`--surface-soft` were originally a warm cream (`#F4EEEB`/`#F9F6F3`)
+and got flagged 2026-07-31 as reading like unwanted "cream/yellow" against the
+otherwise achromatic Noir palette — retuned to near-neutral grays. If a future
+request wants warmth back, that's a deliberate brand call to confirm first,
+not a default to restore quietly.
 
 ## Dark mode — how it actually works (read before touching colors)
 
@@ -221,12 +228,40 @@ to the other theme.
   tooling, not shippable pages. If Bold/Clean are ever fully retired, delete
   these three files, the `forceApproach` option, and the CSS under "Card
   approaches" together — don't let one survive without the others.
-- **PLP filters** (`coleccion.html`, built in `initPLP()`): rendered directly
-  inline above the grid (`[data-filters-inline]`), not a slide-in drawer —
-  there is no "Sort & Filter" button anymore. Every chip tap re-applies
-  immediately (no separate "Apply" step); "Clear all" only shows once a filter
-  is active. `.v-chip` is a generic pill style (used here and in the PDP
-  variant selectors) — don't rescope it back under `.pdp-config`.
+- **PLP filters** (`coleccion.html`, built in `initPLP()`): a **collapsed-by-
+  default off-canvas panel** (`.fp`), opened by the "Sort & Filter" button
+  docked in the sticky utility bar (`.ubar`, `position:sticky` right under the
+  header). An inline-always-expanded version was tried 2026-07-31 and
+  explicitly rejected — don't reintroduce it without being asked again.
+  `.v-chip` is a generic pill style (used here and in the PDP variant
+  selectors) — keep it unscoped from `.pdp-config` (it was accidentally scoped
+  there before, which meant filter chips silently had no pill styling at all —
+  don't reintroduce that scoping either).
+- **Collection promo tiles** (the 4 `.ftile` cards shown on `coleccion.html`
+  when no `?collection=` is set — JJK/KNY/Genshin/Mystery Box): use
+  `assets/banner{1,2,3,4}.png` (empty product-display podium photography,
+  one per mood: cream/gold, dusty rose, sage/olive, navy) as backgrounds,
+  relying on the same `.ftile::after` dark gradient as every other `.ftile`
+  for legible text. The home hero's JJK slide uses `assets/jj_hero.png` (a
+  real sapphire jewelry set) instead of the older `otherRing_hero_AI.png`,
+  which is now unused but left in place.
+- **PLP hero removed** (2026-07-31): `coleccion.html` no longer has a
+  `.plp-hero` title/description banner. The "Showing N pieces" count moved
+  into the `.ubar` sticky bar next to the filter button; the collection promo
+  tiles (shown when no `?collection=` is set) now anchor to `[data-subcats]`
+  instead. `.plp-hero`/`.plp-hero__inner` CSS is NOT dead — `blog.html`,
+  `about.html` and the variant pages still use it.
+- **Wishlist doubles as a "like"** (`Wishlist`, `baseLikes()`, `likeCount()` in
+  `app.js`): toggling the heart still saves to `ka_wishlist` in `localStorage`
+  as before, but every heart context (product cards, all 4 PDP layouts via
+  `pdpWish()`) now also shows a running count — a stable per-handle number
+  (`baseLikes()`, hashed from the handle, no field to maintain in `data.js`)
+  plus 1 while *this visitor* has it wishlisted. This is a deliberate,
+  narrow exception to Hard rule 5: unlike a reviews count or a rating, the
+  number in front of the user visibly changes because of their own action, so
+  it isn't a static fabricated claim — don't extend this reasoning to justify
+  other invented counts elsewhere. The active/liked heart color is `--pink`,
+  not `--accent` — gold stays reserved for the one brand accent.
 - **Reviews / rating**: `RATING_PLACEHOLDER` (`data.js`) and the review
   attribution placeholders (`[REVIEWER N PLACEHOLDER]`) are the only allowed
   values for a rating number or a reviewer identity anywhere in this repo —
@@ -261,13 +296,17 @@ to the other theme.
 8. **No hover-only information.** Hover effects may enhance, never gate content.
 9. **Every product shows a real photo, never a blank/abstract slot.** Shipped
    pieces use their own shoot (`assets/productPhotos/`). Demo/state-only
-   products (no shoot of their own) reuse `assets/placeholder_1..4.jpg` — real
-   photography, just not of that specific SKU — or another product's photo
-   when it's a closer visual match. `phImg()` in `app.js` auto-falls back to
+   products (no shoot of their own) reuse `assets/placeholder_1..4.jpg`, an
+   unused angle from `assets/A_*_Results/` (raw pre-webp shoot exports — mind
+   the spaces in some filenames, URL-encode them, e.g. `%20`), or another
+   product's photo when it's a closer visual match — real photography, just
+   not of that specific SKU. Spread reuse across *different* files rather than
+   repeating the same one twice (checked 2026-07-31: no demo product shares an
+   exact image file with another). `phImg()` in `app.js` auto-falls back to
    `placeholder_<phId>.jpg` if `images[0]` is ever left as the literal string
-   `"placeholder"`, but prefer setting an explicit path in `data.js` (as of
-   2026-07-31 every product has one) — it's clearer than tracing the fallback.
-   Never use real third-party photos or trademarked artwork.
+   `"placeholder"`, but prefer setting an explicit path in `data.js` — it's
+   clearer than tracing the fallback. Never use real third-party photos or
+   trademarked artwork.
 10. **No dead code as a design decision.** If a data field (e.g. a new entry in
     a product's `badges` array) doesn't visibly render anywhere, that's a bug,
     not a future hook — wire it in immediately or don't add the field.

@@ -39,14 +39,17 @@ Producción se quedó con el enfoque "Soft" (el antiguo look de Genshin) para
 todas las colecciones. Bold y Clean siguen existiendo solo para comparar en
 las 3 páginas de variantes de arriba.
 
-Los filtros de "All Collections" ya no son un panel oculto: están siempre
-visibles arriba de la grilla y cada chip aplica al instante (no hay botón
-"Aplicar").
+Los filtros de "All Collections" son un panel que se abre desde el botón
+"Sort & Filter" anclado a la barra fija, no un bloque siempre visible (eso se
+probó y se descartó el 2026-07-31). "All Collections" ya no tiene hero con
+título grande; el conteo de piezas vive junto al botón de filtros.
 
-Componentes transversales: header con buscador funcional, wishlist, drawer de
-carrito con una sola CTA (checkout **simulado**: es un mock, está marcado en el
-código), quiz "Find Your Domain", guía de tallas, sticky add-to-cart en PDP,
-toggle de dark mode.
+Componentes transversales: header con buscador funcional, wishlist (que
+también funciona como "me gusta" — el corazón guarda un contador visible en la
+PDP, en rosa cuando está activo, nunca en dorado), drawer de carrito con una
+sola CTA (checkout **simulado**: es un mock, está marcado en el código), quiz
+"Find Your Domain", guía de tallas, sticky add-to-cart en PDP, toggle de dark
+mode.
 
 Carrito, wishlist y el tema (claro/oscuro) persisten en `localStorage`. Para
 reiniciarlos: DevTools → Application → Local Storage → borrar `ka_cart`,
@@ -67,6 +70,9 @@ reiniciarlos: DevTools → Application → Local Storage → borrar `ka_cart`,
   parezcan reales — esto ya se regresó una vez (una PDP con "5.0" y reseñas
   falsas de "Verified Buyer") y se corrigió el 2026-07-30.
 - Checkout: modal simulado, sin integración real.
+- Colores: `--surface`/`--surface-soft` (fondos de reviews, post-cards, tarjeta
+  base) son grises neutros, no crema/amarillo — se ajustaron el 2026-07-31
+  porque el tono anterior (`#F4EEEB`) desentonaba con la paleta acromática.
 
 Nota: el marquee/footer afirman "10,000+ clients/collectors" en cada página,
 mientras la sección del fundador dice "more than 2,000 collectors" y la

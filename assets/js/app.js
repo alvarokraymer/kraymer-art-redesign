@@ -329,10 +329,24 @@ const Wishlist = {
   },
   count() { return this.read().length; },
 };
+/* Wishlisting doubles as a "like" — the heart shows a running count.
+   baseLikes() is a stable per-handle number (no data.js field to maintain);
+   likeCount() adds 1 on top while *this* visitor has it wishlisted. */
+function baseLikes(handle) {
+  let h = 0;
+  for (let i = 0; i < handle.length; i++) h = (h * 31 + handle.charCodeAt(i)) >>> 0;
+  return 12 + (h % 140);
+}
+function likeCount(handle) {
+  return baseLikes(handle) + (Wishlist.read().includes(handle) ? 1 : 0);
+}
 function syncWishUI() {
   const list = Wishlist.read();
   document.querySelectorAll("[data-wish]").forEach((btn) => {
     btn.classList.toggle("active", list.includes(btn.dataset.wish));
+  });
+  document.querySelectorAll("[data-wish-count]").forEach((el) => {
+    el.textContent = likeCount(el.dataset.wishCount);
   });
 }
 
@@ -620,48 +634,25 @@ function initPLP() {
   const typeParam = params.get("type");        // e.g. sets
   let activeType = typeParam || null;
   let activeSort = "trending";
+  const subHost = document.querySelector("[data-subcats]");
 
-  /* Hero copy per collection */
-  const hero = document.querySelector("[data-plp-hero]");
-  const col = colParam ? COLLECTIONS[colParam] : null;
-  const heroTitle = col ? col.name : (typeParam === "sets" ? "Collector Sets" : "All Collections");
-  const heroDesc = col
-    ? `Handcrafted jewelry, designed for those who know.`
-    : (typeParam === "sets" ? "Curated sets and limited editions." : "Everything we make, in one place.");
-  hero.querySelector("h1").textContent = heroTitle;
-  hero.querySelector("[data-plp-desc]").textContent = heroDesc;
-
-  /* Collection-specific hero gradient */
-  const heroBg = hero;
-  if (colParam === "jjk") { heroBg.style.background = "linear-gradient(135deg, #1A1C2E 0%, #2A2F4F 50%, #1E2035 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
-  else if (colParam === "kny") { heroBg.style.background = "linear-gradient(135deg, #2E1C1A 0%, #4F2F2A 50%, #35201E 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
-  else if (colParam === "genshin") { heroBg.style.background = "linear-gradient(135deg, #1E1A2E 0%, #3A2F4F 50%, #252035 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
-  else { heroBg.style.background = "linear-gradient(135deg, #1C1A1E 0%, #2A282D 50%, #201E22 100%)"; heroBg.style.color = "#EFEFEF"; hero.querySelector(".eyebrow").style.color = "#A09892"; }
-
-  /* All Collections: insert collection promo tiles below hero */
+  /* All Collections: show collection promo tiles above the sub-category chips.
+     No page hero anymore (removed 2026-07-31) — these tiles anchor to
+     subHost instead. */
   if (!colParam) {
     const tiles = document.createElement("div");
     tiles.className = "w";
     tiles.style.padding = "1.5rem 0 0";
     tiles.innerHTML = `<div class="scroll-row" style="display:flex;gap:.75rem;padding:.5rem var(--gutter) 0">
-      <a class="ftile" href="coleccion.html?collection=jjk" style="background:linear-gradient(135deg,#1A1C2E,#2A2F4F);min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">JJK</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Precision and presence</p></div></a>
-      <a class="ftile" href="coleccion.html?collection=kny" style="background:linear-gradient(135deg,#2E1C1A,#4F2F2A);min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">KNY</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Forged in flame</p></div></a>
-      <a class="ftile" href="coleccion.html?collection=genshin" style="background:linear-gradient(135deg,#1E1A2E,#3A2F4F);min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Genshin</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Elemental weight</p></div></a>
-      <a class="ftile" href="#" style="background:linear-gradient(135deg,#1C1816,#2A2520);min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#C4A882">Mystery Box</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Collector's Club</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Unreleased pieces. Every 4 weeks.</p></div></a>
+      <a class="ftile" href="coleccion.html?collection=jjk" style="background-image:url(assets/banner4.png);background-size:cover;background-position:center;min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">JJK</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Precision and presence</p></div></a>
+      <a class="ftile" href="coleccion.html?collection=kny" style="background-image:url(assets/banner2.png);background-size:cover;background-position:center;min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">KNY</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Forged in flame</p></div></a>
+      <a class="ftile" href="coleccion.html?collection=genshin" style="background-image:url(assets/banner3.png);background-size:cover;background-position:center;min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Genshin</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Elemental weight</p></div></a>
+      <a class="ftile" href="#" style="background-image:url(assets/banner1.png);background-size:cover;background-position:center;min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#C4A882">Mystery Box</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Collector's Club</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Unreleased pieces. Every 4 weeks.</p></div></a>
     </div>`;
-    hero.parentNode.insertBefore(tiles, hero.nextSibling);
+    subHost.parentNode.insertBefore(tiles, subHost);
   }
 
-  /* Mark active nav item */
-  document.querySelectorAll(".nav-strip a").forEach((a) => {
-    const nav = a.dataset.nav;
-    if ((colParam && nav === colParam) || (!colParam && typeParam === "sets" && nav === "sets") || (!colParam && !typeParam && nav === "all")) {
-      a.classList.add("active");
-    }
-  });
-
   /* Subcategory tiles with elegant SVG icons */
-  const subHost = document.querySelector("[data-subcats]");
   const poolForCounts = colParam ? PRODUCTS.filter((p) => p.collection === colParam) : PRODUCTS;
   const catIcons = {
     "": `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`,
@@ -734,79 +725,89 @@ function initPLP() {
     apply();
   });
 
-  /* Filter state — rendered directly on the page, no drawer/button to open it */
+  /* Filter state + panel — collapsed by default, opened from the "Sort &
+     Filter" button docked in the sticky utility bar (.ubar) */
   let filterMat = null, filterPrice = null, filterAvail = null, filterCol = null;
-  const filterHost = document.querySelector("[data-filters-inline]");
-  if (filterHost) {
-    filterHost.innerHTML = `
-      <div class="fi__top"><span class="fi__title">Sort &amp; Filter</span><button class="fi__clear" data-clear-filters hidden>Clear all</button></div>
-      <div class="fi__body">
-        ${!colParam ? `
-        <div class="v-group">
-          <p class="v-label">Collection</p>
-          <div class="v-row" data-fil-group="col">
-            <button class="v-chip" data-fil-val="jjk">JJK</button>
-            <button class="v-chip" data-fil-val="kny">KNY</button>
-            <button class="v-chip" data-fil-val="genshin">Genshin</button>
-          </div>
-        </div>` : ""}
-        <div class="v-group">
-          <p class="v-label">Sort by</p>
-          <div class="v-row" data-fil-group="sort">
-            ${[["trending","Trending"],["price-asc","Price: Low"],["price-desc","Price: High"],["newest","Newest"]].map(([v,l]) => `<button class="v-chip${activeSort===v?' selected':''}" data-fil-val="${v}">${l}</button>`).join("")}
-          </div>
+  const filterBtn = document.querySelector("[data-open-filters]");
+  const filterPanel = document.createElement("div");
+  filterPanel.className = "fp";
+  filterPanel.innerHTML = `
+    <div class="fp__top"><span class="fp__title">Sort &amp; Filter</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
+    <div class="fp__body">
+      ${!colParam ? `
+      <div class="v-group">
+        <p class="v-label">Collection</p>
+        <div class="v-row" data-fil-group="col">
+          <button class="v-chip" data-fil-val="jjk">JJK</button>
+          <button class="v-chip" data-fil-val="kny">KNY</button>
+          <button class="v-chip" data-fil-val="genshin">Genshin</button>
         </div>
-        <div class="v-group">
-          <p class="v-label">Material</p>
-          <div class="v-row" data-fil-group="mat">
-            <button class="v-chip" data-fil-val="silver">925 Silver</button>
-            <button class="v-chip" data-fil-val="gold">18K Gold</button>
-          </div>
+      </div>` : ""}
+      <div class="v-group">
+        <p class="v-label">Sort by</p>
+        <div class="v-row" data-fil-group="sort">
+          ${[["trending","Trending"],["price-asc","Price: Low"],["price-desc","Price: High"],["newest","Newest"]].map(([v,l]) => `<button class="v-chip${activeSort===v?' selected':''}" data-fil-val="${v}">${l}</button>`).join("")}
         </div>
-        <div class="v-group">
-          <p class="v-label">Price</p>
-          <div class="v-row" data-fil-group="price">
-            <button class="v-chip" data-fil-val="under100">Under $100</button>
-            <button class="v-chip" data-fil-val="100-200">$100–$200</button>
-            <button class="v-chip" data-fil-val="200-300">$200–$300</button>
-            <button class="v-chip" data-fil-val="300+">$300+</button>
-          </div>
+      </div>
+      <div class="v-group">
+        <p class="v-label">Material</p>
+        <div class="v-row" data-fil-group="mat">
+          <button class="v-chip" data-fil-val="silver">925 Silver</button>
+          <button class="v-chip" data-fil-val="gold">18K Gold</button>
         </div>
-        <div class="v-group">
-          <p class="v-label">Availability</p>
-          <div class="v-row" data-fil-group="avail">
-            <button class="v-chip" data-fil-val="in-stock">In stock</button>
-            <button class="v-chip" data-fil-val="pre-order">Pre-order</button>
-          </div>
+      </div>
+      <div class="v-group">
+        <p class="v-label">Price</p>
+        <div class="v-row" data-fil-group="price">
+          <button class="v-chip" data-fil-val="under100">Under $100</button>
+          <button class="v-chip" data-fil-val="100-200">$100–$200</button>
+          <button class="v-chip" data-fil-val="200-300">$200–$300</button>
+          <button class="v-chip" data-fil-val="300+">$300+</button>
         </div>
-      </div>`;
-  }
+      </div>
+      <div class="v-group">
+        <p class="v-label">Availability</p>
+        <div class="v-row" data-fil-group="avail">
+          <button class="v-chip" data-fil-val="in-stock">In stock</button>
+          <button class="v-chip" data-fil-val="pre-order">Pre-order</button>
+        </div>
+      </div>
+    </div>
+    <div class="fp__bot"><button class="btn btn--dark btn--full" data-apply-filters>Apply filters</button></div>
+  `;
+  document.body.appendChild(filterPanel);
+  filterPanel.insertAdjacentHTML("beforebegin", `<div class="scrim fp-scrim" data-close-fp></div>`);
+  const fpScrim = document.querySelector(".fp-scrim");
+  const fpCount = document.querySelector("[data-filter-count]");
 
+  function closeFP() { filterPanel.classList.remove("on"); fpScrim.classList.remove("on"); document.body.style.overflow = ""; }
   function updateFilterUI() {
-    if (!filterHost) return;
-    filterHost.querySelectorAll(".v-chip").forEach((c) => {
+    filterPanel.querySelectorAll(".v-chip").forEach((c) => {
       const grp = c.closest("[data-fil-group]").dataset.filGroup, val = c.dataset.filVal;
       c.classList.toggle("selected",
         (grp==="col"&&filterCol===val)||(grp==="sort"&&activeSort===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
     });
-    const n = (filterCol?1:0)+(filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
-    filterHost.querySelector("[data-clear-filters]").hidden = n === 0;
+    const n = (filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
+    fpCount.textContent = n; fpCount.classList.toggle("show", n > 0);
   }
 
-  if (filterHost) filterHost.addEventListener("click", (e) => {
+  filterPanel.addEventListener("click", (e) => {
     const chip = e.target.closest("[data-fil-val]");
     if (chip) {
       const grp = chip.closest("[data-fil-group]").dataset.filGroup, val = chip.dataset.filVal;
       if (grp === "col") filterCol = filterCol === val ? null : val;
-      else if (grp === "sort") activeSort = val;
-      else if (grp==="mat") filterMat = filterMat===val?null:val;
+      else if (grp === "sort") { activeSort = val; updateFilterUI(); apply(); return; }
+      if (grp==="mat") filterMat = filterMat===val?null:val;
       else if (grp==="price") filterPrice = filterPrice===val?null:val;
       else if (grp==="avail") filterAvail = filterAvail===val?null:val;
-      updateFilterUI(); apply(); return;
+      updateFilterUI(); return;
     }
-    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=filterCol=null; updateFilterUI(); apply(); return; }
+    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=filterCol=null; updateFilterUI(); apply(); closeFP(); return; }
+    if (e.target.closest("[data-apply-filters]")) { closeFP(); apply(); return; }
   });
-  updateFilterUI();
+
+  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); fpScrim.classList.add("on"); lockScroll(); updateFilterUI(); if (typeof lucide !== "undefined") lucide.createIcons(); });
+  fpScrim.addEventListener("click", closeFP);
 
   /* Load more: visual progress only */
   const loadBtn = document.querySelector("[data-load-more]");
@@ -871,6 +872,11 @@ function initPDP() {
     const sale = p.compareAt ? `<span style="text-decoration:line-through;color:var(--muted);font-weight:300;margin-left:.5rem;font-size:.9em">${kaMoney(p.compareAt)}</span><span class="pdp-discount">-${Math.round((1-p.price/p.compareAt)*100)}%</span>` : "";
     return `<div class="pdp-price" ${extraStyle||""}>${kaMoney(p.price)}${sale}</div>`;
   };
+  const pdpWish = (extraStyle) => `
+    <button class="heart pdp-wish" style="position:static;${extraStyle||""}" data-wish="${p.handle}" aria-label="Wishlist">
+      <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
+      <span class="pdp-wish__count" data-wish-count="${p.handle}">${likeCount(p.handle)}</span>
+    </button>`;
 
   const specsHTML = `
     <div class="specs faq">
@@ -910,6 +916,7 @@ function initPDP() {
           ${pdpBadge()}
           <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
           ${pdpPrice('style="margin-bottom:.75rem"')}
+          ${pdpWish()}
           <div class="pdp-desc">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
           <div class="pdp-config">
             ${variantsHTML("chips","metal-cards","metal-cards")}
@@ -941,13 +948,13 @@ function initPDP() {
           ${pdpBadge()}
           <h1 class="pdp-title" style="font-size:1.5rem;margin-bottom:.25rem">${p.title}</h1>
           ${pdpPrice('style="margin-bottom:.75rem"')}
+          ${pdpWish()}
           <div class="pdp-desc" style="font-size:1rem">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
           <div class="pdp-config" style="background:transparent;padding:1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:1.5rem 0">
             ${variantsHTML("chips","v-row","v-row")}
           </div>
           <div style="display:flex;gap:.75rem;align-items:center">
             ${pdpCTA("flex:1")}
-            <button class="heart" style="position:static;width:48px;height:48px;flex:none;box-shadow:0 1px 4px rgba(0,0,0,.1)" data-wish="${p.handle}" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg></button>
           </div>
           ${noteHTML}
           ${guaranteeHTML}
@@ -966,7 +973,6 @@ function initPDP() {
       <div style="position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;background:#F4EEEB" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center">
         <div style="position:absolute;inset:0;background-image:url(${mainImg});background-size:cover;background-position:center" data-gallery-main-img></div>
         ${soldOverlay}
-        <div style="position:absolute;top:1rem;right:1rem;z-index:4"><button class="heart" style="position:static;width:40px;height:40px;box-shadow:0 2px 8px rgba(0,0,0,.15)" data-wish="${p.handle}" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg></button></div>
         <div style="position:absolute;bottom:0;left:0;right:0;padding:2rem var(--gutter);background:linear-gradient(to top,rgba(24,21,20,.85) 0%,rgba(24,21,20,.4) 60%,transparent 100%);z-index:1">
           <span style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)">${col.name}</span>
           <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem">
@@ -981,6 +987,7 @@ function initPDP() {
       ${hasImgs ? `<div style="display:flex;overflow-x:auto;gap:0;scrollbar-width:none;border-bottom:1px solid var(--line)">${imgs.map((url,i) => `<button data-gal-thumb="${i}" style="flex:none;width:25vw;aspect-ratio:1;background-image:url(${url});background-size:cover;background-position:center;border:none;cursor:pointer;border-right:1px solid var(--line);${i===0?'opacity:1':'opacity:.6'}"></button>`).join("")}</div>` : ""}
       <div class="w" style="max-width:640px;margin:0 auto;padding:2rem var(--gutter)">
         ${pdpBadge()}
+        <div style="text-align:center">${pdpWish()}</div>
         <div class="pdp-config" style="background:transparent;padding:0;margin-bottom:1.5rem">
           ${variantsHTML("chips","metal-cards","metal-cards")}
         </div>
@@ -1009,6 +1016,7 @@ function initPDP() {
           ${pdpBadge()}
           <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
           ${pdpPrice('style="margin-bottom:.75rem"')}
+          ${pdpWish()}
           <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
           <div class="pdp-rating"><span class="stars">★★★★★</span> ${RATING_PLACEHOLDER} · <a href="#reviews">Read reviews</a></div>
           <div class="pdp-config">
