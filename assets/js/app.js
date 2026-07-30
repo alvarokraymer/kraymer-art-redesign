@@ -823,6 +823,25 @@ function initPDP() {
     }
     return h;
   };
+
+  /* --- PDP state helpers --- */
+  const pdpBadge = () => {
+    if (p.soldOut) return `<span class="pdp-state-badge pdp-state--sold">Sold out</span>`;
+    if (p.comingSoon) return `<span class="pdp-state-badge pdp-state--coming">Coming soon</span>`;
+    if (p.lowStock) return `<span class="pdp-state-badge pdp-state--low">Only a few left</span>`;
+    if (p.isNew) return `<span class="pdp-state-badge pdp-state--new">New</span>`;
+    return "";
+  };
+  const pdpCTA = (extraStyle) => {
+    if (p.soldOut) return `<button class="btn btn--dark" disabled style="opacity:.5;cursor:notallowed;${extraStyle||""}">Sold Out</button>`;
+    if (p.comingSoon) return `<button class="btn btn--dark" data-notify="${p.handle}" style="${extraStyle||""}">Notify Me When Available</button>`;
+    return `<button class="btn btn--dark" data-pdp-atc style="${extraStyle||""}">Add to Cart · ${kaMoney(p.price)}</button>`;
+  };
+  const pdpPrice = (extraStyle) => {
+    const sale = p.compareAt ? `<span style="text-decoration:line-through;color:var(--muted);font-weight:300;margin-left:.5rem;font-size:.9em">${kaMoney(p.compareAt)}</span><span class="pdp-discount">-${Math.round((1-p.price/p.compareAt)*100)}%</span>` : "";
+    return `<div class="pdp-price" ${extraStyle||""}>${kaMoney(p.price)}${sale}</div>`;
+  };
+
   const specsHTML = `
     <div class="specs faq">
       <div class="faq__item"><button class="faq__btn">Specs &amp; Materials</button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m)=>m.includes("Gold"))?" or 18K gold plated over sterling silver":""}. Hand-set ${p.gem?p.gem.toLowerCase():"stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
@@ -854,18 +873,19 @@ function initPDP() {
       <div class="pdp-layout">
         <div>
           ${mainGal('style="border:0;border-radius:var(--radius)"')}
-          ${hasImgs ? `<div style="display:flex;justify-content:center;gap:.4rem;padding:.75rem 0">${imgs.map((_,i)=>`<button class="pdp-dot ${i===0?'on':''}" data-gal-thumb="${i}" style="width:8px;height:8px;border-radius:50%;border:0;background:${i===0?'var(--accent)':'var(--line)'};cursor:pointer"></button>`).join("")}</div>` : ""}
+          ${hasImgs ? `<div style="display:flex;justify-content:center;gap:.4rem;padding:.75rem 0">${imgs.map((_,i)=>`<button class="pdp-dot ${i===0?'on':''}" data-gal-thumb="${i}" style="width:8px;height:8px;border-radius:50%;border:0;background:${i===0?'var(--dark)':'var(--line)'};cursor:pointer"></button>`).join("")}</div>` : ""}
         </div>
         <div class="pdp-meta">
           <span class="pdp-tag">${col.name}</span>
+          ${pdpBadge()}
           <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
-          <div class="pdp-price" style="margin-bottom:.75rem">${kaMoney(p.price)}${p.compareAt?`<span style="font-size:1rem;color:var(--muted);text-decoration:line-through;margin-left:.5rem;font-weight:300">${kaMoney(p.compareAt)}</span><span class="card__discount" style="margin-left:.5rem">-${Math.round((1-p.price/p.compareAt)*100)}%</span>`:""}</div>
+          ${pdpPrice('style="margin-bottom:.75rem"')}
           <div class="pdp-desc">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
           <div class="pdp-config">
             ${variantsHTML("chips","metal-cards","metal-cards")}
           </div>
           <div class="atc-bar">
-            <button class="btn btn--dark" data-pdp-atc ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":`Add to Cart · ${kaMoney(p.price)}`}</button>
+            ${pdpCTA()}
             ${noteHTML}
             ${guaranteeHTML}
           </div>
@@ -887,18 +907,16 @@ function initPDP() {
           ${thumbStrip('style="padding:0;gap:.5rem"')}
         </div>
         <div class="pdp-meta">
-          <div style="display:flex;align-items:baseline;gap:.75rem;margin-bottom:.25rem">
-            <span class="pdp-tag" style="margin-bottom:0">${col.name}</span>
-            <span class="pdp-price" style="font-size:1.1rem">${kaMoney(p.price)}</span>
-            ${p.compareAt?`<span style="text-decoration:line-through;color:var(--muted);font-size:.85rem">${kaMoney(p.compareAt)}</span><span class="card__discount">-${Math.round((1-p.price/p.compareAt)*100)}%</span>`:""}
-          </div>
-          <h1 class="pdp-title" style="font-size:1.5rem;margin-bottom:.5rem">${p.title}</h1>
+          <span class="pdp-tag" style="margin-bottom:.25rem">${col.name}</span>
+          ${pdpBadge()}
+          <h1 class="pdp-title" style="font-size:1.5rem;margin-bottom:.25rem">${p.title}</h1>
+          ${pdpPrice('style="margin-bottom:.75rem"')}
           <div class="pdp-desc" style="font-size:1rem">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
           <div class="pdp-config" style="background:transparent;padding:1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:1.5rem 0">
             ${variantsHTML("chips","v-row","v-row")}
           </div>
           <div style="display:flex;gap:.75rem;align-items:center">
-            <button class="btn btn--dark" data-pdp-atc style="flex:1" ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":`Add to Cart · ${kaMoney(p.price)}`}</button>
+            ${pdpCTA("flex:1")}
             <button class="heart" style="position:static;width:48px;height:48px;flex:none;box-shadow:0 1px 4px rgba(0,0,0,.1)" data-wish="${p.handle}" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg></button>
           </div>
           ${noteHTML}
@@ -912,29 +930,32 @@ function initPDP() {
   } else if (approach === "4") {
     /* ── Approach 4: Immersive — full-width gallery, floating price, visual ── */
     cssClass = "pdp--immersive";
+    const soldOverlay = p.soldOut ? `<div style="position:absolute;inset:0;background:rgba(24,21,20,.4);z-index:3;display:flex;align-items:center;justify-content:center"><span style="background:var(--dark);color:var(--light);padding:.75rem 2rem;border-radius:var(--radius-pill);font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase">Sold Out</span></div>` : "";
     html = `
       <nav class="bread" aria-label="Breadcrumb" style="padding:1rem var(--gutter)"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
       <div style="position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;background:#F4EEEB" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center">
         <div style="position:absolute;inset:0;background-image:url(${mainImg});background-size:cover;background-position:center" data-gallery-main-img></div>
-        <div style="position:absolute;top:1rem;right:1rem;z-index:2"><button class="heart" style="position:static;width:40px;height:40px;box-shadow:0 2px 8px rgba(0,0,0,.15)" data-wish="${p.handle}" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg></button></div>
+        ${soldOverlay}
+        <div style="position:absolute;top:1rem;right:1rem;z-index:4"><button class="heart" style="position:static;width:40px;height:40px;box-shadow:0 2px 8px rgba(0,0,0,.15)" data-wish="${p.handle}" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg></button></div>
         <div style="position:absolute;bottom:0;left:0;right:0;padding:2rem var(--gutter);background:linear-gradient(to top,rgba(24,21,20,.85) 0%,rgba(24,21,20,.4) 60%,transparent 100%);z-index:1">
-          <span style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)">${col.name}</span>
+          <span style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)">${col.name}</span>
           <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem">
             <h1 style="font-family:var(--display);font-size:1.75rem;font-weight:300;color:#fff;line-height:1.1">${p.title}</h1>
             <div style="text-align:right;flex:none">
               <div style="font-size:1.5rem;font-weight:700;color:#fff">${kaMoney(p.price)}</div>
-              ${p.compareAt?`<div style="font-size:.85rem;color:rgba(255,255,255,.5);text-decoration:line-through">${kaMoney(p.compareAt)}<span class="card__discount" style="margin-left:.3rem">-${Math.round((1-p.price/p.compareAt)*100)}%</span></div>`:""}
+              ${p.compareAt?`<div style="font-size:.85rem;color:rgba(255,255,255,.5);text-decoration:line-through">${kaMoney(p.compareAt)}<span style="margin-left:.3rem;font-size:.65rem;border:1px solid rgba(255,255,255,.3);border-radius:var(--radius-pill);padding:1px 6px">-${Math.round((1-p.price/p.compareAt)*100)}%</span></div>`:""}
             </div>
           </div>
         </div>
       </div>
       ${hasImgs ? `<div style="display:flex;overflow-x:auto;gap:0;scrollbar-width:none;border-bottom:1px solid var(--line)">${imgs.map((url,i) => `<button data-gal-thumb="${i}" style="flex:none;width:25vw;aspect-ratio:1;background-image:url(${url});background-size:cover;background-position:center;border:none;cursor:pointer;border-right:1px solid var(--line);${i===0?'opacity:1':'opacity:.6'}"></button>`).join("")}</div>` : ""}
       <div class="w" style="max-width:640px;margin:0 auto;padding:2rem var(--gutter)">
+        ${pdpBadge()}
         <div class="pdp-config" style="background:transparent;padding:0;margin-bottom:1.5rem">
           ${variantsHTML("chips","metal-cards","metal-cards")}
         </div>
         <div class="pdp-desc" style="text-align:center;font-size:1.2rem;margin-bottom:1.5rem">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
-        <button class="btn btn--dark btn--full" data-pdp-atc style="min-height:58px;font-size:.9rem;border-radius:var(--radius-pill)" ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":`Add to Cart · ${kaMoney(p.price)}`}</button>
+        ${pdpCTA("min-height:58px;font-size:.9rem;border-radius:var(--radius-pill);width:100%")}
         ${noteHTML}
         ${guaranteeHTML}
         ${specsHTML}
@@ -955,14 +976,16 @@ function initPDP() {
         </div>
         <div class="pdp-meta">
           <span class="pdp-tag">${col.name}</span>
-          <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1><span class="pdp-price">${kaMoney(p.price)}</span></div>
+          ${pdpBadge()}
+          <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
+          ${pdpPrice('style="margin-bottom:.75rem"')}
           <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
           <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
           <div class="pdp-config">
             ${variantsHTML("chips","metal-cards","metal-cards")}
           </div>
           <div class="atc-bar">
-            <button class="btn btn--dark" data-pdp-atc ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="margin-right:.5rem"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Add to Cart · ${kaMoney(p.price)}`}</button>
+            ${pdpCTA()}
             ${noteHTML}
             ${guaranteeHTML}
           </div>
