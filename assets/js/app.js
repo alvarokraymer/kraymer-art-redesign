@@ -117,9 +117,11 @@ function priceHTML(p) {
 function productCard(p, opts = {}) {
   const col = COLLECTIONS[p.collection];
 
-  /* Map collection to approach for demo (neutral, not themed). Only on PLP grid. */
+  /* Approach driven by the active collection page, not the product's collection.
+     Ensures every card on the same PLP shares the same visual approach. */
   const approachMap = { jjk: "bold", kny: "clean", genshin: "soft" };
-  const approachClass = (opts.approach !== false && approachMap[p.collection]) ? ` card--${approachMap[p.collection]}` : "";
+  const approachClass = (opts.approach !== false && opts.activeCollection && approachMap[opts.activeCollection])
+    ? ` card--${approachMap[opts.activeCollection]}` : "";
 
   /* Determine primary state (mutually exclusive) */
   let stateClass = "";
@@ -672,7 +674,7 @@ function initPLP() {
     available.sort(sorts[activeSort] || sorts.trending);
 
     const finalList = [...available, ...coming, ...out];
-    grid.innerHTML = `<div class="pgrid">${finalList.map(productCard).join("")}</div>`;
+    grid.innerHTML = `<div class="pgrid">${finalList.map((p) => productCard(p, { activeCollection: colParam })).join("")}</div>`;
     countEl.textContent = `Showing ${finalList.length} handcrafted piece${finalList.length === 1 ? "" : "s"}`;
     syncWishUI();
   }
