@@ -35,6 +35,9 @@ coleccion.html         PLP, driven by ?collection=jjk|kny|genshin and ?type=sets
 producto.html          PDP, driven by ?id=<handle>&approach=1|2|3|4 (see below)
 blog.html              Journal index (body[data-page="blog"]) — grid of BLOG_POSTS
 about.html             Our Story (body[data-page="about"]) — founder + craft + CTA
+variant1.html          Card approach "Bold" — MOCKUP-ONLY comparison, never production
+variant2.html          Card approach "Clean" — MOCKUP-ONLY comparison, never production
+variant3.html          Card approach "Soft" (= production approach) — same comparison set
 assets/css/styles.css  ALL styles. Tokens in :root, mobile-first, min-width only
 assets/js/data.js      Mock catalog + BLOG_POSTS. Product shape mirrors Shopify `product`
 assets/js/partials.js  Header/footer/cart drawer/search overlay (template strings)
@@ -136,6 +139,23 @@ done — not just in light mode. If a background is a photo + a permanently-dark
 gradient (like the hero or the fandom tiles), its text must be a **hardcoded**
 light color, never a token, since the token swaps but the photo doesn't.
 
+## Logo
+
+`assets/SVG/kraymer-logo.svg` (loaded via `<img>`, so it can't use `fill:currentColor`
+the way an inlined SVG could — the browser won't let an `<img>`-loaded SVG pick
+up the page's CSS `color`). Its fill is a soft near-white (`#fafafa`), the
+opposite polarity of the old `logoProv.svg` (dark `#231f20`). So the CSS filter
+logic is also inverted from what you'd guess:
+
+```css
+.hdr-logo img{ filter:invert(1) }              /* light mode: invert soft-white → dark, visible on the white header */
+[data-theme="dark"] .hdr-logo img{ filter:none } /* dark mode: already light, needs no inversion */
+```
+
+If the logo asset ever changes again, check its fill color first — a light-fill
+logo and a dark-fill logo need opposite filter rules, not the same one moved
+to the other theme.
+
 ## Component inventory
 
 - **Base `.card`** (no approach class — used by home Bestsellers and PDP
@@ -160,10 +180,15 @@ light color, never a token, since the token swaps but the photo doesn't.
   it directly — there are no separate per-post detail pages, by design; the
   excerpt shown IS the full content, same low-fidelity-content convention as
   the rest of this mockup.
-- **Product cards** (`productCard()` in `app.js`): one shared renderer, three
-  visual "approaches" (`bold` / `clean` / `genshin`→`soft`) selected by the
-  **active collection page**, not by the product's own collection — every card
-  on one PLP shares one visual language. Badge priority is mutually exclusive
+- **Product cards** (`productCard()` in `app.js`): one shared renderer.
+  **Production has standardized on the "soft" approach for every collection**
+  (2026-07-31) — `approachMap` maps jjk/kny/genshin all to `"soft"`. "bold" and
+  "clean" still exist in CSS and are reachable via `opts.forceApproach`, but
+  only `variant1.html`/`variant2.html` use them now, as an internal
+  side-by-side comparison — see "Variant pages" below. Don't reintroduce a
+  per-collection approach split on `coleccion.html` without being asked; if you
+  need to compare approaches again, do it on the variant pages, not live.
+  Badge priority is mutually exclusive
   for *state* (soldOut > comingSoon > lowStock > isNew > isFeatured), plus two
   **additive** badges layered on top regardless of state: a sale `-XX%` pill
   (suppressed if soldOut/comingSoon) and a catalog tag (`collector-set` >
@@ -186,6 +211,22 @@ light color, never a token, since the token swaps but the photo doesn't.
   3. **Side** — compact two-column, no rating line, no reviews section (only
      specs + cross-sell) — intentional, not an oversight.
   4. **Immersive** — full-bleed gallery, floating price overlay, full reviews.
+- **Variant pages** (`variant1.html`/`variant2.html`/`variant3.html`,
+  `initVariant(approach)` in `app.js`): show the same fixed set of 8 products
+  three times, once per card approach (Bold / Clean / Soft), for internal
+  side-by-side comparison only. **These never go to production** — they're
+  marked `<meta name="robots" content="noindex,nofollow">`, carry an
+  "Internal Only" eyebrow in the hero copy, and are tucked under a "Variants"
+  dropdown in the nav (not the footer) precisely so they read as internal
+  tooling, not shippable pages. If Bold/Clean are ever fully retired, delete
+  these three files, the `forceApproach` option, and the CSS under "Card
+  approaches" together — don't let one survive without the others.
+- **PLP filters** (`coleccion.html`, built in `initPLP()`): rendered directly
+  inline above the grid (`[data-filters-inline]`), not a slide-in drawer —
+  there is no "Sort & Filter" button anymore. Every chip tap re-applies
+  immediately (no separate "Apply" step); "Clear all" only shows once a filter
+  is active. `.v-chip` is a generic pill style (used here and in the PDP
+  variant selectors) — don't rescope it back under `.pdp-config`.
 - **Reviews / rating**: `RATING_PLACEHOLDER` (`data.js`) and the review
   attribution placeholders (`[REVIEWER N PLACEHOLDER]`) are the only allowed
   values for a rating number or a reviewer identity anywhere in this repo —
@@ -218,9 +259,15 @@ light color, never a token, since the token swaps but the photo doesn't.
 7. **Handmade timeline (9–20 days) lives directly under the ATC button**, not
    buried in descriptions.
 8. **No hover-only information.** Hover effects may enhance, never gate content.
-9. **Placeholder imagery only** (`.ph` blocks) for demo/state products. Real
-   product photography (`assets/productPhotos/`) is fine and already in use
-   for shipped pieces — never real third-party photos or trademarked artwork.
+9. **Every product shows a real photo, never a blank/abstract slot.** Shipped
+   pieces use their own shoot (`assets/productPhotos/`). Demo/state-only
+   products (no shoot of their own) reuse `assets/placeholder_1..4.jpg` — real
+   photography, just not of that specific SKU — or another product's photo
+   when it's a closer visual match. `phImg()` in `app.js` auto-falls back to
+   `placeholder_<phId>.jpg` if `images[0]` is ever left as the literal string
+   `"placeholder"`, but prefer setting an explicit path in `data.js` (as of
+   2026-07-31 every product has one) — it's clearer than tracing the fallback.
+   Never use real third-party photos or trademarked artwork.
 10. **No dead code as a design decision.** If a data field (e.g. a new entry in
     a product's `badges` array) doesn't visibly render anywhere, that's a bug,
     not a future hook — wire it in immediately or don't add the field.

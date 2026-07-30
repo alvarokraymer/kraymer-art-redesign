@@ -108,11 +108,13 @@ function priceHTML(p) {
 function productCard(p, opts = {}) {
   const col = COLLECTIONS[p.collection];
 
-  /* Approach driven by the active collection page, not the product's collection.
-     Ensures every card on the same PLP shares the same visual approach. */
-  const approachMap = { jjk: "bold", kny: "clean", genshin: "soft" };
-  const approachClass = (opts.approach !== false && opts.activeCollection && approachMap[opts.activeCollection])
-    ? ` card--${approachMap[opts.activeCollection]}` : "";
+  /* Card approach: production has settled on "soft" (the former Genshin
+     approach) for every collection — see AGENTS.md. "bold"/"clean" are kept
+     for the variant1/2/3.html comparison pages only, forced via
+     opts.forceApproach; never gate them on a collection again. */
+  const approachMap = { jjk: "soft", kny: "soft", genshin: "soft" };
+  const resolvedApproach = opts.forceApproach || (opts.activeCollection && approachMap[opts.activeCollection]);
+  const approachClass = (opts.approach !== false && resolvedApproach) ? ` card--${resolvedApproach}` : "";
 
   /* Determine primary state (mutually exclusive) */
   let stateClass = "";
@@ -594,6 +596,14 @@ function initHome() {
   }
 }
 
+/* ---- Variant comparison pages (mockup-only, never production — see AGENTS.md) ---- */
+function initVariant(approach) {
+  const handles = ["gojo-x-geto","giyu-ring","giyu-pin","anya-x-yor","shenhe-necklace","toji-bracelet","yuji-ring","water-breathing-ring"];
+  const list = handles.map(kaProduct).filter(Boolean);
+  const grid = document.querySelector("[data-variant-grid]");
+  if (grid) grid.innerHTML = `<div class="pgrid">${list.map((p) => productCard(p, { forceApproach: approach })).join("")}</div>`;
+}
+
 /* ---- Blog ---- */
 function initBlog() {
   renderPosts("[data-posts-all]", BLOG_POSTS);
@@ -724,96 +734,79 @@ function initPLP() {
     apply();
   });
 
-  document.querySelectorAll("[data-sort]").forEach((chip) => {
-    chip.addEventListener("click", () => {
-      activeSort = chip.dataset.sort;
-      document.querySelectorAll("[data-sort]").forEach((c) => c.classList.toggle("active", c === chip));
-      apply();
-    });
-  });
-
-  /* Filter state + panel */
+  /* Filter state — rendered directly on the page, no drawer/button to open it */
   let filterMat = null, filterPrice = null, filterAvail = null, filterCol = null;
-  const filterBtn = document.querySelector("[data-open-filters]");
-  const filterPanel = document.createElement("div");
-  filterPanel.className = "fp";
-  filterPanel.innerHTML = `
-    <div class="fp__top"><span class="fp__title">Sort &amp; Filter</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
-    <div class="fp__body">
-      ${!colParam ? `
-      <div class="v-group">
-        <p class="v-label"><i data-lucide="layers" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Collection</p>
-        <div class="v-row" data-fil-group="col">
-          <button class="v-chip" data-fil-val="jjk">JJK</button>
-          <button class="v-chip" data-fil-val="kny">KNY</button>
-          <button class="v-chip" data-fil-val="genshin">Genshin</button>
+  const filterHost = document.querySelector("[data-filters-inline]");
+  if (filterHost) {
+    filterHost.innerHTML = `
+      <div class="fi__top"><span class="fi__title">Sort &amp; Filter</span><button class="fi__clear" data-clear-filters hidden>Clear all</button></div>
+      <div class="fi__body">
+        ${!colParam ? `
+        <div class="v-group">
+          <p class="v-label">Collection</p>
+          <div class="v-row" data-fil-group="col">
+            <button class="v-chip" data-fil-val="jjk">JJK</button>
+            <button class="v-chip" data-fil-val="kny">KNY</button>
+            <button class="v-chip" data-fil-val="genshin">Genshin</button>
+          </div>
+        </div>` : ""}
+        <div class="v-group">
+          <p class="v-label">Sort by</p>
+          <div class="v-row" data-fil-group="sort">
+            ${[["trending","Trending"],["price-asc","Price: Low"],["price-desc","Price: High"],["newest","Newest"]].map(([v,l]) => `<button class="v-chip${activeSort===v?' selected':''}" data-fil-val="${v}">${l}</button>`).join("")}
+          </div>
         </div>
-      </div>` : ""}
-      <div class="v-group">
-        <p class="v-label"><i data-lucide="arrow-up-down" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Sort by</p>
-        <div class="v-row" data-fil-group="sort">
-          ${[["trending","Trending"],["price-asc","Price: Low"],["price-desc","Price: High"],["newest","Newest"]].map(([v,l]) => `<button class="v-chip${activeSort===v?' selected':''}" data-fil-val="${v}">${l}</button>`).join("")}
+        <div class="v-group">
+          <p class="v-label">Material</p>
+          <div class="v-row" data-fil-group="mat">
+            <button class="v-chip" data-fil-val="silver">925 Silver</button>
+            <button class="v-chip" data-fil-val="gold">18K Gold</button>
+          </div>
         </div>
-      </div>
-      <div class="v-group">
-        <p class="v-label"><i data-lucide="gem" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Material</p>
-        <div class="v-row" data-fil-group="mat">
-          <button class="v-chip" data-fil-val="silver">925 Silver</button>
-          <button class="v-chip" data-fil-val="gold">18K Gold</button>
+        <div class="v-group">
+          <p class="v-label">Price</p>
+          <div class="v-row" data-fil-group="price">
+            <button class="v-chip" data-fil-val="under100">Under $100</button>
+            <button class="v-chip" data-fil-val="100-200">$100–$200</button>
+            <button class="v-chip" data-fil-val="200-300">$200–$300</button>
+            <button class="v-chip" data-fil-val="300+">$300+</button>
+          </div>
         </div>
-      </div>
-      <div class="v-group">
-        <p class="v-label"><i data-lucide="tag" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Price</p>
-        <div class="v-row" data-fil-group="price">
-          <button class="v-chip" data-fil-val="under100">Under $100</button>
-          <button class="v-chip" data-fil-val="100-200">$100–$200</button>
-          <button class="v-chip" data-fil-val="200-300">$200–$300</button>
-          <button class="v-chip" data-fil-val="300+">$300+</button>
+        <div class="v-group">
+          <p class="v-label">Availability</p>
+          <div class="v-row" data-fil-group="avail">
+            <button class="v-chip" data-fil-val="in-stock">In stock</button>
+            <button class="v-chip" data-fil-val="pre-order">Pre-order</button>
+          </div>
         </div>
-      </div>
-      <div class="v-group">
-        <p class="v-label"><i data-lucide="package-check" style="width:14px;height:14px;stroke:var(--muted);vertical-align:-2px;margin-right:4px"></i> Availability</p>
-        <div class="v-row" data-fil-group="avail">
-          <button class="v-chip" data-fil-val="in-stock">In stock</button>
-          <button class="v-chip" data-fil-val="pre-order">Pre-order</button>
-        </div>
-      </div>
-    </div>
-    <div class="fp__bot"><button class="btn btn--dark btn--full" data-apply-filters>Apply filters</button></div>
-  `;
-  document.body.appendChild(filterPanel);
-  filterPanel.insertAdjacentHTML("beforebegin", `<div class="scrim fp-scrim" data-close-fp></div>`);
-  const fpScrim = document.querySelector(".fp-scrim");
-  const fpCount = document.querySelector("[data-filter-count]");
+      </div>`;
+  }
 
-  function closeFP() { filterPanel.classList.remove("on"); fpScrim.classList.remove("on"); document.body.style.overflow = ""; }
   function updateFilterUI() {
-    filterPanel.querySelectorAll(".v-chip").forEach((c) => {
+    if (!filterHost) return;
+    filterHost.querySelectorAll(".v-chip").forEach((c) => {
       const grp = c.closest("[data-fil-group]").dataset.filGroup, val = c.dataset.filVal;
       c.classList.toggle("selected",
         (grp==="col"&&filterCol===val)||(grp==="sort"&&activeSort===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
     });
-    const n = (filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
-    fpCount.textContent = n; fpCount.classList.toggle("show", n > 0);
+    const n = (filterCol?1:0)+(filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
+    filterHost.querySelector("[data-clear-filters]").hidden = n === 0;
   }
 
-  filterPanel.addEventListener("click", (e) => {
+  if (filterHost) filterHost.addEventListener("click", (e) => {
     const chip = e.target.closest("[data-fil-val]");
     if (chip) {
       const grp = chip.closest("[data-fil-group]").dataset.filGroup, val = chip.dataset.filVal;
       if (grp === "col") filterCol = filterCol === val ? null : val;
-      else if (grp === "sort") { activeSort = val; updateFilterUI(); apply(); return; }
-      if (grp==="mat") filterMat = filterMat===val?null:val;
+      else if (grp === "sort") activeSort = val;
+      else if (grp==="mat") filterMat = filterMat===val?null:val;
       else if (grp==="price") filterPrice = filterPrice===val?null:val;
       else if (grp==="avail") filterAvail = filterAvail===val?null:val;
-      updateFilterUI(); return;
+      updateFilterUI(); apply(); return;
     }
-    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=filterCol=null; updateFilterUI(); apply(); closeFP(); return; }
-    if (e.target.closest("[data-apply-filters]")) { closeFP(); apply(); return; }
+    if (e.target.closest("[data-clear-filters]")) { filterMat=filterPrice=filterAvail=filterCol=null; updateFilterUI(); apply(); return; }
   });
-
-  filterBtn.addEventListener("click", () => { filterPanel.classList.add("on"); fpScrim.classList.add("on"); lockScroll(); updateFilterUI(); if (typeof lucide !== "undefined") lucide.createIcons(); });
-  fpScrim.addEventListener("click", closeFP);
+  updateFilterUI();
 
   /* Load more: visual progress only */
   const loadBtn = document.querySelector("[data-load-more]");
@@ -1216,5 +1209,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (page === "plp") initPLP();
   if (page === "pdp") initPDP();
   if (page === "blog") initBlog();
+  if (page === "variant") initVariant(document.body.dataset.approach);
   if (typeof lucide !== "undefined") lucide.createIcons();
 });

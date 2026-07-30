@@ -26,7 +26,7 @@ const HEADER_HTML = `
 <header class="site-header">
   <div class="hdr-bar">
     <button class="hamburger" data-open-menu aria-label="Menu"><span></span><span></span><span></span></button>
-    <a class="hdr-logo" href="index.html"><img src="assets/SVG/logoProv.svg" alt="Kraymer" height="14"></a>
+    <a class="hdr-logo" href="index.html"><img src="assets/SVG/kraymer-logo.svg" alt="Kraymer" height="14"></a>
     <div class="hdr-actions">
       <a class="ico" href="#" aria-label="Account" title="Not in mockup">${ICONS.account}</a>
       <button class="ico" data-open-cart aria-label="Cart">${ICONS.bag}<span class="n" data-cart-count hidden>0</span></button>
@@ -57,6 +57,12 @@ const HEADER_HTML = `
       <a class="mob-link mob-link--sub" href="blog.html">Journal</a>
       <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
       <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
+    </div>
+    <button class="mob-label-btn" data-mob-collapse>VARIANTS <span class="mob-arrow"></span></button>
+    <div class="mob-sub" data-mob-sub>
+      <a class="mob-link mob-link--sub" href="variant1.html">Approach A &middot; Bold</a>
+      <a class="mob-link mob-link--sub" href="variant2.html">Approach B &middot; Clean</a>
+      <a class="mob-link mob-link--sub" href="variant3.html">Approach C &middot; Soft</a>
     </div>
   </div>
   <div class="mob-foot">

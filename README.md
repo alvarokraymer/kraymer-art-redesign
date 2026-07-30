@@ -33,6 +33,15 @@ si no las revisas con el toggle activado.
 | Producto (PDP) | `producto.html` | `?id=<handle>&approach=1\|2\|3\|4` — 4 layouts distintos, ver `AGENTS.md` |
 | Journal / blog | `blog.html` | grid de `BLOG_POSTS` (`assets/js/data.js`); `blog.html#slug` va directo a un post |
 | Our Story | `about.html` | fundador, "The Craft", CTA a colecciones |
+| Variantes (interno) | `variant1/2/3.html` | comparación Bold/Clean/Soft, escondida bajo "Variants" en el menú — **nunca va a producción** |
+
+Producción se quedó con el enfoque "Soft" (el antiguo look de Genshin) para
+todas las colecciones. Bold y Clean siguen existiendo solo para comparar en
+las 3 páginas de variantes de arriba.
+
+Los filtros de "All Collections" ya no son un panel oculto: están siempre
+visibles arriba de la grilla y cada chip aplica al instante (no hay botón
+"Aplicar").
 
 Componentes transversales: header con buscador funcional, wishlist, drawer de
 carrito con una sola CTA (checkout **simulado**: es un mock, está marcado en el
@@ -45,7 +54,13 @@ reiniciarlos: DevTools → Application → Local Storage → borrar `ka_cart`,
 
 ## Placeholders (intencionados)
 
-- Imágenes: bloques oscuros `.ph` con etiqueta de qué foto iría ahí.
+- Imágenes: todo producto muestra una foto real (`assets/productPhotos/` para
+  piezas con shoot propio, `assets/placeholder_1..4.jpg` reutilizadas para los
+  productos de demo que no tienen una). Nunca un bloque vacío o un icono
+  abstracto.
+- Logo: `assets/SVG/kraymer-logo.svg`, con un filtro CSS que lo invierte según
+  el tema (ver `AGENTS.md` si cambias el asset — la lógica depende de si el
+  logo es claro u oscuro).
 - Ratings/reviews/cifras sociales: marcados como `RATING_PLACEHOLDER`,
   `[REVIEWER N PLACEHOLDER]`, `[SOCIAL PROOF PLACEHOLDER]`,
   `[QUOTE N PLACEHOLDER]`. **Nunca** poner cifras o nombres inventados que
