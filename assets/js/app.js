@@ -666,14 +666,25 @@ function initPLP() {
     const out = list.filter((p) => p.soldOut);
 
     const sorts = {
-      "trending": (a, b) => ((b.featured ? 3 : 0) + (b.isFeatured ? 1 : 0) + (b.badges.includes("bestseller") ? 1 : 0)) - ((a.featured ? 3 : 0) + (a.isFeatured ? 1 : 0) + (a.badges.includes("bestseller") ? 1 : 0)),
+      "trending": (a, b) => {
+        if (a.hero && b.hero) return a.hero - b.hero;
+        if (a.hero) return -1;
+        if (b.hero) return 1;
+        return ((b.featured ? 3 : 0) + (b.isFeatured ? 1 : 0) + (b.badges.includes("bestseller") ? 1 : 0)) - ((a.featured ? 3 : 0) + (a.isFeatured ? 1 : 0) + (a.badges.includes("bestseller") ? 1 : 0));
+      },
       "price-asc": (a, b) => a.price - b.price,
       "price-desc": (a, b) => b.price - a.price,
       "newest": (a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0),
     };
     available.sort(sorts[activeSort] || sorts.trending);
+    coming.sort((a, b) => (a.hero || 99) - (b.hero || 99));
+    out.sort((a, b) => (a.hero || 99) - (b.hero || 99));
 
-    const finalList = [...available, ...coming, ...out];
+    /* Pull hero products to the very top regardless of state */
+    const allSorted = [...available, ...coming, ...out];
+    const heroes = allSorted.filter((p) => p.hero).sort((a, b) => a.hero - b.hero);
+    const rest = allSorted.filter((p) => !p.hero);
+    const finalList = [...heroes, ...rest];
     grid.innerHTML = `<div class="pgrid">${finalList.map((p) => productCard(p, { activeCollection: colParam })).join("")}</div>`;
     countEl.textContent = `Showing ${finalList.length} handcrafted piece${finalList.length === 1 ? "" : "s"}`;
     syncWishUI();
