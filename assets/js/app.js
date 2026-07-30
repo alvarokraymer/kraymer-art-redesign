@@ -114,53 +114,51 @@ function priceHTML(p) {
   </div>`;
 }
 
-function productCard(p) {
+function productCard(p, opts = {}) {
   const col = COLLECTIONS[p.collection];
-  const gemColor = accentColors[p.collection] || PH_GOLD;
 
-  /* Determine primary state (mutually exclusive, one badge slot) */
+  /* Map collection to approach for demo (neutral, not themed). Only on PLP grid. */
+  const approachMap = { jjk: "bold", kny: "clean", genshin: "soft" };
+  const approachClass = (opts.approach !== false && approachMap[p.collection]) ? ` card--${approachMap[p.collection]}` : "";
+
+  /* Determine primary state (mutually exclusive) */
   let stateClass = "";
   let stateBadge = "";
 
   if (p.soldOut) {
     stateClass = "sold";
-    stateBadge = '<span class="badge badge--agotado">Agotado</span>';
+    stateBadge = '<span class="badge badge--soldout">Sold out</span>';
   } else if (p.comingSoon) {
     stateClass = "card--coming-soon";
-    stateBadge = '<span class="badge badge--proximamente">Próximamente</span>';
+    stateBadge = '<span class="badge badge--coming">Coming soon</span>';
   } else if (p.lowStock) {
     stateClass = "card--low-stock";
-    stateBadge = '<span class="badge badge--pocos">Quedan pocos</span>';
+    stateBadge = '<span class="badge badge--lowstock">Low stock</span>';
   } else if (p.isNew) {
-    stateClass = "card--new";
-    stateBadge = '<span class="badge badge--nuevo">Nuevo</span>';
+    stateBadge = '<span class="badge badge--new">New</span>';
   } else if (p.isFeatured) {
     stateClass = "card--featured";
-    stateBadge = '<span class="badge badge--destacado">Destacado</span>';
+    stateBadge = '<span class="badge badge--featured">Featured</span>';
   }
 
-  /* Sale is additive — show discount badge only if not sold out or coming soon */
+  /* Sale is additive — discount badge if not sold out or coming soon */
   const saleBadge = (!p.soldOut && !p.comingSoon && p.compareAt)
-    ? `<span class="badge badge--oferta">-${Math.round((1 - p.price / p.compareAt) * 100)}%</span>`
+    ? `<span class="badge badge--sale">-${Math.round((1 - p.price / p.compareAt) * 100)}%</span>`
     : "";
 
-  /* Collection-specific card class (all stays vanilla) */
-  const collClass = (p.collection === "jjk" || p.collection === "kny" || p.collection === "genshin")
-    ? ` card--${p.collection}` : "";
-
-  /* CTA: notify-me for sold out & coming soon; standard ATC otherwise */
+  /* CTA: notify for sold-out & coming-soon, standard ATC otherwise */
   const cta = (p.soldOut || p.comingSoon)
-    ? `<button class="card__buy card__buy--notify" data-notify="${p.handle}" aria-label="Avísame"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>`
-    : `<button class="card__buy" data-add="${p.handle}" aria-label="Añadir al carrito"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>`;
+    ? `<button class="card__buy card__buy--notify" data-notify="${p.handle}" aria-label="Notify me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>`
+    : `<button class="card__buy" data-add="${p.handle}" aria-label="Add to cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>`;
 
-  /* Badges wrap: state + optional sale */
+  /* Badge wrap: primary state + optional sale */
   const badgesWrap = (stateBadge || saleBadge)
     ? `<div class="card__badges">${stateBadge}${saleBadge}</div>` : "";
 
   return `
-  <article class="card${collClass} ${stateClass}" data-handle="${p.handle}" data-images='${JSON.stringify(p.images || [])}'>
+  <article class="card${approachClass} ${stateClass}" data-handle="${p.handle}" data-images='${JSON.stringify(p.images || [])}'>
     <div class="card__img">
-      ${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}
+      ${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: phImg(p) })}
       ${badgesWrap}
       <button class="heart" data-wish="${p.handle}" aria-label="Wishlist">
         <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
@@ -482,7 +480,7 @@ function initHome() {
   const best = PRODUCTS.filter((p) => p.featured && !p.soldOut);
   const strip = document.querySelector("[data-bestsellers]");
   if (strip) {
-    strip.innerHTML = best.map(productCard).join("");
+    strip.innerHTML = best.map((p) => productCard(p, { approach: false })).join("");
     strip.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important";
     strip.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
 
@@ -649,8 +647,8 @@ function initPLP() {
 
   function apply() {
     let list = PRODUCTS.slice();
-    if (colParam) list = list.filter((p) => p.collection === colParam);
-    else if (filterCol) list = list.filter((p) => p.collection === filterCol);
+    if (colParam) list = list.filter((p) => p.collection === colParam || (p.featured && p.collection === "all"));
+    else if (filterCol) list = list.filter((p) => p.collection === filterCol || (p.featured && p.collection === "all"));
     if (activeType) list = list.filter((p) => p.type === activeType);
     if (filterMat) list = list.filter((p) => p.metals.some((m) => m.toLowerCase().includes(filterMat)));
     if (filterPrice) {
@@ -666,7 +664,7 @@ function initPLP() {
     const out = list.filter((p) => p.soldOut);
 
     const sorts = {
-      "trending": (a, b) => ((b.isFeatured ? 1 : 0) + (b.badges.includes("bestseller") ? 1 : 0)) - ((a.isFeatured ? 1 : 0) + (a.badges.includes("bestseller") ? 1 : 0)),
+      "trending": (a, b) => ((b.featured ? 3 : 0) + (b.isFeatured ? 1 : 0) + (b.badges.includes("bestseller") ? 1 : 0)) - ((a.featured ? 3 : 0) + (a.isFeatured ? 1 : 0) + (a.badges.includes("bestseller") ? 1 : 0)),
       "price-asc": (a, b) => a.price - b.price,
       "price-desc": (a, b) => b.price - a.price,
       "newest": (a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0),
@@ -876,7 +874,7 @@ function initPDP() {
 
   /* Cross-sell: same character first, then same collection */
   const cross = PRODUCTS.filter((x) => x.handle !== p.handle && !x.soldOut && (x.character === p.character || x.collection === p.collection)).slice(0, 4);
-  host.querySelector("[data-crosssell]").innerHTML = cross.map(productCard).join("");
+  host.querySelector("[data-crosssell]").innerHTML = cross.map((p) => productCard(p, { approach: false })).join("");
   host.querySelector("[data-crosssell]").querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
 
   /* Gallery: thumbs + swipe on main image */
