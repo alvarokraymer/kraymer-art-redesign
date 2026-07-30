@@ -222,7 +222,7 @@ input,select{font:inherit}
 .card__badges .badge{position:static}
 
 /* ── Approach A: Bold — dark editorial, full-bleed, high contrast ── */
-.card--bold{background:var(--dark);color:var(--light);overflow:hidden}
+.card--bold{background:var(--dark);color:var(--light);border-radius:var(--radius);overflow:hidden}
 .card--bold .card__img{border-radius:0}
 .card--bold .card__body{padding:.85rem;gap:4px}
 .card--bold .card__series{color:var(--accent);font-size:.7rem}
@@ -253,6 +253,7 @@ input,select{font:inherit}
 .card--clean .badge--featured{background:var(--accent);color:#fff;border-color:var(--accent)}
 .card--clean .badge--new{color:#3A7D5A;border-color:#3A7D5A}
 .card--clean .badge--sale{color:#B5453A;border-color:#B5453A}
+.card--clean .card__discount{background:transparent;color:#B5453A;font-size:.5rem;padding:0;margin-left:.2rem}
 
 /* ── Approach C: Soft — rounded, pillowed, gentle gradient + shadow ── */
 .card--soft{background:linear-gradient(180deg,#fff 0%,#FAF7FC 100%);border-radius:18px;overflow:visible;box-shadow:0 3px 18px rgba(120,100,160,.08)}
@@ -298,12 +299,18 @@ input,select{font:inherit}
 /* Sale: discount % badge next to price */
 .card__discount{
   display:inline-block;
-  font-size:.65rem;
+  font-size:.55rem;
   font-weight:600;
-  color:#B5453A;
-  margin-left:.35rem;
-  vertical-align:middle
+  color:#fff;
+  background:#B5453A;
+  border-radius:var(--radius-pill);
+  padding:1px 6px;
+  margin-left:.3rem;
+  vertical-align:middle;
+  line-height:1.4
 }
+.card--dark .card__discount{color:#fff;background:#B5453A}
+.card--bold .card__discount{color:#fff;background:#B5453A}
 
 /* Notify CTA (sold out / coming soon) */
 .card__buy--notify{
@@ -468,6 +475,51 @@ input,select{font:inherit}
 .pdp-guarantee__item b{font-size:.75rem;font-weight:600;color:var(--dark)}
 .pdp-guarantee__item small{font-size:.6rem;color:var(--muted)}
 .specs{margin-top:1.5rem}
+.pdp--editorial{padding-bottom:1rem}
+.pdp--editorial .pdp-media{margin-bottom:2rem}
+.pdp--editorial .pdp-story{padding:1.5rem;background:var(--light);border-radius:var(--radius);box-shadow:0 2px 12px rgba(35,31,32,.06);margin-bottom:1rem}
+.pdp--editorial .pdp-story h3{font-family:var(--display);font-size:1.2rem;font-weight:400;margin-bottom:.5rem}
+.pdp--editorial .pdp-story p{font-size:.875rem;color:var(--muted);line-height:1.6}
+.pdp--editorial .metal-card{background:var(--dark);border-color:var(--dark)}
+.pdp--editorial .metal-card span{color:var(--light)}
+.pdp--editorial .metal-card.selected{background:var(--accent);border-color:var(--accent)}
+.pdp--editorial .metal-card.selected span{color:#fff}
+.pdp--editorial .v-chip{border-color:var(--dark)}
+.pdp--editorial .v-chip.selected{background:var(--accent);border-color:var(--accent)}
+.pdp--side{padding:0}
+.pdp--side .pdp-meta{padding-top:1.5rem}
+.pdp--side .pdp-title{font-size:1.35rem;font-weight:400}
+.pdp--side .pdp-price-inline{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.pdp--side .pdp-price{font-size:1.35rem}
+.pdp--side .pdp-config{background:transparent;border:1px solid var(--line);padding:1rem;border-radius:var(--radius-sm)}
+.pdp--side .v-chip{border-color:var(--line)}
+.pdp--side .v-chip.selected{border-color:var(--dark);background:var(--dark)}
+.pdp--side .pdp-actions{display:flex;gap:.5rem}
+.pdp--side .pdp-actions .btn--dark{flex:1}
+.pdp--side .wishlist-btn{width:48px;height:48px;min-height:48px;padding:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:var(--radius-sm);background:transparent;cursor:pointer;flex:none}
+.pdp--side .wishlist-btn svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:1.5}
+.pdp--immersive{padding:0}
+.pdp--immersive .pdp-media{position:relative;margin:0 calc(-1 * var(--gutter));border-radius:0}
+.pdp--immersive .pdp-media img{border-radius:0}
+.pdp--immersive .pdp-gradient{position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top, var(--bg) 10%, transparent);pointer-events:none}
+.pdp--immersive .pdp-float-price{position:absolute;top:1.5rem;right:1.5rem;background:var(--dark);color:var(--light);padding:.5rem 1rem;border-radius:var(--radius-sm);font-weight:700;font-size:1.1rem;box-shadow:0 4px 20px rgba(0,0,0,.3);z-index:5}
+.pdp--immersive .pdp-meta{padding-top:1rem}
+.pdp--immersive .pdp-title{font-size:1.25rem}
+.pdp--immersive .pdp-config{background:transparent;padding:0;border:none;border-radius:0}
+.pdp--immersive .v-chip{border-color:var(--dark)}
+.pdp--immersive .v-chip.selected{background:var(--accent);border-color:var(--accent)}
+.pdp-dot{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:5}
+.pdp-dot span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.5);transition:background .2s}
+.pdp-dot span.on{background:#fff}
+.pdp--classic .pdp-config{border-radius:var(--radius)}
+.pdp--classic .v-chip{border-color:var(--dark)}
+.pdp--classic .v-chip.selected{background:var(--accent);border-color:var(--accent)}
+.btn--full{width:100%;justify-content:center}
+@media(min-width:768px){
+  .pdp--side{display:grid;grid-template-columns:1fr 1fr;gap:2rem;padding:0}
+  .pdp--side .pdp-media{position:sticky;top:0;height:100vh;border-radius:var(--radius)}
+  .pdp--side .pdp-meta{padding-top:0;display:flex;flex-direction:column;justify-content:center}
+}
 
 /* ── Post cards (horizontal slide) ── */
 .post-scroll{display:grid;grid-auto-flow:column;grid-auto-columns:75%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.5rem;scrollbar-width:none}

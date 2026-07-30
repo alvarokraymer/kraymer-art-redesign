@@ -794,90 +794,197 @@ function initPDP() {
   const p = kaProduct(params.get("id")) || PRODUCTS[0];
   const col = COLLECTIONS[p.collection];
   const host = document.querySelector("[data-pdp]");
+  const approach = params.get("approach") || "1";
 
   const isRing = p.type === "rings" || (p.type === "sets" && p.sizes.length > 1);
-  const hasCompare = !!p.compareAt;
-
   const imgs = phImgList(p);
   const hasImgs = imgs.length > 1;
   const mainImg = imgs[0] || phImg(p);
+  const gemColor = accentColors[p.collection] || PH_GOLD;
 
-  host.innerHTML = `
-    <nav class="bread" aria-label="Breadcrumb">
-      <a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b>
-    </nav>
-    <div class="pdp-layout">
-      <div>
-        <div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5"${hasImgs ? ` data-gal-imgs='${JSON.stringify(imgs)}'` : ""}> </div>
-        ${hasImgs ? `<div class="gal-strip" data-gal-strip>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : ""}
-      </div>
-      <div class="pdp-meta">
-        <span class="pdp-tag">${col.name}</span>
-        <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1><span class="pdp-price">${kaMoney(p.price)}</span></div>
-        <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
-        <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
-
-        <div class="pdp-config">
-        ${p.metals.length ? `
-        <div class="v-group">
-          <p class="v-label">Metal</p>
-          <div class="metal-cards" data-metal-opts>
-            ${p.metals.map((m, i) => `<button class="metal-card ${i === 0 ? "selected" : ""}" data-metal="${m}"><span>${m}</span></button>`).join("")}
-          </div>
-        </div>` : ""}
-
-        ${p.sizes.length ? `
-        <div class="v-group">
-          <p class="v-label">${isRing ? "Ring size" : "Size"} ${isRing ? `<button data-open-sizeguide>Guide</button>` : ""}</p>
-          <div class="v-row" data-size-opts>
-            ${p.sizes.map((s, i) => `<button class="v-chip ${i === 0 ? "selected" : ""}" data-size="${s}">${s}</button>`).join("")}
-          </div>
-          ${isRing ? `<p class="sm muted" style="margin-top:.5rem">Free lifetime resizing on every ring.</p>` : ""}
-        </div>` : ""}
-        </div>
-
-        <div class="atc-bar">
-          <button class="btn btn--dark" data-pdp-atc ${p.soldOut ? "disabled" : ""}>
-            ${p.soldOut ? "Sold Out" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="margin-right:.5rem"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Add to Cart · ${kaMoney(p.price)}`}
-          </button>
-          <div class="atc-note">
-            <b>Handcrafted to order</b>
-            Ships in 9–20 days. You get photo updates while your piece is being made, then tracked shipping.
-          </div>
-          <div class="pdp-guarantee">
-            <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span><b>Lifetime Warranty</b><small>Every piece, forever</small></span></div>
-            <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span><b>60-Day Returns</b><small>No questions asked</small></span></div>
-            <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg><span><b>Certificate of Authenticity</b><small>Numbered by hand</small></span></div>
-          </div>
-        </div>
-
-        <div class="specs faq">
-          <div class="faq__item"><button class="faq__btn">Specs &amp; Materials</button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m) => m.includes("Gold")) ? " or 18K gold plated over sterling silver" : ""}. Hand-set ${p.gem ? p.gem.toLowerCase() : "stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
-          <div class="faq__item"><button class="faq__btn">Concept &amp; Inspiration</button><div class="faq__panel"><p>${p.line || "Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</p></div></div>
-          <div class="faq__item"><button class="faq__btn">Care Instructions</button><div class="faq__panel"><p>Wipe with the included polishing cloth after wear. Store in the pouch. Your lifetime warranty covers the rest.</p></div></div>
-        </div>
-
-        <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to all collections</a>
-      </div>
-    </div>
-
+  /* --- Helpers --- */
+  const thumbStrip = (dataAttr) => hasImgs
+    ? `<div class="gal-strip" ${dataAttr}>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : "";
+  const mainGal = (extra) => `<div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5" ${hasImgs ? `data-gal-imgs='${JSON.stringify(imgs)}'` : ""} ${extra||""}> </div>`;
+  const guaranteeHTML = `
+    <div class="pdp-guarantee">
+      <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span><b>Lifetime Warranty</b><small>Every piece, forever</small></span></div>
+      <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span><b>60-Day Returns</b><small>No questions asked</small></span></div>
+      <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg><span><b>Certificate of Authenticity</b><small>Numbered by hand</small></span></div>
+    </div>`;
+  const noteHTML = `<div class="atc-note"><b>Handcrafted to order</b>Ships in 9–20 days. You get photo updates while your piece is being made, then tracked shipping.</div>`;
+  const variantsHTML = (size, metal, metalStyle) => {
+    let h = "";
+    if (p.metals.length) {
+      h += `<div class="v-group"><p class="v-label">Metal</p><div class="${metalStyle}" data-metal-opts>${p.metals.map((m,i) => `<button class="${metalStyle === 'metal-cards' ? 'metal-card' : 'v-chip'} ${i===0?'selected':''}" data-metal="${m}"><span>${m}</span></button>`).join("")}</div></div>`;
+    }
+    if (p.sizes.length) {
+      h += `<div class="v-group"><p class="v-label">${isRing?"Ring size":"Size"} ${isRing?`<button data-open-sizeguide>Guide</button>`:""}</p><div class="v-row" data-size-opts>${p.sizes.map((s,i) => `<button class="v-chip ${i===0?'selected':''}" data-size="${s}">${s}</button>`).join("")}</div>${isRing?`<p class="sm muted" style="margin-top:.5rem">Free lifetime resizing.</p>`:""}</div>`;
+    }
+    return h;
+  };
+  const specsHTML = `
+    <div class="specs faq">
+      <div class="faq__item"><button class="faq__btn">Specs &amp; Materials</button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m)=>m.includes("Gold"))?" or 18K gold plated over sterling silver":""}. Hand-set ${p.gem?p.gem.toLowerCase():"stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
+      <div class="faq__item"><button class="faq__btn">Concept &amp; Inspiration</button><div class="faq__panel"><p>${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</p></div></div>
+      <div class="faq__item"><button class="faq__btn">Care Instructions</button><div class="faq__panel"><p>Wipe with the included polishing cloth after wear. Store in the pouch. Your lifetime warranty covers the rest.</p></div></div>
+    </div>`;
+  const reviewsHTML = `
     <section class="sec sec--sm" id="reviews">
       <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
       <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><b>Verified Buyer</b> · 2 months ago</p></div>
       <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><b>Verified Buyer</b> · 1 month ago</p></div>
       <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><b>Verified Buyer</b> · 3 weeks ago</p></div>
-    </section>
-
+    </section>`;
+  const crossHTML = `
     <section class="sec sec--sm">
       <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">You may also like</span><h2>Complete the look</h2></div>
       <div class="scroll-row" data-crosssell></div>
-    </section>
-  `;
+    </section>`;
 
-  /* Cross-sell: same character first, then same collection */
-  const cross = PRODUCTS.filter((x) => x.handle !== p.handle && !x.soldOut && (x.character === p.character || x.collection === p.collection)).slice(0, 4);
-  host.querySelector("[data-crosssell]").innerHTML = cross.map((p) => productCard(p, { approach: false })).join("");
-  host.querySelector("[data-crosssell]").querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
+  /* ===== APPROACH ROUTING ===== */
+  let html = "";
+  let cssClass = "";
+
+  if (approach === "2") {
+    /* ── Approach 2: Editorial — story-driven, large visual ── */
+    cssClass = "pdp--editorial";
+    html = `
+      <nav class="bread" aria-label="Breadcrumb"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
+      <div class="pdp-layout">
+        <div>
+          ${mainGal('style="border:0;border-radius:var(--radius)"')}
+          ${hasImgs ? `<div style="display:flex;justify-content:center;gap:.4rem;padding:.75rem 0">${imgs.map((_,i)=>`<button class="pdp-dot ${i===0?'on':''}" data-gal-thumb="${i}" style="width:8px;height:8px;border-radius:50%;border:0;background:${i===0?'var(--accent)':'var(--line)'};cursor:pointer"></button>`).join("")}</div>` : ""}
+        </div>
+        <div class="pdp-meta">
+          <span class="pdp-tag">${col.name}</span>
+          <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
+          <div class="pdp-price" style="margin-bottom:.75rem">${kaMoney(p.price)}${p.compareAt?`<span style="font-size:1rem;color:var(--muted);text-decoration:line-through;margin-left:.5rem;font-weight:300">${kaMoney(p.compareAt)}</span><span class="card__discount" style="margin-left:.5rem">-${Math.round((1-p.price/p.compareAt)*100)}%</span>`:""}</div>
+          <div class="pdp-desc">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
+          <div class="pdp-config">
+            ${variantsHTML("chips","metal-cards","metal-cards")}
+          </div>
+          <div class="atc-bar">
+            <button class="btn btn--dark" data-pdp-atc ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":`Add to Cart · ${kaMoney(p.price)}`}</button>
+            ${noteHTML}
+            ${guaranteeHTML}
+          </div>
+          ${specsHTML}
+          <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to collection</a>
+        </div>
+      </div>
+      ${reviewsHTML}
+      ${crossHTML}`;
+
+  } else if (approach === "3") {
+    /* ── Approach 3: Side — 2-column, minimal chrome, price inline ── */
+    cssClass = "pdp--side";
+    html = `
+      <nav class="bread" aria-label="Breadcrumb"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
+      <div class="pdp-layout">
+        <div>
+          ${mainGal('style="border:0;aspect-ratio:1"')}
+          ${thumbStrip('style="padding:0;gap:.5rem"')}
+        </div>
+        <div class="pdp-meta">
+          <div style="display:flex;align-items:baseline;gap:.75rem;margin-bottom:.25rem">
+            <span class="pdp-tag" style="margin-bottom:0">${col.name}</span>
+            <span class="pdp-price" style="font-size:1.1rem">${kaMoney(p.price)}</span>
+            ${p.compareAt?`<span style="text-decoration:line-through;color:var(--muted);font-size:.85rem">${kaMoney(p.compareAt)}</span><span class="card__discount">-${Math.round((1-p.price/p.compareAt)*100)}%</span>`:""}
+          </div>
+          <h1 class="pdp-title" style="font-size:1.5rem;margin-bottom:.5rem">${p.title}</h1>
+          <div class="pdp-desc" style="font-size:1rem">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
+          <div class="pdp-config" style="background:transparent;padding:1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:1.5rem 0">
+            ${variantsHTML("chips","v-row","v-row")}
+          </div>
+          <div style="display:flex;gap:.75rem;align-items:center">
+            <button class="btn btn--dark" data-pdp-atc style="flex:1" ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":`Add to Cart · ${kaMoney(p.price)}`}</button>
+            <button class="heart" style="position:static;width:48px;height:48px;flex:none;box-shadow:0 1px 4px rgba(0,0,0,.1)" data-wish="${p.handle}" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg></button>
+          </div>
+          ${noteHTML}
+          ${guaranteeHTML}
+          ${specsHTML}
+          <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to collection</a>
+        </div>
+      </div>
+      ${crossHTML}`;
+
+  } else if (approach === "4") {
+    /* ── Approach 4: Immersive — full-width gallery, floating price, visual ── */
+    cssClass = "pdp--immersive";
+    html = `
+      <nav class="bread" aria-label="Breadcrumb" style="padding:1rem var(--gutter)"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
+      <div style="position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;background:#F4EEEB" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center">
+        <div style="position:absolute;inset:0;background-image:url(${mainImg});background-size:cover;background-position:center" data-gallery-main-img></div>
+        <div style="position:absolute;top:1rem;right:1rem;z-index:2"><button class="heart" style="position:static;width:40px;height:40px;box-shadow:0 2px 8px rgba(0,0,0,.15)" data-wish="${p.handle}" aria-label="Wishlist"><svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg></button></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:2rem var(--gutter);background:linear-gradient(to top,rgba(24,21,20,.85) 0%,rgba(24,21,20,.4) 60%,transparent 100%);z-index:1">
+          <span style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)">${col.name}</span>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem">
+            <h1 style="font-family:var(--display);font-size:1.75rem;font-weight:300;color:#fff;line-height:1.1">${p.title}</h1>
+            <div style="text-align:right;flex:none">
+              <div style="font-size:1.5rem;font-weight:700;color:#fff">${kaMoney(p.price)}</div>
+              ${p.compareAt?`<div style="font-size:.85rem;color:rgba(255,255,255,.5);text-decoration:line-through">${kaMoney(p.compareAt)}<span class="card__discount" style="margin-left:.3rem">-${Math.round((1-p.price/p.compareAt)*100)}%</span></div>`:""}
+            </div>
+          </div>
+        </div>
+      </div>
+      ${hasImgs ? `<div style="display:flex;overflow-x:auto;gap:0;scrollbar-width:none;border-bottom:1px solid var(--line)">${imgs.map((url,i) => `<button data-gal-thumb="${i}" style="flex:none;width:25vw;aspect-ratio:1;background-image:url(${url});background-size:cover;background-position:center;border:none;cursor:pointer;border-right:1px solid var(--line);${i===0?'opacity:1':'opacity:.6'}"></button>`).join("")}</div>` : ""}
+      <div class="w" style="max-width:640px;margin:0 auto;padding:2rem var(--gutter)">
+        <div class="pdp-config" style="background:transparent;padding:0;margin-bottom:1.5rem">
+          ${variantsHTML("chips","metal-cards","metal-cards")}
+        </div>
+        <div class="pdp-desc" style="text-align:center;font-size:1.2rem;margin-bottom:1.5rem">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
+        <button class="btn btn--dark btn--full" data-pdp-atc style="min-height:58px;font-size:.9rem;border-radius:var(--radius-pill)" ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":`Add to Cart · ${kaMoney(p.price)}`}</button>
+        ${noteHTML}
+        ${guaranteeHTML}
+        ${specsHTML}
+        <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem;text-align:center;display:block">&larr; Back to collection</a>
+      </div>
+      ${reviewsHTML}
+      ${crossHTML}`;
+
+  } else {
+    /* ── Approach 1: Classic — traditional layout (default) ── */
+    cssClass = "pdp--classic";
+    html = `
+      <nav class="bread" aria-label="Breadcrumb"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
+      <div class="pdp-layout">
+        <div>
+          ${mainGal()}
+          ${thumbStrip('data-gal-strip')}
+        </div>
+        <div class="pdp-meta">
+          <span class="pdp-tag">${col.name}</span>
+          <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1><span class="pdp-price">${kaMoney(p.price)}</span></div>
+          <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
+          <div class="pdp-rating"><span class="stars">★★★★★</span> 5.0 · <a href="#reviews">Read reviews</a></div>
+          <div class="pdp-config">
+            ${variantsHTML("chips","metal-cards","metal-cards")}
+          </div>
+          <div class="atc-bar">
+            <button class="btn btn--dark" data-pdp-atc ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="margin-right:.5rem"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Add to Cart · ${kaMoney(p.price)}`}</button>
+            ${noteHTML}
+            ${guaranteeHTML}
+          </div>
+          ${specsHTML}
+          <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to all collections</a>
+        </div>
+      </div>
+      ${reviewsHTML}
+      ${crossHTML}`;
+  }
+
+  /* ===== RENDER ===== */
+  host.innerHTML = html;
+  if (cssClass) host.classList.add(cssClass);
+
+  /* Cross-sell */
+  const cross = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && (x.character===p.character || x.collection===p.collection)).slice(0,4);
+  const crossEl = host.querySelector("[data-crosssell]");
+  if (crossEl) {
+    crossEl.innerHTML = cross.map((cp) => productCard(cp, { approach: false })).join("");
+    crossEl.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
+  }
 
   /* Gallery: thumbs + swipe on main image */
   const main = host.querySelector("[data-gallery-main]");
@@ -886,8 +993,15 @@ function initPDP() {
     const goGal = (i) => {
       galIdx = ((i % imgs.length) + imgs.length) % imgs.length;
       main.style.backgroundImage = `url(${imgs[galIdx]})`;
-      host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => b.classList.toggle("on", j===galIdx));
-      /* Auto-scroll strip to active thumb */
+      host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => {
+        b.classList.toggle("on", j===galIdx);
+        if (b.style.opacity !== undefined && !b.classList.contains("pdp-dot")) {
+          b.style.opacity = j===galIdx ? "1" : ".6";
+        }
+        if (b.classList.contains("pdp-dot")) {
+          b.style.background = j===galIdx ? "var(--accent)" : "var(--line)";
+        }
+      });
       const strip = host.querySelector("[data-gal-strip]");
       if (strip) { const btn = strip.children[galIdx]; if (btn) btn.scrollIntoView({behavior:"smooth",inline:"center",block:"nearest"}); }
     };
@@ -895,7 +1009,6 @@ function initPDP() {
       const btn = e.target.closest("[data-gal-thumb]");
       if (btn) { goGal(Number(btn.dataset.galThumb)); return; }
     });
-    /* Touch swipe on main image */
     let gx = 0;
     main.addEventListener("touchstart", (e) => { gx = e.changedTouches[0].screenX; }, {passive:true});
     main.addEventListener("touchend", (e) => {
@@ -904,6 +1017,30 @@ function initPDP() {
     }, {passive:true});
   }
 
+  /* Immersive approach: separate main image element */
+  const mainImgEl = host.querySelector("[data-gallery-main-img]");
+  if (mainImgEl && hasImgs) {
+    let galIdx = 0;
+    const goGalImmersive = (i) => {
+      galIdx = ((i % imgs.length) + imgs.length) % imgs.length;
+      mainImgEl.style.backgroundImage = `url(${imgs[galIdx]})`;
+      host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => {
+        b.style.opacity = j===galIdx ? "1" : ".6";
+      });
+    };
+    host.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-gal-thumb]");
+      if (btn && mainImgEl) { goGalImmersive(Number(btn.dataset.galThumb)); return; }
+    });
+    let gx = 0;
+    mainImgEl.addEventListener("touchstart", (e) => { gx = e.changedTouches[0].screenX; }, {passive:true});
+    mainImgEl.addEventListener("touchend", (e) => {
+      const dx = gx - e.changedTouches[0].screenX;
+      if (Math.abs(dx) > 40) goGalImmersive(galIdx + (dx > 0 ? 1 : -1));
+    }, {passive:true});
+  }
+
+  /* Variants */
   let selectedMetal = p.metals[0];
   let selectedSize = p.sizes[0] || null;
   host.querySelectorAll("[data-metal]").forEach((btn) => {
@@ -919,37 +1056,39 @@ function initPDP() {
     });
   });
 
-  /* Size guide modal is handled by the global delegated handler */
-
   /* Inline ATC */
   const atcBtn = host.querySelector("[data-pdp-atc]");
-  atcBtn.addEventListener("click", () => {
-    Cart.add(p.handle, selectedMetal, selectedSize);
-    atcBtn.classList.add("done");
-    atcBtn.textContent = "Added ✓";
-    setTimeout(() => {
-      atcBtn.classList.remove("done");
-      atcBtn.textContent = `Add to Cart · ${kaMoney(p.price)}`;
-      openCart();
-    }, 600);
-  });
+  if (atcBtn) {
+    atcBtn.addEventListener("click", () => {
+      Cart.add(p.handle, selectedMetal, selectedSize);
+      atcBtn.classList.add("done");
+      atcBtn.textContent = "Added ✓";
+      setTimeout(() => {
+        atcBtn.classList.remove("done");
+        atcBtn.textContent = p.soldOut ? "Sold Out" : `Add to Cart · ${kaMoney(p.price)}`;
+        openCart();
+      }, 600);
+    });
+  }
 
-  /* Sticky ATC bar: only after the inline button leaves the viewport */
-  const bar = document.createElement("div");
-  bar.className = "sticky-atc";
-  bar.innerHTML = `
-    <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: phImg(p) })}</div>
-    <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
-    <button class="btn btn--dark" ${p.soldOut ? "disabled" : ""}>${p.soldOut ? "Sold Out" : "Add to Cart"}</button>`;
-  document.body.appendChild(bar);
-  bar.querySelector("button").addEventListener("click", () => {
-    Cart.add(p.handle, selectedMetal, selectedSize);
-    openCart();
-  });
-  const io = new IntersectionObserver(([entry]) => {
-    bar.classList.toggle("show", !entry.isIntersecting && entry.boundingClientRect.top < 0);
-  }, { threshold: 0 });
-  io.observe(atcBtn);
+  /* Sticky ATC bar */
+  if (atcBtn) {
+    const bar = document.createElement("div");
+    bar.className = "sticky-atc";
+    bar.innerHTML = `
+      <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}</div>
+      <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
+      <button class="btn btn--dark" ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":"Add to Cart"}</button>`;
+    document.body.appendChild(bar);
+    bar.querySelector("button").addEventListener("click", () => {
+      Cart.add(p.handle, selectedMetal, selectedSize);
+      openCart();
+    });
+    const io = new IntersectionObserver(([entry]) => {
+      bar.classList.toggle("show", !entry.isIntersecting && entry.boundingClientRect.top < 0);
+    }, { threshold: 0 });
+    io.observe(atcBtn);
+  }
 
   initAccordions(host);
   syncWishUI();
