@@ -686,11 +686,21 @@ function initPLP() {
      "All Collections" view has no hero (removed 2026-07-31) — clarified
      2026-08-01 that this only ever meant the unfiltered view. */
   const hero = document.querySelector("[data-plp-hero]");
+  /* Evocative, non-anime-naming lines — same voice as the home hero slider,
+     one per collection. Never mention the show by name (see hard rule 2 on
+     never naming Berserk/AoT — extended here to keep all three consistent:
+     the imagery does the work, not the title). */
+  const heroCopy = {
+    jjk: { eyebrow: "Collection JJ", line: "Cursed energy, cast in solid silver. Two eyes on one technique, precision that never blinks." },
+    kny: { eyebrow: "Collection KN", line: "Breath held to a single, exact note. Steel that remembers the fight, calm that holds the line." },
+    genshin: { eyebrow: "Collection GI", line: "Elements bent to one will. Light that keeps every color it passed through." },
+  }[colParam];
   if (colParam && COLLECTIONS[colParam]) {
     hero.hidden = false;
     hero.classList.add("plp-hero--img");
+    hero.querySelector(".eyebrow").textContent = heroCopy.eyebrow;
     hero.querySelector("h1").textContent = COLLECTIONS[colParam].name;
-    hero.querySelector("[data-plp-desc]").textContent = "Handcrafted jewelry, designed for those who know.";
+    hero.querySelector("[data-plp-desc]").textContent = heroCopy.line;
     const heroImg = {
       jjk: "assets/jj_hero.png",
       kny: "assets/giyuRing_hero_AI.png",
@@ -884,6 +894,16 @@ function initPLP() {
   apply();
 }
 
+/* Detail captions for the last two gallery shots — only the 4 products with
+   their own full local photoshoot (7 real images each) get these; every
+   other product has too few images for "the last two" to mean anything. */
+const PDP_IMAGE_NOTES = {
+  "anya-x-yor": ["Worn everyday, paired with a plain stud.", "Catching afternoon light, no filter."],
+  "giyu-pin": ["Charged under any light source.", "Glows blue for hours after dark."],
+  "giyu-ring": ["Shown on a size 7, worn solo.", "Stacked next to the matching pin."],
+  "gojo-x-geto": ["Worn stacked, both bands together.", "Shown solo, catching studio light."],
+};
+
 /* ---- PDP ---- */
 function initPDP() {
   const params = new URLSearchParams(location.search);
@@ -898,10 +918,33 @@ function initPDP() {
   const mainImg = imgs[0] || phImg(p);
   const gemColor = accentColors[p.collection] || PH_GOLD;
 
+  /* Info button + caption overlay on the last two gallery images (see
+     PDP_IMAGE_NOTES). One button/panel pair exists per page (only one PDP
+     approach renders at a time), shared across the classic/editorial/side
+     main-gallery path and the immersive path — both call this after moving. */
+  const imgNotes = PDP_IMAGE_NOTES[p.handle];
+  const noteForIdx = (i) => {
+    if (!imgNotes) return null;
+    const start = imgs.length - imgNotes.length;
+    return i >= start ? imgNotes[i - start] : null;
+  };
+  const applyImgNote = (i) => {
+    const btn = host.querySelector("[data-gal-info]");
+    if (!btn) return;
+    const panel = btn.nextElementSibling;
+    const note = noteForIdx(i);
+    btn.hidden = !note;
+    if (panel) {
+      panel.hidden = true;
+      panel.querySelector("[data-gal-info-text]").textContent = note || "";
+    }
+  };
+
   /* --- Helpers --- */
   const thumbStrip = (dataAttr) => hasImgs
     ? `<div class="gal-strip" ${dataAttr}>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : "";
-  const mainGal = (extra) => `<div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5" ${hasImgs ? `data-gal-imgs='${JSON.stringify(imgs)}'` : ""} ${extra||""}> </div>`;
+  const galInfoHTML = `<button class="gal-info" data-gal-info hidden aria-label="Image details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><line x1="12" y1="15.5" x2="12" y2="11"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/></svg></button><div class="gal-info__panel" data-gal-info-panel hidden><p data-gal-info-text></p></div>`;
+  const mainGal = (extra) => `<div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5" ${hasImgs ? `data-gal-imgs='${JSON.stringify(imgs)}'` : ""} ${extra||""}>${galInfoHTML}</div>`;
   const guaranteeHTML = `
     <div class="pdp-guarantee">
       <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span><b>Lifetime Warranty</b><small>Every piece, forever</small></span></div>
@@ -1038,6 +1081,7 @@ function initPDP() {
       <div style="position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;background:#F4EEEB" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center">
         <div style="position:absolute;inset:0;background-image:url(${mainImg});background-size:cover;background-position:center" data-gallery-main-img></div>
         ${soldOverlay}
+        ${galInfoHTML}
         <div style="position:absolute;bottom:0;left:0;right:0;padding:2rem var(--gutter);background:linear-gradient(to top,rgba(24,21,20,.85) 0%,rgba(24,21,20,.4) 60%,transparent 100%);z-index:1">
           <span style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)">${col.name}</span>
           <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem">
@@ -1111,6 +1155,13 @@ function initPDP() {
     crossEl.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
   }
 
+  /* Info button: toggles the caption panel over whichever image is showing */
+  applyImgNote(0);
+  host.addEventListener("click", (e) => {
+    const infoBtn = e.target.closest("[data-gal-info]");
+    if (infoBtn) { infoBtn.nextElementSibling.hidden = !infoBtn.nextElementSibling.hidden; }
+  });
+
   /* Gallery: thumbs + swipe on main image */
   const main = host.querySelector("[data-gallery-main]");
   if (main && hasImgs) {
@@ -1118,6 +1169,7 @@ function initPDP() {
     const goGal = (i) => {
       galIdx = ((i % imgs.length) + imgs.length) % imgs.length;
       main.style.backgroundImage = `url(${imgs[galIdx]})`;
+      applyImgNote(galIdx);
       host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => {
         b.classList.toggle("on", j===galIdx);
         if (b.style.opacity !== undefined && !b.classList.contains("pdp-dot")) {
@@ -1149,6 +1201,7 @@ function initPDP() {
     const goGalImmersive = (i) => {
       galIdx = ((i % imgs.length) + imgs.length) % imgs.length;
       mainImgEl.style.backgroundImage = `url(${imgs[galIdx]})`;
+      applyImgNote(galIdx);
       host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => {
         b.style.opacity = j===galIdx ? "1" : ".6";
       });

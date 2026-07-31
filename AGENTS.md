@@ -159,6 +159,13 @@ hardcoded-literal overrides (`#181514`) on the always-light card, not a token
 background that stays fixed needs fixed text, whichever polarity the fixed
 background is. The `.heart` icon had the identical bug (white circle backdrop
 that never inverts, `stroke:var(--dark)` that did) — fixed the same way.
+`.trust` (the Lifetime Warranty/60-Day Returns/Certificate row on home) and
+`.quiz-wrap` (the Find Your Domain card, both the home CTA and `quiz.html`
+itself) went through the same fix after being given a fixed `--surface-soft`
+background 2026-07-31 (`.trust` for a card look it didn't have before,
+`.quiz-wrap` because it used to sit on `var(--light)` — identical to the page
+background, so the "card" was invisible even in light mode, not just a
+dark-mode bug). Both got the same hardcoded-literal dark-mode override.
 
 ## Logo
 
@@ -212,8 +219,42 @@ nothing by itself — both have an explicit `display` in their own rule, which
 beats the UA stylesheet's `[hidden]{display:none}` on specificity/source-order.
 Every element toggled via the `hidden` attribute needs its own
 `.selector[hidden]{display:none}` line; don't assume the attribute alone works.
+`.promo-fab`'s `bottom` offset is page-conditional (2026-07-31): the base rule
+sits it low (`1.35rem` + safe-area), close to the thumb, but
+`body[data-page="pdp"] .promo-fab` bumps it back up to the old `5.5rem` —
+PDP is the one page with `.sticky-atc`, a full-width fixed bar that occupies
+roughly the bottom 4.5rem once the visitor scrolls past the buy box, and
+would sit under the FAB at the low offset. If another page ever grows its own
+bottom-fixed bar, give it the same override rather than raising the shared
+base value back up for everyone.
 
 ## Component inventory
+
+- **Marquee track must be two byte-identical halves** (bug found 2026-07-31):
+  the top announcement bar duplicates its 4 items once so `@keyframes
+  marquee{to{transform:translateX(-50%)}}` can loop seamlessly — but the
+  first half was missing the middot between its last item and the first item
+  of the second half, so the two halves weren't the same width. Result: a
+  visible gap at that seam, and because the two halves were slightly
+  different lengths, the `-50%` loop point didn't land exactly on the second
+  half's start, causing a small stutter every cycle. Both symptoms were the
+  same root cause. If you ever add/remove/reorder marquee items, keep both
+  halves (in every page's inline copy *and* `partials.js`'s unused
+  `ANNOUNCE_HTML`, kept in sync for when it's eventually wired up) exactly
+  identical, separators included.
+- **PDP gallery info button** (`PDP_IMAGE_NOTES`, `applyImgNote()` in
+  `initPDP()`, 2026-07-31): the last two images of the 4 products with a full
+  local photoshoot (`anya-x-yor`, `giyu-pin`, `giyu-ring`, `gojo-x-geto` — the
+  only ones with 7 real images each) get a small `.gal-info` button in the
+  corner; clicking it shows a `.gal-info__panel` caption over the image. The
+  button/panel markup (`galInfoHTML`) is injected into `mainGal()` and into
+  the immersive approach's gallery box, but there's only ever one instance in
+  the DOM at a time (one PDP approach renders per page load), so `goGal()`
+  and `goGalImmersive()` both call the same `applyImgNote(galIdx)` — harmless
+  redundancy on approach 4, which already double-wires its gallery (see the
+  `data-gallery-main`/`data-gallery-main-img` split below). Every other
+  product has too few images for "the last two" to be meaningful, so
+  `PDP_IMAGE_NOTES` simply has no entry and the button stays hidden.
 
 - **Base `.card`** (no approach class — used by home Bestsellers and PDP
   cross-sell only, via `productCard(p, {approach:false})`): a real card
@@ -222,13 +263,21 @@ Every element toggled via the `hidden` attribute needs its own
   background/radius/shadow, so changes here are invisible on `coleccion.html` —
   that's by design, don't chase parity between the two.
 - **Shop by Collection** (`.ftile` on `index.html`, right after Bestsellers):
-  full-bleed real product photography per collection (not `.ph` placeholders —
+  full-bleed photography per collection (not `.ph` placeholders —
   rule 9 explicitly allows real photography for shipped pieces) with a
-  hardcoded dark gradient overlay (`.ftile::after`) for legible text regardless
+  hardcoded dark gradient overlay (`.ftile::after`). The home version's three
+  tiles use `banner4`/`banner2`/`banner3`.png (2026-07-31) — the same mood
+  images `coleccion.html`'s own "All Collections" promo tiles use for
+  jjk/kny/genshin — rather than a bespoke photo per tile, for consistency
+  between the two. Legible text regardless
   of theme. Text inside must stay on tokens that are *paired* with the tile's
-  own background (`.ftile__body h3{color:var(--light)}` pairs with the
-  `::after` gradient being permanently dark) — don't add a hardcoded-photo
-  section without also adding its gradient overlay.
+  own background. **Correction, 2026-07-31:** this used to say
+  `.ftile__body h3{color:var(--light)}` "pairs with" the permanently-dark
+  `::after` gradient — that was wrong, `--light` *inverts* in dark mode and
+  went dark-on-dark. `h3`/`p`/`.eyebrow` are hardcoded literals now
+  (`#F6F6F6`, `rgba(246,246,246,x)`), same fix as `.card`/`.post-card` in the
+  dark-mode section above. Don't add a hardcoded-photo section without also
+  adding its gradient overlay, and don't pair it with a token that inverts.
 - **Journal / blog** (`postCard()` + `renderPosts()` in `app.js`, `BLOG_POSTS`
   in `data.js`): one card renderer, two mounts — `[data-posts-home]` (first 3,
   horizontal scroll on `index.html`) and `[data-posts-all]` (all, grid on
@@ -309,7 +358,19 @@ Every element toggled via the `hidden` attribute needs its own
   modifier (added in `initPLP()`, never in markup) that swaps the centered
   gradient-text layout for a real per-collection photo (same three files as
   the home hero slider) with a dark gradient overlay and the title anchored
-  bottom-left, matching the `.ftile`/`.hs-content` convention.
+  bottom-left, matching the `.ftile`/`.hs-content` convention. **Gotcha hit
+  immediately after shipping it:** the first pass set
+  `.plp-hero--img .plp-hero__inner{padding:2rem 0 2.5rem}` as a shorthand,
+  which zeroed the horizontal padding `.plp-hero__inner`'s own `.w` class was
+  providing — the title rendered flush against the screen edge. Fixed by
+  setting `padding-top`/`padding-bottom`/`padding-left` as separate longhand
+  properties instead of a shorthand, so `.w`'s `padding-right` survives; a
+  shorthand always resets every side it doesn't mention, a longhand never
+  touches sides it doesn't name. The eyebrow uses `var(--accent)` (the hero-
+  eyebrow exception in the gold-accent rule above) and the description is a
+  bespoke per-collection line (`heroCopy` in `initPLP()`) written in the same
+  evocative, never-name-the-anime voice as the home hero slider — don't
+  revert it to one generic line shared by all three collections.
   `blog.html`/`about.html`/variant pages keep the plain, image-less base
   `.plp-hero` — don't add the modifier there without being asked.
 - **Wishlist doubles as a "like"** (`Wishlist`, `baseLikes()`, `likeCount()` in

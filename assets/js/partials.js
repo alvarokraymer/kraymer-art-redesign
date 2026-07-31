@@ -15,7 +15,7 @@ const ANNOUNCE_HTML = `
   <span>10,000+ clients</span><span>&middot;</span>
   <span>Free delivery over $150</span><span>&middot;</span>
   <span>Lifetime warranty</span><span>&middot;</span>
-  <span>Handcrafted to order</span>
+  <span>Handcrafted to order</span><span>&middot;</span>
   <span>10,000+ clients</span><span>&middot;</span>
   <span>Free delivery over $150</span><span>&middot;</span>
   <span>Lifetime warranty</span><span>&middot;</span>
@@ -35,7 +35,7 @@ const HEADER_HTML = `
 </header>
 <nav class="mob-nav" data-mob-nav>
   <button class="mob-search-row" data-open-search style="margin-top:1.5rem">
-    <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.5;flex:none"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:var(--dark);fill:none;stroke-width:1.5;flex:none"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     Search
   </button>
   <div class="mob-links">
