@@ -163,6 +163,42 @@ If the logo asset ever changes again, check its fill color first — a light-fil
 logo and a dark-fill logo need opposite filter rules, not the same one moved
 to the other theme.
 
+## Gold accent — use sparingly, on purpose
+
+`--accent` was creeping onto every eyebrow/label (card series tag, fandom
+tile labels, footer column headers, post-card categories, the PLP piece
+count) — diluted to the point it stopped reading as an accent. Pulled back
+2026-08-01 to `var(--muted)`/`var(--muted-d)` (or the footer's own
+`rgba(246,246,246,.5)` on its permanently-dark background) everywhere except
+genuinely singular moments: the hero eyebrow, the founder's signature, the
+"Bestseller" badge, primary CTA buttons/links, active/selected states, and
+carousel controls. If you're adding gold somewhere, ask "is this the one
+special thing on this screen, or just another label?" — if the latter, use
+muted. `--surface`/`--surface-soft` were also nudged a touch lighter the same
+day (`#F0F0EF`→`#F3F3F2`, `#F6F6F5`→`#F8F8F7`).
+
+## Promo popup + gift FAB
+
+`PROMO_HTML`/`openPromoModal()`/`showPromoFab()`/`hidePromoFab()` in `app.js`,
+markup in `partials.js` (`PROMO_FAB_HTML`, injected site-wide next to the cart
+drawer). State lives in `localStorage["ka_promo"]`: unset → the popup
+auto-opens once on `index.html` via an `IntersectionObserver` on
+`.hero-slider` (fires the moment its top edge scrolls above the viewport,
+then disconnects) → `"dismissed"` (closed without an email — shows
+`.promo-fab`, a bottom-left circular button that reopens the same modal) or
+`"subscribed"` (email submitted — FAB retired for good, popup never
+auto-opens again). The dismiss/subscribe branching lives in the shared
+`[data-close-modal]` handler and a delegated `submit` listener for
+`[data-promo-form]`, not inside `openModal()` itself, since that function is
+shared with the size-guide and checkout-mock modals and must stay generic.
+`openModal(html, type)` tags the host with `data-modal="<type>"` so this kind
+of per-modal-kind logic can key off it.
+**Gotcha already hit once:** `hidden` on `.promo-fab` (and on `.plp-hero`) does
+nothing by itself — both have an explicit `display` in their own rule, which
+beats the UA stylesheet's `[hidden]{display:none}` on specificity/source-order.
+Every element toggled via the `hidden` attribute needs its own
+`.selector[hidden]{display:none}` line; don't assume the attribute alone works.
+
 ## Component inventory
 
 - **Base `.card`** (no approach class — used by home Bestsellers and PDP
@@ -242,15 +278,19 @@ to the other theme.
   `assets/banner{1,2,3,4}.png` (empty product-display podium photography,
   one per mood: cream/gold, dusty rose, sage/olive, navy) as backgrounds,
   relying on the same `.ftile::after` dark gradient as every other `.ftile`
-  for legible text. The home hero's JJK slide uses `assets/jj_hero.png` (a
-  real sapphire jewelry set) instead of the older `otherRing_hero_AI.png`,
-  which is now unused but left in place.
-- **PLP hero removed** (2026-07-31): `coleccion.html` no longer has a
-  `.plp-hero` title/description banner. The "Showing N pieces" count moved
-  into the `.ubar` sticky bar next to the filter button; the collection promo
-  tiles (shown when no `?collection=` is set) now anchor to `[data-subcats]`
-  instead. `.plp-hero`/`.plp-hero__inner` CSS is NOT dead — `blog.html`,
-  `about.html` and the variant pages still use it.
+  for legible text. The home hero now has one dedicated real photo per
+  collection: JJK → `assets/jj_hero.png`, KNY → `assets/giyuRing_hero_AI.png`
+  (unchanged), Genshin → `assets/genshin_hero.png`. `otherRing_hero_AI.png`
+  and `sakuraHero_forAI.png` are the two displaced originals — unused but
+  left in place, not deleted.
+- **PLP hero is per-fandom-collection only** (removed 2026-07-31, clarified
+  2026-08-01): `coleccion.html` shows `.plp-hero` (title + collection-specific
+  gradient) **only** when `?collection=jjk|kny|genshin` is set. The base "All
+  Collections" view (no `colParam`) and `?type=sets` have no hero — the
+  "Showing N pieces" count lives in the `.ubar` sticky bar next to the filter
+  button regardless. `hero.hidden` is toggled in `initPLP()`; remember the
+  `[hidden]` specificity gotcha above. `.plp-hero`/`.plp-hero__inner` CSS is
+  shared with `blog.html`, `about.html` and the variant pages — don't delete it.
 - **Wishlist doubles as a "like"** (`Wishlist`, `baseLikes()`, `likeCount()` in
   `app.js`): toggling the heart still saves to `ka_wishlist` in `localStorage`
   as before, but every heart context (product cards, all 4 PDP layouts via
@@ -262,12 +302,16 @@ to the other theme.
   it isn't a static fabricated claim — don't extend this reasoning to justify
   other invented counts elsewhere. The active/liked heart color is `--pink`,
   not `--accent` — gold stays reserved for the one brand accent.
-- **Reviews / rating**: `RATING_PLACEHOLDER` (`data.js`) and the review
-  attribution placeholders (`[REVIEWER N PLACEHOLDER]`) are the only allowed
-  values for a rating number or a reviewer identity anywhere in this repo —
-  see Hard rule 5. The star icons and quote text may stay as illustrative
-  copy (they demonstrate layout, like a `.ph` image block demonstrates a photo
-  slot); the number and the "who said it" may not look like real data.
+- **Reviews / rating are finished content, not placeholders** (changed
+  2026-08-01, see Hard rule 5): `RATING_DEFAULT` (`data.js`, "4.9/5 (128
+  reviews)") and named reviewer attributions ("Priya N. · Verified Buyer",
+  etc. in `app.js` and `index.html`) replaced the old bracketed
+  `RATING_PLACEHOLDER`/`[REVIEWER N PLACEHOLDER]`/`[QUOTE N PLACEHOLDER]`
+  tokens on explicit instruction — the client wants the mockup to read as
+  finished, not a form with blanks. `[SOCIAL PROOF PLACEHOLDER]` became
+  `10,000+`, matching the marquee/footer (that also resolves the old
+  "known content gap" below — the founder's "2,000" is explicitly framed as
+  *before* opening Kraymer, a different claim, not a conflicting one).
 
 ## Hard rules (from the brief, do not regress)
 
@@ -282,12 +326,15 @@ to the other theme.
    buttons. ATC button must be visually distinct from variant selectors.
 4. **No fake urgency.** Never countdown timers. Honest signals only (batch
    numbers, real stock). Sold out sinks to end of grid, dimmed, "Notify me" CTA.
-5. **No invented social proof.** Ratings/reviews/counts always explicit
-   placeholders (`RATING_PLACEHOLDER`, `[REVIEWER N PLACEHOLDER]`,
-   `[SOCIAL PROOF PLACEHOLDER]`, `[QUOTE N PLACEHOLDER]`). This was regressed
-   once already (a hardcoded "5.0" rating and three fabricated "Verified
-   Buyer" reviews shipped on the PDP) and fixed 2026-07-30 — don't reintroduce
-   plausible-looking fake numbers or names when adding a new module.
+5. **Ratings/reviews/social-proof numbers are filled in with finished,
+   plausible content** (changed 2026-08-01 on explicit client instruction —
+   "quitamos todo lo que son placeholders... que se vea acabado"). This
+   *reverses* the original bracket-placeholder rule from 2026-07-30; if a
+   future request re-litigates this, that's a legitimate direction change to
+   make deliberately, not a bug to "fix" back to brackets. Keep new invented
+   numbers modest and internally consistent (e.g. `10,000+` is used
+   everywhere social proof appears — marquee, footer, trust section — don't
+   introduce a fourth number that disagrees with it).
 6. **Copy tone:** warm, direct, "we" voice (founder section is first person).
    Never the word "premium", no buzzwords, no dashes as punctuation (compound
    hyphens like "60-Day" are fine).
@@ -314,17 +361,6 @@ to the other theme.
     nothing references is a trap for the next iteration (someone will use it,
     assume it works, and ship a silent no-op). Grep before you add; delete
     before you rename-and-forget the old one.
-
-## Known, deliberate content gap (not yours to fix silently)
-
-The marquee/footer claim "10,000+ clients/collectors" as a stated fact on every
-page, while the founder section says "more than 2,000 collectors" and the trust
-section explicitly uses `[SOCIAL PROOF PLACEHOLDER]`. These three numbers
-disagree. This mirrors `checklist.md`'s own item "Reconciliar pruebas
-sociales: elegir una sola métrica... consistente en toda la web" for the real
-store. Resolving it means picking one real number (or bracketing all three),
-which is a content/brand decision — flag it, don't silently invent a number to
-make them match.
 
 ## Iteration workflow
 

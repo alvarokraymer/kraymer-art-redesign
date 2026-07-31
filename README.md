@@ -41,44 +41,47 @@ las 3 páginas de variantes de arriba.
 
 Los filtros de "All Collections" son un panel que se abre desde el botón
 "Sort & Filter" anclado a la barra fija, no un bloque siempre visible (eso se
-probó y se descartó el 2026-07-31). "All Collections" ya no tiene hero con
-título grande; el conteo de piezas vive junto al botón de filtros.
+probó y se descartó el 2026-07-31). El hero grande con título solo aparece en
+`?collection=jjk|kny|genshin`; "All Collections" (sin filtro) no lo tiene — el
+conteo de piezas vive junto al botón de filtros en ambos casos.
 
 Componentes transversales: header con buscador funcional, wishlist (que
-también funciona como "me gusta" — el corazón guarda un contador visible en la
-PDP, en rosa cuando está activo, nunca en dorado), drawer de carrito con una
-sola CTA (checkout **simulado**: es un mock, está marcado en el código), quiz
-"Find Your Domain", guía de tallas, sticky add-to-cart en PDP, toggle de dark
-mode.
+también funciona como "me gusta" — el corazón guarda un contador junto a las
+estrellas en la PDP, en rosa cuando está activo, nunca en dorado), drawer de
+carrito con una sola CTA (checkout **simulado**: es un mock, está marcado en
+el código), quiz "Find Your Domain", guía de tallas, sticky add-to-cart en
+PDP, toggle de dark mode, y un popup de 10% de descuento en la home (aparece
+al pasar el hero; si lo cierras sin dejar el correo, queda un botón flotante
+de regalo abajo a la izquierda para volver a abrirlo).
+
+El dorado (`--accent`) se usa con más cuidado desde el 2026-08-01: ya no
+aparece en cada etiqueta pequeña (categoría de tarjeta, cabeceras del footer,
+etc.), solo en momentos puntuales — CTA, badge "Bestseller", firma del
+fundador, eyebrow del hero.
 
 Carrito, wishlist y el tema (claro/oscuro) persisten en `localStorage`. Para
 reiniciarlos: DevTools → Application → Local Storage → borrar `ka_cart`,
 `ka_wishlist` y la clave de tema.
 
-## Placeholders (intencionados)
+## Contenido
 
 - Imágenes: todo producto muestra una foto real (`assets/productPhotos/` para
-  piezas con shoot propio, `assets/placeholder_1..4.jpg` reutilizadas para los
-  productos de demo que no tienen una). Nunca un bloque vacío o un icono
-  abstracto.
+  piezas con shoot propio, `assets/placeholder_1..4.jpg` o `A_*_Results/`
+  reutilizadas para los productos de demo que no tienen una). Nunca un bloque
+  vacío o un icono abstracto.
 - Logo: `assets/SVG/kraymer-logo.svg`, con un filtro CSS que lo invierte según
   el tema (ver `AGENTS.md` si cambias el asset — la lógica depende de si el
   logo es claro u oscuro).
-- Ratings/reviews/cifras sociales: marcados como `RATING_PLACEHOLDER`,
-  `[REVIEWER N PLACEHOLDER]`, `[SOCIAL PROOF PLACEHOLDER]`,
-  `[QUOTE N PLACEHOLDER]`. **Nunca** poner cifras o nombres inventados que
-  parezcan reales — esto ya se regresó una vez (una PDP con "5.0" y reseñas
-  falsas de "Verified Buyer") y se corrigió el 2026-07-30.
+- Ratings/reviews/cifras sociales: desde el 2026-08-01 son contenido
+  terminado, no placeholders entre corchetes (a petición explícita, para que
+  la maqueta se vea acabada) — `RATING_DEFAULT` ("4.9/5"), reseñas con nombre
+  ("Priya N. · Verified Buyer"), `10,000+` como única cifra de clientes en
+  toda la web. Si añades una prueba social nueva, que la cifra coincida con
+  esa, no inventes una cuarta.
 - Checkout: modal simulado, sin integración real.
 - Colores: `--surface`/`--surface-soft` (fondos de reviews, post-cards, tarjeta
   base) son grises neutros, no crema/amarillo — se ajustaron el 2026-07-31
   porque el tono anterior (`#F4EEEB`) desentonaba con la paleta acromática.
-
-Nota: el marquee/footer afirman "10,000+ clients/collectors" en cada página,
-mientras la sección del fundador dice "more than 2,000 collectors" y la
-sección de confianza usa `[SOCIAL PROOF PLACEHOLDER]`. Esas tres cifras no
-coinciden entre sí — es una decisión de contenido pendiente (qué cifra real
-usar en todos lados), no algo para resolver inventando un número.
 
 ## Cómo iterar (esto es lo importante)
 

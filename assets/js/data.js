@@ -43,7 +43,7 @@ const PRODUCTS = [
   {"handle":"pride-heart-pendant","title":"Pride Heart Pendant","collection":"all","type":"necklaces","price":11195,"compareAt":null,"pieces":1,"badges":[],"batch":"","soldOut":false,"metals":["Gold","Silver"],"sizes":[],"line":"","gem":"","images":["https://cdn.shopify.com/s/files/1/0666/9015/4658/files/Untitled_design_2_922c48bb-51b2-4e01-b751-a5778d40b67a.webp?v=1783582686","https://cdn.shopify.com/s/files/1/0666/9015/4658/files/Modular_LGBTQ_pendant_render_Lesbian_no_wings_2.webp?v=1783583700","https://cdn.shopify.com/s/files/1/0666/9015/4658/files/Untitled_design_5.webp?v=1783583338","https://cdn.shopify.com/s/files/1/0666/9015/4658/files/Modular_LGBTQ_pendant_render_bisex_no_wings_1.webp?v=1783583666","https://cdn.shopify.com/s/files/1/0666/9015/4658/files/Modular_LGBTQ_pendant_render_Lesbian_no_wings_3.webp?v=1783583745","https://cdn.shopify.com/s/files/1/0666/9015/4658/files/Untitled_design_4_b3f70a86-aebf-4910-bd2e-c5243a5aed1c.webp?v=1783582814","https://cdn.shopify.com/s/files/1/0666/9015/4658/files/Modular_LGBTQ_pendant_render_bisex_no_wings.webp?v=1783583245","https://cdn.shopify.com/s/files/1/0666/9015/4658/files/reviews_etsy_kickstarter.webp?v=1776527959"]},
   {"handle":"pride-animals-pin-set","title":"Pride Animals Pin Set","collection":"all","type":"sets","price":31295,"compareAt":null,"pieces":1,"badges":[],"batch":"","soldOut":false,"metals":[],"sizes":[],"line":"","gem":"","images":["https://cdn.shopify.com/s/files/1/0666/9015/4658/files/Untitleddesign-22.webp?v=1781518750"]},
 
-  /* ===== PLACEHOLDERS: card-state demos ===== */
+  /* ===== State demos: no shoot of their own, reuse another product's photo ===== */
   { handle:"toji-bracelet", title:"Toji Bracelet", collection:"jjk", type:"bracelets", price:19500, compareAt:null, pieces:1, badges:[], lowStock:true, batch:"Batch #03", soldOut:false, metals:["925 Sterling Silver","18K Gold Plated"], sizes:[], line:"", gem:"Onyx", phId:1, images:["assets/productPhotos/gojoXgeto_PP/gojoXgeto_detail1.webp"] },
   { handle:"yuji-ring", title:"Yuji Ring", collection:"jjk", type:"rings", price:15500, compareAt:null, pieces:1, badges:[], comingSoon:true, batch:"", soldOut:false, metals:["925 Sterling Silver","18K Gold Plated"], sizes:["5","6","7","8","9","10","11","12"], line:"", gem:"Ruby", phId:2, images:["assets/productPhotos/giyuRing_PP/giyuRing_variation.webp"] },
   { handle:"geto-earrings", title:"Geto Earrings", collection:"jjk", type:"earrings", price:13500, compareAt:null, pieces:1, badges:[], batch:"", soldOut:true, metals:["925 Sterling Silver"], sizes:[], line:"", gem:"", phId:3, images:["assets/placeholder_1.jpg"] },
@@ -74,5 +74,5 @@ function kaTypeName(typeId) {
   const t = PRODUCT_TYPES.find((t) => t.id === typeId);
   return t ? t.name : typeId;
 }
-const RATING_PLACEHOLDER = "[RATING PLACEHOLDER]";
+const RATING_DEFAULT = "4.9/5 (128 reviews)";
 

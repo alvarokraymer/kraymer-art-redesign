@@ -387,11 +387,11 @@ function runSearch(q) {
 }
 
 /* ---------------- 6. Modals ---------------- */
-function openModal(html) {
+function openModal(html, type) {
   closeModal();
   const host = document.createElement("div");
   host.className = "modal";
-  host.setAttribute("data-modal", "");
+  host.setAttribute("data-modal", type || "");
   host.innerHTML = `
     <div class="modal__bg" data-close-modal></div>
     <div class="modal__box" role="dialog" aria-modal="true">
@@ -405,6 +405,24 @@ function closeModal() {
   const m = document.querySelector("[data-modal]");
   if (m) m.remove();
 }
+
+/* Promo popup: 10% off first order for an email. Dismissing without
+   subscribing leaves a floating gift button (site-wide) that reopens it;
+   subscribing retires the button for good. State in localStorage "ka_promo":
+   unset -> never seen, "dismissed" -> closed without email, "subscribed" -> done. */
+const PROMO_HTML = `
+  <span class="eyebrow" style="color:var(--accent)">Welcome</span>
+  <h3>Get 10% Off Your First Piece</h3>
+  <p class="small muted" style="margin-bottom:1.25rem">Join the inner circle for early access to new drops and a discount on your first order.</p>
+  <form data-promo-form>
+    <input type="email" required placeholder="Your email" aria-label="Email" style="display:block;width:100%;height:52px;padding:0 1rem;margin-bottom:.75rem;border:1px solid var(--line);border-radius:var(--radius-sm);background:transparent;font-size:.875rem;color:var(--dark)">
+    <button type="submit" class="btn btn--dark btn--full">Get My 10% Off</button>
+  </form>
+  <p class="small muted" style="margin-top:.75rem;text-align:center">No spam. Unsubscribe anytime.</p>
+`;
+function openPromoModal() { openModal(PROMO_HTML, "promo"); }
+function showPromoFab() { const fab = document.querySelector("[data-promo-fab]"); if (fab) fab.hidden = false; }
+function hidePromoFab() { const fab = document.querySelector("[data-promo-fab]"); if (fab) fab.hidden = true; }
 
 const SIZE_GUIDE_HTML = `
   <h3>Ring Size Guide</h3>
@@ -487,7 +505,13 @@ function initCardActions() {
       return;
     }
     const wishBtn = e.target.closest("[data-wish]");
-    if (wishBtn) { e.preventDefault(); Wishlist.toggle(wishBtn.dataset.wish); return; }
+    if (wishBtn) {
+      e.preventDefault();
+      Wishlist.toggle(wishBtn.dataset.wish);
+      wishBtn.classList.add("heart-pop");
+      setTimeout(() => wishBtn.classList.remove("heart-pop"), 350);
+      return;
+    }
     const notifyBtn = e.target.closest("[data-notify]");
     if (notifyBtn) {
       notifyBtn.textContent = "We'll email you";
@@ -520,6 +544,19 @@ function initHome() {
 
   /* Journal preview: first 3 posts */
   renderPosts("[data-posts-home]", BLOG_POSTS.slice(0, 3));
+
+  /* Promo popup: auto-open once, right after the visitor scrolls past the
+     hero slider — never if they've already dismissed or subscribed. */
+  const heroSection = document.querySelector(".hero-slider");
+  if (heroSection && !localStorage.getItem("ka_promo")) {
+    const promoObserver = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting && entry.boundingClientRect.top < 0 && !localStorage.getItem("ka_promo")) {
+        openPromoModal();
+        promoObserver.disconnect();
+      }
+    }, { threshold: 0 });
+    promoObserver.observe(heroSection);
+  }
 
   /* Hero slider: auto-rotate every 5s, touch swipe */
   const track = document.querySelector("[data-hs-track]");
@@ -635,6 +672,26 @@ function initPLP() {
   let activeType = typeParam || null;
   let activeSort = "trending";
   const subHost = document.querySelector("[data-subcats]");
+
+  /* Hero: only for a specific fandom collection (jjk/kny/genshin). The base
+     "All Collections" view has no hero (removed 2026-07-31) — clarified
+     2026-08-01 that this only ever meant the unfiltered view. */
+  const hero = document.querySelector("[data-plp-hero]");
+  if (colParam && COLLECTIONS[colParam]) {
+    hero.hidden = false;
+    hero.querySelector("h1").textContent = COLLECTIONS[colParam].name;
+    hero.querySelector("[data-plp-desc]").textContent = "Handcrafted jewelry, designed for those who know.";
+    const grad = {
+      jjk: "linear-gradient(135deg, #1A1C2E 0%, #2A2F4F 50%, #1E2035 100%)",
+      kny: "linear-gradient(135deg, #2E1C1A 0%, #4F2F2A 50%, #35201E 100%)",
+      genshin: "linear-gradient(135deg, #1E1A2E 0%, #3A2F4F 50%, #252035 100%)",
+    }[colParam];
+    hero.style.background = grad;
+    hero.style.color = "#EFEFEF";
+    hero.querySelector(".eyebrow").style.color = "#A09892";
+  } else {
+    hero.hidden = true;
+  }
 
   /* All Collections: show collection promo tiles above the sub-category chips.
      No page hero anymore (removed 2026-07-31) — these tiles anchor to
@@ -872,8 +929,8 @@ function initPDP() {
     const sale = p.compareAt ? `<span style="text-decoration:line-through;color:var(--muted);font-weight:300;margin-left:.5rem;font-size:.9em">${kaMoney(p.compareAt)}</span><span class="pdp-discount">-${Math.round((1-p.price/p.compareAt)*100)}%</span>` : "";
     return `<div class="pdp-price" ${extraStyle||""}>${kaMoney(p.price)}${sale}</div>`;
   };
-  const pdpWish = (extraStyle) => `
-    <button class="heart pdp-wish" style="position:static;${extraStyle||""}" data-wish="${p.handle}" aria-label="Wishlist">
+  const pdpWish = (extraStyle, extraClass) => `
+    <button class="heart pdp-wish ${extraClass||""}" style="position:static;${extraStyle||""}" data-wish="${p.handle}" aria-label="Wishlist">
       <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
       <span class="pdp-wish__count" data-wish-count="${p.handle}">${likeCount(p.handle)}</span>
     </button>`;
@@ -887,9 +944,9 @@ function initPDP() {
   const reviewsHTML = `
     <section class="sec sec--sm" id="reviews">
       <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who">[REVIEWER 1 PLACEHOLDER]</p></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who">[REVIEWER 2 PLACEHOLDER]</p></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who">[REVIEWER 3 PLACEHOLDER]</p></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><b>Priya N.</b> · Verified Buyer</p></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><b>Daniel K.</b> · Verified Buyer</p></div>
+      <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><b>Sam T.</b> · Verified Buyer</p></div>
     </section>`;
   const crossHTML = `
     <section class="sec sec--sm">
@@ -1016,9 +1073,8 @@ function initPDP() {
           ${pdpBadge()}
           <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
           ${pdpPrice('style="margin-bottom:.75rem"')}
-          ${pdpWish()}
           <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
-          <div class="pdp-rating"><span class="stars">★★★★★</span> ${RATING_PLACEHOLDER} · <a href="#reviews">Read reviews</a></div>
+          <div class="pdp-rating"><span class="stars">★★★★★</span> ${RATING_DEFAULT} · <a href="#reviews">Read reviews</a> ${pdpWish("", "pdp-wish--inline")}</div>
           <div class="pdp-config">
             ${variantsHTML("chips","metal-cards","metal-cards")}
           </div>
@@ -1178,7 +1234,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.closest("[data-open-cart]")) openCart();
     if (e.target.closest("[data-close-cart]") || e.target.closest("[data-scrim]")) closeCart();
     if (e.target.closest("[data-close-search]")) { closeSearch(); document.querySelector("[data-search-results]").innerHTML = ""; return; }
-    if (e.target.closest("[data-close-modal]")) closeModal();
+    if (e.target.closest("[data-close-modal]")) {
+      if (document.querySelector('[data-modal="promo"]') && localStorage.getItem("ka_promo") !== "subscribed") {
+        localStorage.setItem("ka_promo", "dismissed");
+        showPromoFab();
+      }
+      closeModal();
+      return;
+    }
+    if (e.target.closest("[data-promo-fab]")) { openPromoModal(); return; }
     if (e.target.closest("[data-checkout]")) openModal(CHECKOUT_MOCK_HTML);
     if (e.target.closest("[data-open-sizeguide]")) { e.preventDefault(); openModal(SIZE_GUIDE_HTML); }
     if (e.target.closest("[data-theme-toggle]")) {
@@ -1207,6 +1271,20 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     news.innerHTML = '<p class="small" style="color:var(--gold-soft)">You are on the list. (Mockup only, no email was sent.)</p>';
   });
+
+  /* Promo popup: submit + FAB visibility on load */
+  document.addEventListener("submit", (e) => {
+    if (!e.target.matches("[data-promo-form]")) return;
+    e.preventDefault();
+    localStorage.setItem("ka_promo", "subscribed");
+    hidePromoFab();
+    e.target.closest(".modal__box").innerHTML = `
+      <span class="eyebrow" style="color:var(--accent)">You are in</span>
+      <h3>10% Off, Sent</h3>
+      <p class="small muted">Check your inbox for the code. (Mockup only, no email was sent.)</p>
+      <button class="btn btn--dark btn--full" data-close-modal style="margin-top:1rem">Continue Shopping</button>`;
+  });
+  if (localStorage.getItem("ka_promo") === "dismissed") showPromoFab();
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") { closeCart(); closeSearch(); closeModal(); }
