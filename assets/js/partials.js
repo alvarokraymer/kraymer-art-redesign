@@ -55,6 +55,7 @@ const HEADER_HTML = `
       <a class="mob-link mob-link--sub" href="about.html">Our Story</a>
       <a class="mob-link mob-link--sub" href="about.html#craft">The Craft</a>
       <a class="mob-link mob-link--sub" href="blog.html">Journal</a>
+      <a class="mob-link mob-link--sub" href="quiz.html">Find Your Domain</a>
       <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
       <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
     </div>
@@ -96,14 +97,6 @@ const HEADER_HTML = `
 const FOOTER_HTML = `
 <footer class="ft">
   <div class="w">
-    <div class="ft-news">
-      <h2>Join 10,000+ collectors</h2>
-      <p>First access to new pieces, private offers, and a look inside the workshop.</p>
-      <form data-newsletter>
-        <input type="email" placeholder="Your email" aria-label="Email" required>
-        <button type="submit">Subscribe</button>
-      </form>
-    </div>
     <div class="ft-cols">
       <div>
         <h3>Shop</h3>
@@ -128,19 +121,23 @@ const FOOTER_HTML = `
         <a href="about.html">Our Story</a>
         <a href="about.html#craft">The Craft</a>
         <a href="blog.html">Journal</a>
+        <a href="quiz.html">Find Your Domain</a>
         <a href="index.html#reviews">Customer Reviews</a>
         <a href="#">Instagram</a>
         <a href="#">YouTube</a>
       </div>
     </div>
-    <div class="ft-trust">
-      <span><i data-lucide="shield-check" style="width:16px;height:16px;stroke:var(--accent)"></i> Lifetime Warranty</span>
-      <span><i data-lucide="rotate-ccw" style="width:16px;height:16px;stroke:var(--accent)"></i> 60-Day Returns</span>
-      <span><i data-lucide="scroll-text" style="width:16px;height:16px;stroke:var(--accent)"></i> Certificate of Authenticity</span>
-    </div>
     <div class="ft-pay">
       <span>VISA</span><span>MASTERCARD</span><span>AMEX</span>
       <span>APPLE PAY</span><span>GOOGLE PAY</span><span>PAYPAL</span>
+    </div>
+    <div class="ft-news">
+      <h2>Join 10,000+ collectors</h2>
+      <p>First access to new pieces, private offers, and a look inside the workshop.</p>
+      <form data-newsletter>
+        <input type="email" placeholder="Your email" aria-label="Email" required>
+        <button type="submit">Subscribe</button>
+      </form>
     </div>
     <div class="ft-copy">
       <p>&copy; 2026 Kraymer. All rights reserved.</p>

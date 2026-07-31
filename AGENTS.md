@@ -35,6 +35,8 @@ coleccion.html         PLP, driven by ?collection=jjk|kny|genshin and ?type=sets
 producto.html          PDP, driven by ?id=<handle>&approach=1|2|3|4 (see below)
 blog.html              Journal index (body[data-page="blog"]) — grid of BLOG_POSTS
 about.html             Our Story (body[data-page="about"]) — founder + craft + CTA
+quiz.html              Find Your Domain quiz (body[data-page="quiz"]) — extracted
+                        off home 2026-07-31, see "Quiz" below
 variant1.html          Card approach "Bold" — MOCKUP-ONLY comparison, never production
 variant2.html          Card approach "Clean" — MOCKUP-ONLY comparison, never production
 variant3.html          Card approach "Soft" (= production approach) — same comparison set
@@ -145,6 +147,18 @@ same change, and must be checked with the theme toggle on before calling it
 done — not just in light mode. If a background is a photo + a permanently-dark
 gradient (like the hero or the fandom tiles), its text must be a **hardcoded**
 light color, never a token, since the token swaps but the photo doesn't.
+
+The inverse trap bit `.card`/`.card--soft` (product cards) and `.post-card`
+(journal cards), found 2026-07-31: their backgrounds are `--surface`/
+`--surface-soft` (or a hardcoded white gradient for `.card--soft`), which
+**never invert**, but `.card__title`/price and `.post-card` title/link text
+were unset and inherited the page's `color:var(--dark)` — which *does* invert.
+Result: near-white title text on a near-white card in dark mode. Fixed with
+hardcoded-literal overrides (`#181514`) on the always-light card, not a token
+— same underlying rule as above, just the light/dark roles swapped: a
+background that stays fixed needs fixed text, whichever polarity the fixed
+background is. The `.heart` icon had the identical bug (white circle backdrop
+that never inverts, `stroke:var(--dark)` that did) — fixed the same way.
 
 ## Logo
 
@@ -291,6 +305,13 @@ Every element toggled via the `hidden` attribute needs its own
   button regardless. `hero.hidden` is toggled in `initPLP()`; remember the
   `[hidden]` specificity gotcha above. `.plp-hero`/`.plp-hero__inner` CSS is
   shared with `blog.html`, `about.html` and the variant pages — don't delete it.
+  Since 2026-07-31 the fandom variant additionally gets a `.plp-hero--img`
+  modifier (added in `initPLP()`, never in markup) that swaps the centered
+  gradient-text layout for a real per-collection photo (same three files as
+  the home hero slider) with a dark gradient overlay and the title anchored
+  bottom-left, matching the `.ftile`/`.hs-content` convention.
+  `blog.html`/`about.html`/variant pages keep the plain, image-less base
+  `.plp-hero` — don't add the modifier there without being asked.
 - **Wishlist doubles as a "like"** (`Wishlist`, `baseLikes()`, `likeCount()` in
   `app.js`): toggling the heart still saves to `ka_wishlist` in `localStorage`
   as before, but every heart context (product cards, all 4 PDP layouts via
@@ -312,6 +333,45 @@ Every element toggled via the `hidden` attribute needs its own
   `10,000+`, matching the marquee/footer (that also resolves the old
   "known content gap" below — the founder's "2,000" is explicitly framed as
   *before* opening Kraymer, a different claim, not a conflicting one).
+- **Reviews carousel is swipe/dots only** (arrows removed 2026-07-31): the
+  `.rev-arrows` buttons were positioned wrong and are gone along with their
+  click handlers; `[data-rev-track]` now has its own touchstart/touchend pair
+  (same 40px-threshold pattern as the hero slider's `[data-hs-track]`, just a
+  lower threshold since review slides are shorter). Dots stay, both as a
+  progress indicator and a click target — don't reintroduce arrow buttons.
+- **Quiz lives on its own page** (`quiz.html`, extracted off home 2026-07-31):
+  the 3-step "Find Your Domain" logic itself didn't change, just where it's
+  mounted — `initQuizWidget()` in `app.js` is a standalone function now
+  (previously inlined in `initHome()`), called from `initHome()` was removed;
+  it's called for `data-page="quiz"` in the dispatcher instead. `index.html`
+  now shows a static `.quiz-wrap--cta` teaser card (copy + a `.btn btn--dark`
+  link to `quiz.html`) instead of mounting the interactive quiz inline — the
+  client's framing was that the inline version read as "badly coded" sitting
+  in the middle of the homepage scroll; a dedicated page reads more finished
+  and gives the quiz room to breathe. Don't re-inline it without being asked.
+- **Footer: subscribe is the last content block, not the first** (reordered
+  2026-07-31): order is now `ft-cols` → `ft-pay` → `ft-news` (newsletter) →
+  `ft-copy`, so the email ask no longer competes with the promo popup's own
+  email ask right as a visitor lands in the footer. The old `ft-trust` row
+  (Lifetime Warranty / 60-Day Returns / Certificate) was deleted outright, not
+  just moved — it duplicated the top marquee (present on every page) and the
+  Customer Care column right next to it; removing it was the main lever for
+  making the footer shorter on mobile, alongside trimmed padding on
+  `ft-cols`/`ft-news`/`ft-copy`. If you need trust badges back, that's a
+  deliberate call to make, not a default to restore.
+- **On-photo buttons are glass capsules, not flat fills** (changed
+  2026-07-31): `.btn--light` (hero slider CTAs) and `.ftile__cta` (fandom
+  tile CTAs — Shop by Collection) both moved from a flat solid
+  `background:var(--light)` + `--radius-sm` to a translucent white fill
+  (`rgba(255,255,255,.14)`), a thin light border, `--radius-pill`, and a
+  `backdrop-filter` blur. Both only ever sit over a photo + a hardcoded dark
+  gradient overlay, so — same rule as everywhere else in this file — the
+  colors are hardcoded literals, never tokens, and need no
+  `[data-theme="dark"]` override. `.btn--light` has exactly one caller site
+  (the home hero slider); don't reuse it on a surface that isn't a dark photo
+  overlay without restyling it back to something token-paired first. `.btn`
+  (base), `.btn--dark` and `.btn--line` are unchanged — the ATC/checkout/form
+  buttons still need to read as solid, dominant CTAs per Hard rule 3.
 
 ## Hard rules (from the brief, do not regress)
 

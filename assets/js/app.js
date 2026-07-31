@@ -585,7 +585,7 @@ function initHome() {
     }, {passive:true});
   }
 
-  /* Reviews carousel */
+  /* Reviews carousel: dots + swipe only, no arrows */
   const revTrack = document.querySelector("[data-rev-track]");
   const revDots = document.querySelector("[data-rev-dots]");
   if (revTrack && revDots) {
@@ -593,11 +593,20 @@ function initHome() {
     let rCur = 0;
     const rGo = (i) => { rCur = ((i % rTotal) + rTotal) % rTotal; revTrack.style.transform = `translateX(-${rCur * 100}%)`; revDots.querySelectorAll("button").forEach((d,j) => d.classList.toggle("on", j === rCur)); };
     revDots.addEventListener("click", (e) => { const btn = e.target.closest("button"); if (!btn) return; rGo(Array.from(revDots.children).indexOf(btn)); });
-    document.querySelector("[data-rev-prev]").addEventListener("click", () => rGo(rCur - 1));
-    document.querySelector("[data-rev-next]").addEventListener("click", () => rGo(rCur + 1));
+    let rsx = 0;
+    revTrack.addEventListener("touchstart", (e) => { rsx = e.changedTouches[0].screenX; }, {passive:true});
+    revTrack.addEventListener("touchend", (e) => {
+      const dx = rsx - e.changedTouches[0].screenX;
+      if (Math.abs(dx) > 40) rGo(dx > 0 ? rCur + 1 : rCur - 1);
+    }, {passive:true});
   }
 
-  /* Quiz: Find Your Domain (3 steps, series -> metal -> style) */
+  initQuizWidget();
+}
+
+/* ---- Quiz: Find Your Domain (3 steps, series -> metal -> style) — its own
+   page (quiz.html), not inline on home (see AGENTS.md quiz CTA note) ---- */
+function initQuizWidget() {
   const quiz = document.querySelector("[data-quiz]");
   if (quiz) {
     const state = { series: null, metal: null, style: null };
@@ -679,16 +688,15 @@ function initPLP() {
   const hero = document.querySelector("[data-plp-hero]");
   if (colParam && COLLECTIONS[colParam]) {
     hero.hidden = false;
+    hero.classList.add("plp-hero--img");
     hero.querySelector("h1").textContent = COLLECTIONS[colParam].name;
     hero.querySelector("[data-plp-desc]").textContent = "Handcrafted jewelry, designed for those who know.";
-    const grad = {
-      jjk: "linear-gradient(135deg, #1A1C2E 0%, #2A2F4F 50%, #1E2035 100%)",
-      kny: "linear-gradient(135deg, #2E1C1A 0%, #4F2F2A 50%, #35201E 100%)",
-      genshin: "linear-gradient(135deg, #1E1A2E 0%, #3A2F4F 50%, #252035 100%)",
+    const heroImg = {
+      jjk: "assets/jj_hero.png",
+      kny: "assets/giyuRing_hero_AI.png",
+      genshin: "assets/genshin_hero.png",
     }[colParam];
-    hero.style.background = grad;
-    hero.style.color = "#EFEFEF";
-    hero.querySelector(".eyebrow").style.color = "#A09892";
+    hero.style.backgroundImage = `url(${heroImg})`;
   } else {
     hero.hidden = true;
   }
@@ -1295,6 +1303,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (page === "plp") initPLP();
   if (page === "pdp") initPDP();
   if (page === "blog") initBlog();
+  if (page === "quiz") initQuizWidget();
   if (page === "variant") initVariant(document.body.dataset.approach);
   if (typeof lucide !== "undefined") lucide.createIcons();
 });
