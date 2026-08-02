@@ -86,8 +86,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 
 /* ── Utilities ── */
 .w{max-width:1080px;margin:0 auto;padding:0 var(--gutter)}
-.sec{padding:5rem 0}
-.sec--sm{padding:3rem 0}
+.sec{padding:2.75rem 0}
+.sec--sm{padding:2rem 0}
 .sec--dark{background:var(--dark);color:var(--light)}
 .sec--warm{background:var(--surface)}
 .eyebrow{font-family:var(--body);font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.5rem}
@@ -138,6 +138,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .mob-link{display:block;padding:.85rem 0;font-family:var(--display);font-size:1.35rem;font-weight:300;color:var(--dark);letter-spacing:-.01em;transition:opacity .15s}
 .mob-link:active{opacity:.5}
 .mob-link--sub{padding:.65rem 0;font-size:1.05rem;color:var(--muted)}
+.mob-hint{padding:.25rem 0 .85rem;font-size:.8rem;color:var(--muted);max-width:34ch}
 .mob-sub{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.25,.46,.45,.94)}
 .mob-sub.open{max-height:300px}
 .mob-label-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.85rem 0;font-family:var(--body);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;background:0;border:0;cursor:pointer}
@@ -190,16 +191,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .hs-dots{position:absolute;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:.6rem;align-items:center}
 .hs-dots button{width:1rem;height:1.5px;background:rgba(246,246,246,.3);border-radius:1px;transition:all .4s cubic-bezier(.25,.46,.45,.94);border:0;padding:0}
 .hs-dots button.on{width:2rem;background:var(--accent)}
-.hero-slider{position:relative;width:100%;aspect-ratio:3/4;max-height:100vh;overflow:hidden;background:var(--dark)}
+.hero-slider{position:relative;width:100%;height:56vh;min-height:360px;max-height:560px;overflow:hidden;background:var(--dark)}
 .hs-track{display:flex;height:100%;transition:transform .7s cubic-bezier(.22,1,.36,1);will-change:transform}
 .hs-slide{flex:0 0 100%;height:100%;background-size:cover;background-position:center;position:relative;display:flex;align-items:flex-end}
 .hs-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(35,31,32,.85) 0%,rgba(35,31,32,.3) 50%,rgba(35,31,32,.15) 100%)}
-.hs-content{position:relative;z-index:2;padding:var(--gutter);padding-bottom:5rem;width:100%}
-.hs-content .eyebrow{color:var(--accent);margin-bottom:.75rem}
-.hs-content h2{font-family:var(--display);font-size:2.25rem;font-weight:300;color:#F6F6F6;line-height:1.05;letter-spacing:-.02em;margin-bottom:1rem;max-width:14ch}
+.hs-content{position:relative;z-index:2;padding:var(--gutter);padding-bottom:2.5rem;width:100%}
+.hs-content .eyebrow{color:var(--accent);margin-bottom:.5rem}
+.hs-content h2{font-family:var(--display);font-size:2rem;font-weight:300;color:#F6F6F6;line-height:1.05;letter-spacing:-.02em;margin-bottom:.6rem;max-width:14ch}
 .hs-content h2 i{font-style:italic}
-.hs-content p{font-size:1rem;color:rgba(246,246,246,.75);line-height:1.5;margin-bottom:1.5rem;max-width:30ch}
-.hs-content .btn{min-height:50px;padding:0 1.75rem;font-size:.8rem}
+.hs-content p{font-size:.95rem;color:rgba(246,246,246,.75);line-height:1.5;margin-bottom:1.1rem;max-width:30ch}
+.hs-content .btn{min-height:46px;padding:0 1.75rem;font-size:.8rem}
 
 
 
@@ -379,6 +380,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .founder{margin-top:2.5rem;padding:2rem;background:var(--light);border-radius:var(--radius);box-shadow:0 1px 3px rgba(35,31,32,.06)}
 .founder__sig{font-family:var(--display);font-style:italic;font-size:1.1rem;color:var(--accent);margin-top:1rem}
 .founder p+p{margin-top:1rem}
+/* Sophisticated founder presentation (about.html): photo + name/role header
+   above the copy, a pull-quote treatment on the first line. Avatar is the
+   same grey placeholder convention as .rv__avatar/.ft-founder__avatar. */
+.founder__head{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
+.founder__avatar{width:64px;height:64px;border-radius:50%;background:var(--surface);flex:none}
+.founder__name{font-family:var(--display);font-size:1.25rem}
+.founder__role{font-size:.75rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.founder__pull{font-family:var(--display);font-size:1.3rem;font-weight:300;font-style:italic;line-height:1.35;color:var(--dark);margin-bottom:1.25rem}
 
 /* ── Quiz ── */
 /* --surface-soft so it actually reads as a card against the page (var(--light)
@@ -409,6 +418,22 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .ft-cols h3{font-family:var(--body);font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(246,246,246,.5);margin-bottom:.75rem}
 .ft-cols a{display:block;padding:3px 0;font-size:.875rem;color:rgba(246,246,246,.6)}
 .ft-cols a.mail{color:var(--accent)}
+/* Founder photo + social row — sits above the shop/care/brand columns.
+   Avatar is a grey placeholder circle (real photo pending, same convention
+   as .rv__avatar). Social icons use lucide, sized up and on a translucent
+   dark chip so they read as a deliberate row, not afterthought text links. */
+.ft-founder{display:flex;align-items:center;gap:1rem;padding:1.75rem 0 1.5rem;border-bottom:1px solid rgba(246,246,246,.1)}
+.ft-founder__avatar{width:56px;height:56px;border-radius:50%;background:#4A4645;flex:none}
+/* Hardcoded literals, not tokens — .ft's background is forced to stay dark in
+   dark mode (see the .ft override above), so var(--light)/var(--dark) would
+   invert against a background that never does. Same bug class documented at
+   the top of this file for .ft-cols/.marquee. */
+.ft-founder__name{font-family:var(--display);font-size:1.05rem;color:#F6F6F6;font-weight:400}
+.ft-founder__role{font-size:.7rem;color:rgba(246,246,246,.5);margin-top:2px}
+.ft-social{display:flex;gap:.6rem;margin-left:auto}
+.ft-social a{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(246,246,246,.08);border:1px solid rgba(246,246,246,.16);color:#F6F6F6;transition:background .2s,transform .2s}
+.ft-social a:active{background:var(--accent);color:#fff;transform:scale(.92)}
+.ft-social svg{width:18px;height:18px}
 .ft-pay{display:flex;flex-wrap:wrap;gap:.5rem;padding:1.25rem 0}
 .ft-pay span{font-size:.48rem;font-weight:700;letter-spacing:.1em;border:1px solid rgba(246,246,246,.18);border-radius:4px;padding:3px 7px;color:rgba(246,246,246,.4)}
 /* Subscribe sits last, right above the legal copy — kept out of the way of
@@ -424,23 +449,23 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .ft-copy p+p{margin-top:.5rem}
 
 /* ── PLP ── */
-.plp-hero{width:100%;min-height:45vh;max-height:55vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:3rem 0;margin-bottom:0}
+.plp-hero{width:100%;min-height:24vh;max-height:32vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:1.75rem 0;margin-bottom:0}
 .plp-hero[hidden]{display:none}
 .plp-hero__inner{width:100%}
-.plp-hero .eyebrow{margin-bottom:.5rem;display:block}
-.plp-hero h1{margin-bottom:.5rem}
-.plp-hero p{font-size:.875rem;color:var(--muted);margin-top:.5rem}
+.plp-hero .eyebrow{margin-bottom:.4rem;display:block}
+.plp-hero h1{margin-bottom:.4rem}
+.plp-hero p{font-size:.875rem;color:var(--muted);margin-top:.4rem}
 /* Photo variant — used only for a specific fandom collection (jjk/kny/genshin),
    set via JS in initPLP(). Real photography + a permanently-dark gradient, so
    text is hardcoded light, never a token (same rule as .ftile/.hs-content). */
 .plp-hero--img{position:relative;overflow:hidden;align-items:flex-end;justify-content:flex-start;text-align:left;padding:0;background-size:cover;background-position:center}
 .plp-hero--img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(24,21,20,.88) 0%,rgba(24,21,20,.4) 55%,rgba(24,21,20,.05) 100%)}
-.plp-hero--img .plp-hero__inner{position:relative;z-index:1;padding-top:2rem;padding-bottom:2.75rem;padding-left:calc(var(--gutter) + .5rem)}
+.plp-hero--img .plp-hero__inner{position:relative;z-index:1;padding-top:1.25rem;padding-bottom:1.5rem;padding-left:calc(var(--gutter) + .5rem)}
 .plp-hero--img .eyebrow{color:var(--accent);letter-spacing:.2em}
 .plp-hero--img h1{color:#F6F6F6;font-style:italic;text-shadow:0 2px 12px rgba(0,0,0,.3)}
 .plp-hero--img p{color:rgba(246,246,246,.78);max-width:32ch;font-size:.95rem}
 .plp-n{font-size:.875rem;color:var(--muted);font-weight:600;margin-top:1rem}
-.sub-scroll{display:flex;gap:.65rem;overflow-x:auto;scrollbar-width:none;padding:1.25rem var(--gutter) 1rem;scroll-snap-type:x proximity}
+.sub-scroll{display:flex;gap:.65rem;overflow-x:auto;scrollbar-width:none;padding:.75rem var(--gutter) .5rem;scroll-snap-type:x proximity}
 .sub-scroll::-webkit-scrollbar{display:none}
 .sub-scroll::after{content:"";flex:none;width:1px}
 .sub{flex:none;padding:.7rem 1.25rem;border:1.5px solid var(--line);border-radius:var(--radius-pill);font-size:.9rem;white-space:nowrap;cursor:pointer;transition:all .25s cubic-bezier(.25,.46,.45,.94);background:transparent;color:var(--muted);font-weight:450;scroll-snap-align:start;min-height:48px;display:flex;align-items:center;gap:.6rem}
@@ -470,7 +495,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .bread a{color:var(--muted)}
 .bread span::before{content:"/";margin:0 .5rem;color:var(--line)}
 .bread b{color:var(--dark);font-weight:500}
-.gal{aspect-ratio:1;border-radius:var(--radius);overflow:hidden;background:var(--surface);position:relative}
+.gal{aspect-ratio:4/3;border-radius:var(--radius);overflow:hidden;background:var(--surface);position:relative}
 .gal .ph{position:absolute;inset:0;background:var(--surface)}
 .gal .ph svg{width:45%}
 /* Info button + caption panel on the last two gallery shots of the 4 fully-
@@ -483,7 +508,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .gal-info__panel p{font-size:.9rem;line-height:1.5;max-width:26ch}
 .gal-strip{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding:.75rem 0;scroll-snap-type:x proximity}
 .gal-strip::-webkit-scrollbar{display:none}
-.gal-strip button{flex:none;width:72px;height:72px;border-radius:var(--radius-sm);background-size:cover;background-position:center;border:1px solid #E0E0E0;cursor:pointer;padding:0;transition:border-color .15s;background-color:#F0F0F0}
+.gal-strip button{flex:none;width:56px;height:56px;border-radius:var(--radius-sm);background-size:cover;background-position:center;border:1px solid #E0E0E0;cursor:pointer;padding:0;transition:border-color .15s;background-color:#F0F0F0}
 .gal-strip button.on{border:1.5px solid var(--dark)}
 .pdp-meta{padding-top:2rem}
 .pdp-meta .eyebrow{display:block;margin-bottom:.5rem}
@@ -524,8 +549,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .v-chip.selected{background:var(--dark);border-color:var(--dark);color:var(--light)}
 .atc-bar .btn--dark{border-radius:var(--radius-pill);min-height:56px;font-size:.85rem;letter-spacing:.04em;font-weight:600;width:100%}
 .atc-bar .btn--dark.done{background:var(--dark)}
-.atc-note{margin-top:.75rem;padding:1rem;background:transparent;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:.875rem}
+.atc-note{padding:1rem;background:transparent;font-size:.875rem}
 .atc-note b{display:block;color:var(--muted);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
+/* Groups the handmade-timeline note and the guarantee row into one card
+   instead of two stacked boxes — reads as a single "what you're getting"
+   block rather than disparate callouts. */
+.pdp-assurance{margin-top:.75rem;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden}
+.pdp-assurance .pdp-guarantee{border-radius:0;border-top:1px solid var(--line);margin-top:0}
+.pdp-details-head{margin-top:1.75rem;margin-bottom:.25rem}
 .trust-row-s{display:flex;gap:.5rem;margin-top:1rem}
 .trust-row-s span{flex:1;text-align:center;padding:.75rem .5rem;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:.75rem;color:var(--muted)}
 .trust-row-s span b{display:block;color:var(--dark);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
@@ -598,8 +629,20 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .rv+.rv{margin-top:1rem}
 .rv h4{font-family:var(--body);font-weight:600;font-size:.875rem;margin:.5rem 0 2px}
 .rv p{font-size:.875rem;color:var(--muted)}
-.rv .who{font-size:.65rem;color:var(--muted);margin-top:.5rem}
+.rv .who{display:flex;align-items:center;gap:.6rem;margin-top:.75rem}
+.rv .who span{font-size:.65rem;color:var(--muted)}
+/* Customer photo — grey placeholder circle until real photos are supplied.
+   Hardcoded neutral, same convention as .card__img/.ph empty-state fills;
+   doesn't need a dark-mode override since it never carries text of its own. */
+.rv__avatar{width:38px;height:38px;border-radius:50%;background:#DADADA;flex:none}
 .note-pl{display:inline-block;font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line);padding:2px 6px;border-radius:4px;margin-top:.5rem}
+
+/* Reviews as a horizontal scroll row (PDP) — same mechanics as .scroll-row,
+   card width tuned wider since review copy needs more room than a product card. */
+.rev-scroll{display:flex;flex-wrap:nowrap;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.5rem;scrollbar-width:none}
+.rev-scroll::-webkit-scrollbar{display:none}
+.rev-scroll>.rv{flex:none;scroll-snap-align:start;width:82vw;max-width:340px}
+.rev-scroll>.rv+.rv{margin-top:0}
 
 /* ── Promo popup FAB ── */
 .promo-fab{position:fixed;left:1.25rem;bottom:calc(1.35rem + env(safe-area-inset-bottom,0px));z-index:56;width:60px;height:60px;border-radius:50%;background:var(--dark);color:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(20,17,16,.25);animation:promo-fab-pop .4s cubic-bezier(.34,1.56,.64,1),promo-fab-pulse 2.6s ease-in-out 1s 3}
@@ -673,6 +716,7 @@ body[data-page="pdp"] .promo-fab{bottom:calc(5.5rem + env(safe-area-inset-bottom
 /* ── Desktop ── */
 @media(min-width:768px){
   :root{--gutter:2.5rem}
+  .hero-slider{height:64vh;max-height:640px}
   .hs-content h2{font-size:4rem}
   .hs-content p{font-size:1.35rem}
   .pgrid{grid-template-columns:repeat(3,1fr)}

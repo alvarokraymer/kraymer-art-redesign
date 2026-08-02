@@ -40,14 +40,7 @@ const HEADER_HTML = `
   </button>
   <div class="mob-links">
     <a class="mob-link" href="coleccion.html">All Collections</a>
-    <button class="mob-label-btn" data-mob-collapse>COLLECTIONS <span class="mob-arrow"></span></button>
-    <div class="mob-sub" data-mob-sub>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">JJK</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">KNY</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html">Best Sellers</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
-    </div>
+    <p class="mob-hint">Filter by fandom, sort by trending or newest — right on the collections page.</p>
     <a class="mob-link" href="#">Mystery Box</a>
     <a class="mob-link" href="#" data-open-wishlist>Wishlist</a>
     <button class="mob-label-btn" data-mob-collapse>BRAND <span class="mob-arrow"></span></button>
@@ -57,7 +50,7 @@ const HEADER_HTML = `
       <a class="mob-link mob-link--sub" href="blog.html">Journal</a>
       <a class="mob-link mob-link--sub" href="quiz.html">Find Your Domain</a>
       <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
-      <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
+      <a class="mob-link mob-link--sub" href="about.html#faq">FAQ</a>
     </div>
     <button class="mob-label-btn" data-mob-collapse>VARIANTS <span class="mob-arrow"></span></button>
     <div class="mob-sub" data-mob-sub>
@@ -97,13 +90,22 @@ const HEADER_HTML = `
 const FOOTER_HTML = `
 <footer class="ft">
   <div class="w">
+    <div class="ft-founder">
+      <span class="ft-founder__avatar"></span>
+      <div>
+        <div class="ft-founder__name">Kraymer</div>
+        <div class="ft-founder__role">Founder &amp; Designer</div>
+      </div>
+      <div class="ft-social">
+        <a href="https://instagram.com/kraymer.art" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://youtube.com/@KraymerArt" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l6 3-6 3z" fill="currentColor" stroke="none"/></svg></a>
+        <a href="https://tiktok.com/@kraymer.art" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 3c.5 2.5 2 4 4.5 4.3"/></svg></a>
+      </div>
+    </div>
     <div class="ft-cols">
       <div>
         <h3>Shop</h3>
         <a href="coleccion.html">All Collections</a>
-        <a href="coleccion.html?collection=jjk">JJ</a>
-        <a href="coleccion.html?collection=kny">KN</a>
-        <a href="coleccion.html?collection=genshin">GI</a>
         <a href="coleccion.html?type=sets">Collector Sets</a>
         <a href="#">Mystery Box</a>
       </div>
@@ -113,7 +115,7 @@ const FOOTER_HTML = `
         <a href="#">Shipping &amp; Handmade Timeline</a>
         <a href="#">60-Day Returns</a>
         <a href="#">Lifetime Warranty</a>
-        <a href="index.html#faq">FAQ</a>
+        <a href="about.html#faq">FAQ</a>
         <a href="mailto:support@kraymerart.com" class="mail">support@kraymerart.com</a>
       </div>
       <div>
@@ -123,8 +125,6 @@ const FOOTER_HTML = `
         <a href="blog.html">Journal</a>
         <a href="quiz.html">Find Your Domain</a>
         <a href="index.html#reviews">Customer Reviews</a>
-        <a href="#">Instagram</a>
-        <a href="#">YouTube</a>
       </div>
     </div>
     <div class="ft-pay">

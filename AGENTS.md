@@ -327,11 +327,25 @@ base value back up for everyone.
   tooling, not shippable pages. If Bold/Clean are ever fully retired, delete
   these three files, the `forceApproach` option, and the CSS under "Card
   approaches" together — don't let one survive without the others.
-- **PLP filters** (`coleccion.html`, built in `initPLP()`): a **collapsed-by-
-  default off-canvas panel** (`.fp`), opened by the "Sort & Filter" button
-  docked in the sticky utility bar (`.ubar`, `position:sticky` right under the
-  header). An inline-always-expanded version was tried 2026-07-31 and
-  explicitly rejected — don't reintroduce it without being asked again.
+- **PLP filters** (`coleccion.html`, built in `initPLP()`): **sort is inline,
+  the rest is off-canvas** — reversed 2026-08-02 on explicit client
+  instruction after the 2026-07-31 all-inline experiment was rejected; this
+  time the ask was narrower (make coleccion.html itself the primary
+  collection/sort interface instead of the navbar's JJK/KNY/Genshin
+  drill-down, and make Trending/Newest more prominent), not "put everything
+  inline" again. Concretely: `[data-sortbar]` renders Trending/Newest/Price
+  chips (reusing `.sub` styling) always visible, right under the subcategory
+  row — this is the one thing users reach for most, so it isn't a tap away.
+  Material/Price-range/Availability/Collection stay in the collapsed-by-
+  default off-canvas panel (`.fp`), now labeled just "Filters" since sort left
+  it, opened by the button docked in the sticky utility bar (`.ubar`,
+  `position:sticky` right under the header). Every chip in both places —
+  sort, subcategory, and the panel's Collection/Material/Price/Availability
+  groups — carries an inline SVG icon now (`sortIcons`/`filIcons` in
+  `initPLP()`); if you add a new filter value, give it an icon in the same
+  object, don't ship a bare label. The mobile nav's old COLLECTIONS submenu
+  (JJK/KNY/Genshin drill-down links in `partials.js`) was removed for the same
+  reason — that navigation now lives on `coleccion.html` itself.
   `.v-chip` is a generic pill style (used here and in the PDP variant
   selectors) — keep it unscoped from `.pdp-config` (it was accidentally scoped
   there before, which meant filter chips silently had no pill styling at all —
@@ -400,6 +414,23 @@ base value back up for everyone.
   (same 40px-threshold pattern as the hero slider's `[data-hs-track]`, just a
   lower threshold since review slides are shorter). Dots stay, both as a
   progress indicator and a click target — don't reintroduce arrow buttons.
+- **Founder, craft process and FAQ live on `about.html` only** (consolidated
+  2026-08-02): home used to duplicate the full founder copy and the 3-item
+  craft grid (`#craft` section) and also carried its own 4-item FAQ
+  (`index.html#faq`). That's now a single unified `about.html`: a fuller
+  founder section (photo placeholder + name/role header + pull-quote, see
+  `.founder__head`/`.founder__pull` in the dark-mode-safe styles) followed by
+  the craft grid, then a **6-item** FAQ (`#faq`, two new items added — "Is
+  this official licensed merchandise?" and "Can I choose the metal and size
+  myself?" — don't drop back to 4 without being asked), then the trust row +
+  CTA. Home (`index.html`) keeps only a compact one-line founder teaser (small
+  avatar circle + one sentence + "Read our full story →" link to
+  `about.html`) in the section still tagged `id="craft"` for anchor
+  stability, and has no FAQ section of its own — every internal link that
+  used to point to `index.html#faq` (mobile nav, footer Customer Care column)
+  now points to `about.html#faq`. Founder signature reads "Kraymer" /
+  "Kraymer, Founder", not "David Wang" — if you see that name reappear
+  anywhere, it's stale content, not a deliberate callback.
 - **Quiz lives on its own page** (`quiz.html`, extracted off home 2026-07-31):
   the 3-step "Find Your Domain" logic itself didn't change, just where it's
   mounted — `initQuizWidget()` in `app.js` is a standalone function now
@@ -411,15 +442,22 @@ base value back up for everyone.
   in the middle of the homepage scroll; a dedicated page reads more finished
   and gives the quiz room to breathe. Don't re-inline it without being asked.
 - **Footer: subscribe is the last content block, not the first** (reordered
-  2026-07-31): order is now `ft-cols` → `ft-pay` → `ft-news` (newsletter) →
-  `ft-copy`, so the email ask no longer competes with the promo popup's own
-  email ask right as a visitor lands in the footer. The old `ft-trust` row
-  (Lifetime Warranty / 60-Day Returns / Certificate) was deleted outright, not
-  just moved — it duplicated the top marquee (present on every page) and the
-  Customer Care column right next to it; removing it was the main lever for
-  making the footer shorter on mobile, alongside trimmed padding on
-  `ft-cols`/`ft-news`/`ft-copy`. If you need trust badges back, that's a
-  deliberate call to make, not a default to restore.
+  2026-07-31): order is now `ft-founder` → `ft-cols` → `ft-pay` → `ft-news`
+  (newsletter) → `ft-copy`, so the email ask no longer competes with the
+  promo popup's own email ask right as a visitor lands in the footer. The old
+  `ft-trust` row (Lifetime Warranty / 60-Day Returns / Certificate) was
+  deleted outright, not just moved — it duplicated the top marquee (present on
+  every page) and the Customer Care column right next to it; removing it was
+  the main lever for making the footer shorter on mobile, alongside trimmed
+  padding on `ft-cols`/`ft-news`/`ft-copy`. If you need trust badges back,
+  that's a deliberate call to make, not a default to restore.
+- **Footer founder row** (`.ft-founder`, added 2026-08-02): a small avatar +
+  name/role + social icon row sits above `ft-cols`. The avatar
+  (`.ft-founder__avatar`) is a hardcoded mid-grey circle placeholder — the
+  client is supplying a real photo later, don't treat the grey fill as a bug.
+  `.ft-social` (Instagram/YouTube/TikTok, lucide-style inline SVGs) replaces
+  the old plain-text "Instagram"/"YouTube" links that used to sit inside the
+  Brand column — don't re-add them there, this row is their one home now.
 - **On-photo buttons are glass capsules, not flat fills** (changed
   2026-07-31): `.btn--light` (hero slider CTAs) and `.ftile__cta` (fandom
   tile CTAs — Shop by Collection) both moved from a flat solid
@@ -433,6 +471,34 @@ base value back up for everyone.
   overlay without restyling it back to something token-paired first. `.btn`
   (base), `.btn--dark` and `.btn--line` are unchanged — the ATC/checkout/form
   buttons still need to read as solid, dominant CTAs per Hard rule 3.
+
+- **Section rhythm is tight, on purpose** (2026-08-02): `.sec` is `2.75rem 0`
+  (was `5rem`), `.sec--sm` is `2rem 0` (was `3rem`), and most `.ct`
+  margin-bottoms were trimmed from `2rem`/`1.5rem` to `1–1.25rem` — a client
+  request to cut scroll depth site-wide. `.hero-slider` dropped its
+  `aspect-ratio:3/4` (near full-viewport-tall on a phone) for an explicit
+  `height:56vh` (`64vh` at `min-width:768px`) — "about half the screen," not a
+  fixed aspect ratio, was the actual ask. `.plp-hero` shrank the same way
+  (`45–55vh` → `24–32vh`). Don't restore the old numbers as a "fix" for
+  perceived whitespace regressions — the tightness is intentional; if a
+  future pass wants more breathing room back, that's a deliberate call.
+- **PDP: cross-sell moved above reviews, images shrank, reviews scroll
+  horizontally** (2026-08-02): in approaches 1/2/4 the render order is now
+  `${crossHTML}${reviewsHTML}` (was the reverse) — "You may also like" no
+  longer sits at the very bottom of the page. `.gal` (main gallery image) is
+  `aspect-ratio:4/3` (was `1`), `.gal-strip` thumbnails are `56px` (was
+  `72px`) — a deliberate "lighter page" pass, not a bug; approach 3 ("Side")
+  overrides `.gal`'s aspect-ratio inline in `initPDP()`, keep that override in
+  sync if `.gal`'s default changes again. `noteHTML` + `guaranteeHTML` are now
+  wrapped in one `.pdp-assurance` card instead of two stacked boxes, and
+  `specsHTML` grew a `.pdp-details-head` eyebrow ("Details") so the specs
+  accordion doesn't start with zero visual lead-in. PDP's `reviewsHTML` (and
+  the home reviews carousel) render `.rv` cards inside `.rev-scroll`
+  (horizontal, snap-scroll) instead of a stacked column, and every `.rv`
+  now has an `.rv__avatar` — a hardcoded grey placeholder circle for a
+  customer photo the client hasn't supplied yet, same convention as
+  `.ft-founder__avatar`. Don't remove the avatar slot thinking it's an empty
+  bug.
 
 ## Hard rules (from the brief, do not regress)
 

@@ -746,6 +746,32 @@ function initPLP() {
     }).join("");
   subHost.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important";
 
+  /* Sort chips — inline and iconed, not tucked away in the filter panel.
+     This is the primary "which pieces float to the top" control, so it lives
+     right on the page, not one tap deep. */
+  const sortHost = document.querySelector("[data-sortbar]");
+  const sortIcons = {
+    trending: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 7l-8.5 8.5-5-5L1 18"/><path d="M16 7h6v6"/></svg>`,
+    newest: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+    "price-asc": `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>`,
+    "price-desc": `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>`,
+  };
+  const sortLabels = { trending: "Trending", newest: "Newest", "price-asc": "Price: Low", "price-desc": "Price: High" };
+  if (sortHost) {
+    sortHost.innerHTML = Object.keys(sortLabels).map((v) =>
+      `<button class="sub ${activeSort===v?"active":""}" data-sort="${v}">${sortIcons[v]}<b>${sortLabels[v]}</b></button>`
+    ).join("");
+    sortHost.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important";
+    sortHost.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-sort]");
+      if (!btn) return;
+      activeSort = btn.dataset.sort;
+      sortHost.querySelectorAll(".sub").forEach((s) => s.classList.toggle("active", s === btn));
+      updateFilterUI();
+      apply();
+    });
+  }
+
   const grid = document.querySelector("[data-plp-grid]");
   const countEl = document.querySelector("[data-plp-count]");
 
@@ -806,45 +832,53 @@ function initPLP() {
   const filterBtn = document.querySelector("[data-open-filters]");
   const filterPanel = document.createElement("div");
   filterPanel.className = "fp";
+  const svgIco = (path) => `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-right:5px;vertical-align:-2px">${path}</svg>`;
+  const filIcons = {
+    jjk: svgIco(`<circle cx="8" cy="12" r="3"/><circle cx="16" cy="12" r="3"/>`),
+    kny: svgIco(`<path d="M12 2c2 4 5 6 5 11a5 5 0 0 1-10 0c0-2 1-3 2-4-.3 1.5 0 2.5 1 3 0-3 .5-6 2-10z"/>`),
+    genshin: svgIco(`<path d="M12 2l2.5 7H22l-6 4.5L18.5 21 12 16.5 5.5 21 8 13.5 2 9h7.5z"/>`),
+    silver: svgIco(`<circle cx="12" cy="12" r="8"/>`),
+    gold: svgIco(`<path d="M6 3h12l3 6-9 12L3 9z"/>`),
+    under100: svgIco(`<path d="M12 2v20M8 6h5.5a3 3 0 0 1 0 6H8m0 0h6.5a3 3 0 0 1 0 6H8"/>`),
+    "100-200": svgIco(`<path d="M12 2v20M8 6h5.5a3 3 0 0 1 0 6H8m0 0h6.5a3 3 0 0 1 0 6H8"/>`),
+    "200-300": svgIco(`<path d="M12 2v20M8 6h5.5a3 3 0 0 1 0 6H8m0 0h6.5a3 3 0 0 1 0 6H8"/>`),
+    "300+": svgIco(`<path d="M12 2v20M8 6h5.5a3 3 0 0 1 0 6H8m0 0h6.5a3 3 0 0 1 0 6H8"/>`),
+    "in-stock": svgIco(`<path d="M20 6L9 17l-5-5"/>`),
+    "pre-order": svgIco(`<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>`),
+  };
   filterPanel.innerHTML = `
-    <div class="fp__top"><span class="fp__title">Sort &amp; Filter</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
+    <div class="fp__top"><span class="fp__title">Filters</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
     <div class="fp__body">
       ${!colParam ? `
       <div class="v-group">
         <p class="v-label">Collection</p>
         <div class="v-row" data-fil-group="col">
-          <button class="v-chip" data-fil-val="jjk">JJK</button>
-          <button class="v-chip" data-fil-val="kny">KNY</button>
-          <button class="v-chip" data-fil-val="genshin">Genshin</button>
+          <button class="v-chip" data-fil-val="jjk">${filIcons.jjk}JJK</button>
+          <button class="v-chip" data-fil-val="kny">${filIcons.kny}KNY</button>
+          <button class="v-chip" data-fil-val="genshin">${filIcons.genshin}Genshin</button>
         </div>
       </div>` : ""}
       <div class="v-group">
-        <p class="v-label">Sort by</p>
-        <div class="v-row" data-fil-group="sort">
-          ${[["trending","Trending"],["price-asc","Price: Low"],["price-desc","Price: High"],["newest","Newest"]].map(([v,l]) => `<button class="v-chip${activeSort===v?' selected':''}" data-fil-val="${v}">${l}</button>`).join("")}
-        </div>
-      </div>
-      <div class="v-group">
         <p class="v-label">Material</p>
         <div class="v-row" data-fil-group="mat">
-          <button class="v-chip" data-fil-val="silver">925 Silver</button>
-          <button class="v-chip" data-fil-val="gold">18K Gold</button>
+          <button class="v-chip" data-fil-val="silver">${filIcons.silver}925 Silver</button>
+          <button class="v-chip" data-fil-val="gold">${filIcons.gold}18K Gold</button>
         </div>
       </div>
       <div class="v-group">
         <p class="v-label">Price</p>
         <div class="v-row" data-fil-group="price">
-          <button class="v-chip" data-fil-val="under100">Under $100</button>
-          <button class="v-chip" data-fil-val="100-200">$100–$200</button>
-          <button class="v-chip" data-fil-val="200-300">$200–$300</button>
-          <button class="v-chip" data-fil-val="300+">$300+</button>
+          <button class="v-chip" data-fil-val="under100">${filIcons.under100}Under $100</button>
+          <button class="v-chip" data-fil-val="100-200">${filIcons["100-200"]}$100–$200</button>
+          <button class="v-chip" data-fil-val="200-300">${filIcons["200-300"]}$200–$300</button>
+          <button class="v-chip" data-fil-val="300+">${filIcons["300+"]}$300+</button>
         </div>
       </div>
       <div class="v-group">
         <p class="v-label">Availability</p>
         <div class="v-row" data-fil-group="avail">
-          <button class="v-chip" data-fil-val="in-stock">In stock</button>
-          <button class="v-chip" data-fil-val="pre-order">Pre-order</button>
+          <button class="v-chip" data-fil-val="in-stock">${filIcons["in-stock"]}In stock</button>
+          <button class="v-chip" data-fil-val="pre-order">${filIcons["pre-order"]}Pre-order</button>
         </div>
       </div>
     </div>
@@ -860,7 +894,7 @@ function initPLP() {
     filterPanel.querySelectorAll(".v-chip").forEach((c) => {
       const grp = c.closest("[data-fil-group]").dataset.filGroup, val = c.dataset.filVal;
       c.classList.toggle("selected",
-        (grp==="col"&&filterCol===val)||(grp==="sort"&&activeSort===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
+        (grp==="col"&&filterCol===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
     });
     const n = (filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
     fpCount.textContent = n; fpCount.classList.toggle("show", n > 0);
@@ -871,7 +905,6 @@ function initPLP() {
     if (chip) {
       const grp = chip.closest("[data-fil-group]").dataset.filGroup, val = chip.dataset.filVal;
       if (grp === "col") filterCol = filterCol === val ? null : val;
-      else if (grp === "sort") { activeSort = val; updateFilterUI(); apply(); return; }
       if (grp==="mat") filterMat = filterMat===val?null:val;
       else if (grp==="price") filterPrice = filterPrice===val?null:val;
       else if (grp==="avail") filterAvail = filterAvail===val?null:val;
@@ -987,6 +1020,7 @@ function initPDP() {
     </button>`;
 
   const specsHTML = `
+    <div class="pdp-details-head"><span class="eyebrow">Details</span></div>
     <div class="specs faq">
       <div class="faq__item"><button class="faq__btn">Specs &amp; Materials</button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m)=>m.includes("Gold"))?" or 18K gold plated over sterling silver":""}. Hand-set ${p.gem?p.gem.toLowerCase():"stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
       <div class="faq__item"><button class="faq__btn">Concept &amp; Inspiration</button><div class="faq__panel"><p>${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</p></div></div>
@@ -995,9 +1029,11 @@ function initPDP() {
   const reviewsHTML = `
     <section class="sec sec--sm" id="reviews">
       <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><b>Priya N.</b> · Verified Buyer</p></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><b>Daniel K.</b> · Verified Buyer</p></div>
-      <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><b>Sam T.</b> · Verified Buyer</p></div>
+      <div class="rev-scroll">
+        <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><span class="rv__avatar"></span><span><b>Priya N.</b> · Verified Buyer</span></p></div>
+        <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><span class="rv__avatar"></span><span><b>Daniel K.</b> · Verified Buyer</span></p></div>
+        <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><span class="rv__avatar"></span><span><b>Sam T.</b> · Verified Buyer</span></p></div>
+      </div>
     </section>`;
   const crossHTML = `
     <section class="sec sec--sm">
@@ -1031,15 +1067,14 @@ function initPDP() {
           </div>
           <div class="atc-bar">
             ${pdpCTA()}
-            ${noteHTML}
-            ${guaranteeHTML}
+            <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
           </div>
           ${specsHTML}
           <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to collection</a>
         </div>
       </div>
-      ${reviewsHTML}
-      ${crossHTML}`;
+      ${crossHTML}
+      ${reviewsHTML}`;
 
   } else if (approach === "3") {
     /* ── Approach 3: Side — 2-column, minimal chrome, price inline ── */
@@ -1048,7 +1083,7 @@ function initPDP() {
       <nav class="bread" aria-label="Breadcrumb"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
       <div class="pdp-layout">
         <div>
-          ${mainGal('style="border:0;aspect-ratio:1"')}
+          ${mainGal('style="border:0;aspect-ratio:4/3"')}
           ${thumbStrip('style="padding:0;gap:.5rem"')}
         </div>
         <div class="pdp-meta">
@@ -1064,8 +1099,7 @@ function initPDP() {
           <div style="display:flex;gap:.75rem;align-items:center">
             ${pdpCTA("flex:1")}
           </div>
-          ${noteHTML}
-          ${guaranteeHTML}
+          <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
           ${specsHTML}
           <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to collection</a>
         </div>
@@ -1102,13 +1136,12 @@ function initPDP() {
         </div>
         <div class="pdp-desc" style="text-align:center;font-size:1.2rem;margin-bottom:1.5rem">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
         ${pdpCTA("min-height:58px;font-size:.9rem;border-radius:var(--radius-pill);width:100%")}
-        ${noteHTML}
-        ${guaranteeHTML}
+        <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
         ${specsHTML}
         <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem;text-align:center;display:block">&larr; Back to collection</a>
       </div>
-      ${reviewsHTML}
-      ${crossHTML}`;
+      ${crossHTML}
+      ${reviewsHTML}`;
 
   } else {
     /* ── Approach 1: Classic — traditional layout (default) ── */
@@ -1132,15 +1165,14 @@ function initPDP() {
           </div>
           <div class="atc-bar">
             ${pdpCTA()}
-            ${noteHTML}
-            ${guaranteeHTML}
+            <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
           </div>
           ${specsHTML}
           <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to all collections</a>
         </div>
       </div>
-      ${reviewsHTML}
-      ${crossHTML}`;
+      ${crossHTML}
+      ${reviewsHTML}`;
   }
 
   /* ===== RENDER ===== */
