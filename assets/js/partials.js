@@ -45,14 +45,12 @@ const HEADER_HTML = `
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">JJK</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">KNY</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html">Best Sellers</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
     </div>
     <a class="mob-link" href="#">Mystery Box</a>
-    <button class="mob-label-btn" data-mob-collapse>BRAND <span class="mob-arrow"></span></button>
-    <div class="mob-sub" data-mob-sub>
+    <button class="mob-label-btn open" data-mob-collapse>BRAND <span class="mob-arrow"></span></button>
+    <div class="mob-sub open" data-mob-sub>
       <a class="mob-link mob-link--sub" href="about.html">Our Story</a>
-      <a class="mob-link mob-link--sub" href="about.html#craft">The Craft</a>
       <a class="mob-link mob-link--sub" href="blog.html">Journal</a>
       <a class="mob-link mob-link--sub" href="quiz.html">Find Your Domain</a>
       <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>

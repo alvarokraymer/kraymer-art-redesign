@@ -149,7 +149,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .mob-foot-actions{display:flex;gap:.6rem;padding:.25rem 0 .75rem}
 .mob-action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;border:1px solid var(--line);border-radius:var(--radius-pill);background:transparent;color:var(--dark);font-size:.8rem;font-weight:600}
 .mob-action-btn:active{background:var(--line)}
-.mob-foot-icons{display:flex;gap:1.25rem;padding:.25rem 0 1rem}
+.mob-foot-icons{display:flex;justify-content:center;gap:1.25rem;padding:.25rem 0 1rem}
 /* Hardcoded icon color, not a token — the circle backdrop (--surface) never
    inverts, so pairing it with var(--dark) would go light-on-light in dark
    mode, same trap as the .heart icon documented above. */
@@ -231,7 +231,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .card__buy svg{width:19px!important;height:19px!important;display:block!important;flex:none!important}
 .card__buy:active{background:var(--accent)!important;border-color:var(--accent)!important;transform:scale(.92)!important}
 .card__buy.done{background:#4A7C59!important;border-color:#4A7C59!important}
-.badge{font-size:.45rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:var(--radius-pill);background:transparent;color:var(--dark);position:absolute;top:.5rem;left:.5rem;z-index:3;border:1px solid var(--dark)}
+.badge{font-size:.45rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 10px;border-radius:var(--radius-pill);background:transparent;color:var(--dark);position:absolute;top:.5rem;left:.5rem;z-index:3;border:1px solid var(--dark);white-space:nowrap}
 .badge--gold{background:var(--accent);color:#fff;border:1px solid var(--accent)}
 .badge--ink{background:var(--dark);color:var(--light);border:1px solid var(--dark)}
 .heart{position:absolute;top:.5rem;right:.5rem;z-index:3;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.88);border-radius:50%;transition:transform .15s;box-shadow:0 1px 3px rgba(20,17,16,.12)}
@@ -244,7 +244,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* ── Card approaches (3 proposals, mapped per-collection for demo) ── */
 
 /* Badge wrapper */
-.card__badges{position:absolute;top:.5rem;left:.5rem;z-index:3;display:flex;flex-direction:column;gap:4px}
+/* align-items:flex-start is load-bearing: without it, flex's default
+   `stretch` forces every stacked badge to match the width of the widest one
+   (e.g. "Collector Set" stretching a "New" pill next to it). */
+.card__badges{position:absolute;top:.5rem;left:.5rem;z-index:3;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
 .card__badges .badge{position:static}
 
 /* ── Approach A: Bold — dark editorial, full-bleed, high contrast ── */
@@ -283,7 +286,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 
 /* ── Approach C: Soft — rounded, pillowed, gentle gradient + shadow ── */
 .card--soft{background:linear-gradient(180deg,#fff 0%,#FAF7FC 100%);border-radius:18px;overflow:visible;box-shadow:0 3px 18px rgba(120,100,160,.08)}
-.card--soft .card__img{border-radius:var(--radius-sm);margin:.5rem .5rem 0}
+/* Flush with the card's own top corners — no inset margin/border around the
+   photo. overflow:visible on .card--soft (for the shadow) means the image
+   needs its own matching top radius rather than relying on the card to clip it. */
+.card--soft .card__img{border-radius:18px 18px 0 0;margin:0}
 .card--soft .card__body{padding:.85rem 1rem 1.1rem;gap:3px}
 .card--soft .card__series{color:#8A6DAE;font-size:.62rem}
 .card--soft .card__title{font-size:1.05rem}
@@ -468,7 +474,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Photo variant — used only for a specific fandom collection (jjk/kny/genshin),
    set via JS in initPLP(). Real photography + a permanently-dark gradient, so
    text is hardcoded light, never a token (same rule as .ftile/.hs-content). */
-.plp-hero--img{position:relative;overflow:hidden;align-items:flex-end;justify-content:flex-start;text-align:left;padding:0;background-size:cover;background-position:center}
+/* Taller than the base .plp-hero (about.html/blog.html keep the shorter one)
+   — close to, but not quite, the home hero's 56vh. */
+.plp-hero--img{position:relative;overflow:hidden;align-items:flex-end;justify-content:flex-start;text-align:left;padding:0;background-size:cover;background-position:center;min-height:42vh;max-height:48vh}
 .plp-hero--img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(24,21,20,.88) 0%,rgba(24,21,20,.4) 55%,rgba(24,21,20,.05) 100%)}
 .plp-hero--img .plp-hero__inner{position:relative;z-index:1;padding-top:1.25rem;padding-bottom:1.5rem;padding-left:calc(var(--gutter) + .5rem)}
 .plp-hero--img .eyebrow{color:var(--accent);letter-spacing:.2em}
