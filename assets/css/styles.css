@@ -138,19 +138,24 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .mob-link{display:block;padding:.85rem 0;font-family:var(--display);font-size:1.35rem;font-weight:300;color:var(--dark);letter-spacing:-.01em;transition:opacity .15s}
 .mob-link:active{opacity:.5}
 .mob-link--sub{padding:.65rem 0;font-size:1.05rem;color:var(--muted)}
-.mob-hint{padding:.25rem 0 .85rem;font-size:.8rem;color:var(--muted);max-width:34ch}
 .mob-sub{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.25,.46,.45,.94)}
 .mob-sub.open{max-height:300px}
 .mob-label-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:.85rem 0;font-family:var(--body);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;background:0;border:0;cursor:pointer}
 .mob-arrow{width:8px;height:8px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transition:transform .3s cubic-bezier(.25,.46,.45,.94)}
 .mob-label-btn.open .mob-arrow{transform:rotate(-135deg);margin-top:-4px}
 .mob-nav .mob-foot{margin-top:auto;padding-top:1rem;border-top:1px solid var(--line)}
-.mob-foot-row{display:flex;align-items:center;justify-content:space-between;padding:.25rem 0}
-.mob-foot-icons{display:flex;gap:1.25rem;padding:.75rem 0 1rem}
-.mob-soc{font-size:.8rem;font-weight:600;letter-spacing:.06em;color:var(--muted);text-decoration:none}
+/* Wishlist + Dark Mode: matched pill buttons, icon + label, not a bare text
+   link and a bare icon circle anymore. */
+.mob-foot-actions{display:flex;gap:.6rem;padding:.25rem 0 .75rem}
+.mob-action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;border:1px solid var(--line);border-radius:var(--radius-pill);background:transparent;color:var(--dark);font-size:.8rem;font-weight:600}
+.mob-action-btn:active{background:var(--line)}
+.mob-foot-icons{display:flex;gap:1.25rem;padding:.25rem 0 1rem}
+/* Hardcoded icon color, not a token — the circle backdrop (--surface) never
+   inverts, so pairing it with var(--dark) would go light-on-light in dark
+   mode, same trap as the .heart icon documented above. */
+.mob-soc{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:var(--surface);color:#181514}
+.mob-soc svg{width:18px;height:18px}
 .mob-scrim{z-index:58!important}
-.mob-foot-row span{font-size:.875rem;color:var(--muted)}
-.theme-btn{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:transparent;border:1px solid var(--line);cursor:pointer;color:var(--muted);flex:none}
 .theme-btn .theme-sun{display:block}
 .theme-btn .theme-moon{display:none}
 .theme-btn.on .theme-sun{display:none}
@@ -346,20 +351,25 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .scroll-row{display:flex;flex-wrap:nowrap;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;scrollbar-width:none;scroll-padding-left:24px;scroll-padding-right:24px}
 .scroll-row::-webkit-scrollbar{display:none}
 .scroll-row>*{flex:none;scroll-snap-align:start;width:62vw}
+/* Best Sellers: smaller cards than the default scroll-row (e.g. PDP cross-sell) */
+.scroll-row--compact>*{width:42vw}
+.viewall-card{flex:none;scroll-snap-align:start;width:42vw;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;text-align:center;border:1.5px dashed var(--line);border-radius:var(--radius);color:var(--dark);font-family:var(--display);font-size:1rem;font-weight:300;transition:border-color .2s}
+.viewall-card:active{border-color:var(--accent)}
 
 /* ── Fandom tiles ── */
-.ftile-stack{display:flex;flex-direction:column;gap:1.25rem}
-.ftile{position:relative;border-radius:var(--radius);overflow:hidden;min-height:300px;display:flex;align-items:flex-end;background-color:var(--dark);background-size:cover;background-position:center;box-shadow:0 4px 24px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.25,.46,.45,.94)}
+.ftile-stack{display:flex;flex-direction:column;gap:1rem}
+/* Panoramic, not portrait — about half the old 300px height, full-width. */
+.ftile{position:relative;border-radius:var(--radius);overflow:hidden;min-height:150px;display:flex;align-items:flex-end;background-color:var(--dark);background-size:cover;background-position:center;box-shadow:0 4px 24px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.25,.46,.45,.94)}
 .ftile:active{transform:scale(.98)}
 .ftile::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(24,21,20,.95) 0%,rgba(24,21,20,.5) 55%,rgba(24,21,20,.05) 100%)}
-.ftile__body{position:relative;z-index:1;padding:1.75rem;width:100%}
+.ftile__body{position:relative;z-index:1;padding:1.1rem 1.25rem}
 /* Hardcoded, not tokens — the gradient overlay is permanently dark, but
    --light/--muted-d invert in dark mode and would go dark-on-dark. Same bug
    class as .card/.post-card, just caught here 2026-07-31. */
 .ftile__body .eyebrow{color:rgba(246,246,246,.55)}
-.ftile__body h3{color:#F6F6F6;margin-bottom:6px;font-size:1.5rem}
-.ftile__body p{font-size:.9rem;color:rgba(246,246,246,.7);margin-bottom:1.25rem;max-width:30ch}
-.ftile__cta{display:inline-flex;align-items:center;height:44px;padding:0 1.25rem;background:rgba(255,255,255,.14);color:#F6F6F6;font-size:.75rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:var(--radius-pill);border:1.5px solid rgba(255,255,255,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.ftile__body h3{color:#F6F6F6;margin-bottom:4px;font-size:1.3rem}
+.ftile__body p{font-size:.85rem;color:rgba(246,246,246,.7);margin-bottom:.75rem;max-width:30ch}
+.ftile__cta{display:inline-flex;align-items:center;height:38px;padding:0 1.1rem;background:rgba(255,255,255,.14);color:#F6F6F6;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:var(--radius-pill);border:1.5px solid rgba(255,255,255,.55);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 
 /* ── Trust ── */
 /* Boxed on --surface-soft, which stays fixed-light in dark mode — text needs
@@ -547,6 +557,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .v-row{display:flex;flex-wrap:wrap;gap:.5rem}
 .v-chip{min-height:44px;padding:0 1.5rem;border:1px solid var(--line);border-radius:var(--radius-pill);font-size:.875rem;color:var(--muted);background:transparent;transition:all .15s}
 .v-chip.selected{background:var(--dark);border-color:var(--dark);color:var(--light)}
+/* Sort chips: the one group in the Filters panel that should read as bigger
+   and more eye-catching than plain Material/Price/Availability pills — an
+   accent border by default, filled accent when selected. */
+.v-chip--sort{min-height:52px;padding:0 1.5rem;font-size:1rem;font-weight:600;border:1.5px solid var(--accent);color:var(--dark)}
+.v-chip--sort.selected{background:var(--accent);border-color:var(--accent);color:#fff}
 .atc-bar .btn--dark{border-radius:var(--radius-pill);min-height:56px;font-size:.85rem;letter-spacing:.04em;font-weight:600;width:100%}
 .atc-bar .btn--dark.done{background:var(--dark)}
 .atc-note{padding:1rem;background:transparent;font-size:.875rem}

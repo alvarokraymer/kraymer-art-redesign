@@ -19,7 +19,7 @@ const ANNOUNCE_HTML = `
   <span>10,000+ clients</span><span>&middot;</span>
   <span>Free delivery over $150</span><span>&middot;</span>
   <span>Lifetime warranty</span><span>&middot;</span>
-  <span>Handcrafted to order</span>
+  <span>Handcrafted to order</span><span>&middot;</span>
 </div></div>`;
 
 const HEADER_HTML = `
@@ -40,9 +40,15 @@ const HEADER_HTML = `
   </button>
   <div class="mob-links">
     <a class="mob-link" href="coleccion.html">All Collections</a>
-    <p class="mob-hint">Filter by fandom, sort by trending or newest — right on the collections page.</p>
+    <button class="mob-label-btn" data-mob-collapse>COLLECTIONS <span class="mob-arrow"></span></button>
+    <div class="mob-sub" data-mob-sub>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">JJK</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">KNY</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html">Best Sellers</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
+    </div>
     <a class="mob-link" href="#">Mystery Box</a>
-    <a class="mob-link" href="#" data-open-wishlist>Wishlist</a>
     <button class="mob-label-btn" data-mob-collapse>BRAND <span class="mob-arrow"></span></button>
     <div class="mob-sub" data-mob-sub>
       <a class="mob-link mob-link--sub" href="about.html">Our Story</a>
@@ -50,28 +56,25 @@ const HEADER_HTML = `
       <a class="mob-link mob-link--sub" href="blog.html">Journal</a>
       <a class="mob-link mob-link--sub" href="quiz.html">Find Your Domain</a>
       <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
-      <a class="mob-link mob-link--sub" href="about.html#faq">FAQ</a>
-    </div>
-    <button class="mob-label-btn" data-mob-collapse>VARIANTS <span class="mob-arrow"></span></button>
-    <div class="mob-sub" data-mob-sub>
-      <a class="mob-link mob-link--sub" href="variant1.html">Approach A &middot; Bold</a>
-      <a class="mob-link mob-link--sub" href="variant2.html">Approach B &middot; Clean</a>
-      <a class="mob-link mob-link--sub" href="variant3.html">Approach C &middot; Soft</a>
+      <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
     </div>
   </div>
   <div class="mob-foot">
-    <div class="mob-foot-row"><a href="#" data-open-wishlist>Wishlist</a></div>
-    <div class="mob-foot-icons">
-      <a href="https://instagram.com/kraymer.art" target="_blank" rel="noopener" aria-label="Instagram" class="mob-soc">IG</a>
-      <a href="https://youtube.com/@KraymerArt" target="_blank" rel="noopener" aria-label="YouTube" class="mob-soc">YT</a>
-      <a href="https://tiktok.com/@kraymer.art" target="_blank" rel="noopener" aria-label="TikTok" class="mob-soc">TK</a>
-    </div>
-    <div class="mob-foot-row">
-      <span>Dark mode</span>
-      <button class="theme-btn" data-theme-toggle>
-        <svg class="theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    <div class="mob-foot-actions">
+      <button class="mob-action-btn" data-open-wishlist>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18"><path d="M12 20.5C7 16.5 3 13.3 3 9.3 3 6.4 5.2 4.5 7.7 4.5c1.7 0 3.3.9 4.3 2.4 1-1.5 2.6-2.4 4.3-2.4 2.5 0 4.7 1.9 4.7 4.8 0 4-4 7.2-9 11.2z"/></svg>
+        Wishlist
       </button>
+      <button class="mob-action-btn theme-btn" data-theme-toggle>
+        <svg class="theme-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="theme-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="18" height="18"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <span class="theme-label">Dark Mode</span>
+      </button>
+    </div>
+    <div class="mob-foot-icons">
+      <a href="https://instagram.com/kraymer.art" target="_blank" rel="noopener" aria-label="Instagram" class="mob-soc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://youtube.com/@KraymerArt" target="_blank" rel="noopener" aria-label="YouTube" class="mob-soc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l6 3-6 3z" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://tiktok.com/@kraymer.art" target="_blank" rel="noopener" aria-label="TikTok" class="mob-soc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 3c.5 2.5 2 4 4.5 4.3"/></svg></a>
     </div>
   </div>
 </nav>
@@ -110,15 +113,6 @@ const FOOTER_HTML = `
         <a href="#">Mystery Box</a>
       </div>
       <div>
-        <h3>Customer Care</h3>
-        <a href="#" data-open-sizeguide>Ring Size Guide</a>
-        <a href="#">Shipping &amp; Handmade Timeline</a>
-        <a href="#">60-Day Returns</a>
-        <a href="#">Lifetime Warranty</a>
-        <a href="about.html#faq">FAQ</a>
-        <a href="mailto:support@kraymerart.com" class="mail">support@kraymerart.com</a>
-      </div>
-      <div>
         <h3>Brand</h3>
         <a href="about.html">Our Story</a>
         <a href="about.html#craft">The Craft</a>
@@ -126,10 +120,15 @@ const FOOTER_HTML = `
         <a href="quiz.html">Find Your Domain</a>
         <a href="index.html#reviews">Customer Reviews</a>
       </div>
-    </div>
-    <div class="ft-pay">
-      <span>VISA</span><span>MASTERCARD</span><span>AMEX</span>
-      <span>APPLE PAY</span><span>GOOGLE PAY</span><span>PAYPAL</span>
+      <div style="grid-column:1/-1">
+        <h3>Customer Care</h3>
+        <a href="#" data-open-sizeguide>Ring Size Guide</a>
+        <a href="#">Shipping &amp; Handmade Timeline</a>
+        <a href="#">60-Day Returns</a>
+        <a href="#">Lifetime Warranty</a>
+        <a href="index.html#faq">FAQ</a>
+        <a href="mailto:support@kraymerart.com" class="mail">support@kraymerart.com</a>
+      </div>
     </div>
     <div class="ft-news">
       <h2>Join 10,000+ collectors</h2>
@@ -138,6 +137,10 @@ const FOOTER_HTML = `
         <input type="email" placeholder="Your email" aria-label="Email" required>
         <button type="submit">Subscribe</button>
       </form>
+    </div>
+    <div class="ft-pay">
+      <span>VISA</span><span>MASTERCARD</span><span>AMEX</span>
+      <span>APPLE PAY</span><span>GOOGLE PAY</span><span>PAYPAL</span>
     </div>
     <div class="ft-copy">
       <p>&copy; 2026 Kraymer. All rights reserved.</p>

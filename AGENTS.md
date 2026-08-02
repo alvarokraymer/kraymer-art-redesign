@@ -202,13 +202,18 @@ day (`#F0F0EF`→`#F3F3F2`, `#F6F6F5`→`#F8F8F7`).
 
 `PROMO_HTML`/`openPromoModal()`/`showPromoFab()`/`hidePromoFab()` in `app.js`,
 markup in `partials.js` (`PROMO_FAB_HTML`, injected site-wide next to the cart
-drawer). State lives in `localStorage["ka_promo"]`: unset → the popup
-auto-opens once on `index.html` via an `IntersectionObserver` on
-`.hero-slider` (fires the moment its top edge scrolls above the viewport,
-then disconnects) → `"dismissed"` (closed without an email — shows
-`.promo-fab`, a bottom-left circular button that reopens the same modal) or
-`"subscribed"` (email submitted — FAB retired for good, popup never
-auto-opens again). The dismiss/subscribe branching lives in the shared
+drawer). State lives in the plain in-memory `promoState` variable in
+`app.js` (changed 2026-08-03 from `localStorage["ka_promo"]` — client wants
+the popup to greet every fresh page load/reload, not just the first time
+ever, so it must NOT survive a reload; don't reintroduce persistence here
+without being asked again): `null` → the popup auto-opens once per load on
+`index.html` via an `IntersectionObserver` on `.hero-slider` (fires the
+moment its top edge scrolls above the viewport, then disconnects) →
+`"dismissed"` (closed without an email — shows `.promo-fab`, a bottom-left
+circular button that reopens the same modal, for the rest of THIS load only)
+or `"subscribed"` (email submitted — FAB retired for the rest of this load,
+popup doesn't reopen again until the next reload). The dismiss/subscribe
+branching lives in the shared
 `[data-close-modal]` handler and a delegated `submit` listener for
 `[data-promo-form]`, not inside `openModal()` itself, since that function is
 shared with the size-guide and checkout-mock modals and must stay generic.
@@ -321,31 +326,35 @@ base value back up for everyone.
   `initVariant(approach)` in `app.js`): show the same fixed set of 8 products
   three times, once per card approach (Bold / Clean / Soft), for internal
   side-by-side comparison only. **These never go to production** — they're
-  marked `<meta name="robots" content="noindex,nofollow">`, carry an
-  "Internal Only" eyebrow in the hero copy, and are tucked under a "Variants"
-  dropdown in the nav (not the footer) precisely so they read as internal
-  tooling, not shippable pages. If Bold/Clean are ever fully retired, delete
-  these three files, the `forceApproach` option, and the CSS under "Card
-  approaches" together — don't let one survive without the others.
-- **PLP filters** (`coleccion.html`, built in `initPLP()`): **sort is inline,
-  the rest is off-canvas** — reversed 2026-08-02 on explicit client
-  instruction after the 2026-07-31 all-inline experiment was rejected; this
-  time the ask was narrower (make coleccion.html itself the primary
-  collection/sort interface instead of the navbar's JJK/KNY/Genshin
-  drill-down, and make Trending/Newest more prominent), not "put everything
-  inline" again. Concretely: `[data-sortbar]` renders Trending/Newest/Price
-  chips (reusing `.sub` styling) always visible, right under the subcategory
-  row — this is the one thing users reach for most, so it isn't a tap away.
-  Material/Price-range/Availability/Collection stay in the collapsed-by-
-  default off-canvas panel (`.fp`), now labeled just "Filters" since sort left
-  it, opened by the button docked in the sticky utility bar (`.ubar`,
-  `position:sticky` right under the header). Every chip in both places —
-  sort, subcategory, and the panel's Collection/Material/Price/Availability
-  groups — carries an inline SVG icon now (`sortIcons`/`filIcons` in
-  `initPLP()`); if you add a new filter value, give it an icon in the same
-  object, don't ship a bare label. The mobile nav's old COLLECTIONS submenu
-  (JJK/KNY/Genshin drill-down links in `partials.js`) was removed for the same
-  reason — that navigation now lives on `coleccion.html` itself.
+  marked `<meta name="robots" content="noindex,nofollow">` and carry an
+  "Internal Only" eyebrow in the hero copy. The nav's "Variants" dropdown
+  that used to link to them was removed 2026-08-03 ("no lo necesitamos por
+  ahora") — the three files themselves are untouched on disk, deliberately
+  kept as an unused backup rather than deleted, reachable only by typing the
+  URL directly. If you need to compare approaches again, restore the nav
+  entry rather than rebuilding the pages. If Bold/Clean are ever fully
+  retired instead, delete these three files, the `forceApproach` option, and
+  the CSS under "Card approaches" together — don't let one survive without
+  the others.
+- **PLP filters** (`coleccion.html`, built in `initPLP()`): a **collapsed-by-
+  default off-canvas panel** (`.fp`, labeled "Filters"), opened by the button
+  docked in the sticky utility bar (`.ubar`, `position:sticky` right under
+  the header) — Sort/Collection/Material/Price/Availability all live inside
+  it. This went inline-sort-bar → back to fully off-canvas across two
+  requests in the same week (2026-08-02 then 2026-08-03): the 2026-08-02
+  change put Trending/Newest/Price on their own always-visible row; the very
+  next request reverted that specifically ("como estaba antes"), so don't
+  re-extract sort into an inline bar again without being asked a third time.
+  What DID stick from the 2026-08-02 pass: every chip carries an icon
+  (`sortIcons`/`filIcons` in `initPLP()`) — if you add a new filter value,
+  give it an icon in the same object, don't ship a bare label — and the Sort
+  group is visually bigger/bolder than Material/Price/Availability
+  (`.v-chip--sort`: larger, accent-bordered, accent-filled when selected)
+  since sort is the filter users reach for most. The mobile nav's
+  COLLECTIONS submenu (JJK/KNY/Genshin drill-down) is back too — the
+  2026-08-02 removal ("that navigation now lives on the page instead") was
+  also reverted 2026-08-03 ("eso no había que cambiarlo"); don't remove it
+  again on the same reasoning, that call was made and un-made once already.
   `.v-chip` is a generic pill style (used here and in the PDP variant
   selectors) — keep it unscoped from `.pdp-config` (it was accidentally scoped
   there before, which meant filter chips silently had no pill styling at all —
@@ -442,9 +451,14 @@ base value back up for everyone.
   in the middle of the homepage scroll; a dedicated page reads more finished
   and gives the quiz room to breathe. Don't re-inline it without being asked.
 - **Footer: subscribe is the last content block, not the first** (reordered
-  2026-07-31): order is now `ft-founder` → `ft-cols` → `ft-pay` → `ft-news`
-  (newsletter) → `ft-copy`, so the email ask no longer competes with the
-  promo popup's own email ask right as a visitor lands in the footer. The old
+  2026-07-31, columns re-reordered 2026-08-03): order is now `ft-founder` →
+  `ft-cols` → `ft-news` (newsletter) → `ft-pay` → `ft-copy` — payment-card
+  logos sit after the newsletter CTA now, not before it. Within `ft-cols`,
+  Shop and Brand are the two top-row columns; Customer Care spans the full
+  width on its own row below (`style="grid-column:1/-1"` on that div) rather
+  than sitting in the 2-column grid alongside them. So the email ask no
+  longer competes with the promo popup's own email ask right as a visitor
+  lands in the footer. The old
   `ft-trust` row (Lifetime Warranty / 60-Day Returns / Certificate) was
   deleted outright, not just moved — it duplicated the top marquee (present on
   every page) and the Customer Care column right next to it; removing it was

@@ -408,8 +408,11 @@ function closeModal() {
 
 /* Promo popup: 10% off first order for an email. Dismissing without
    subscribing leaves a floating gift button (site-wide) that reopens it;
-   subscribing retires the button for good. State in localStorage "ka_promo":
-   unset -> never seen, "dismissed" -> closed without email, "subscribed" -> done. */
+   subscribing retires the button for good, for the rest of THIS page load.
+   State lives in the plain in-memory `promoState` variable, not
+   localStorage — client wants the popup to greet every fresh visit/reload,
+   not just the first time ever, so nothing here should survive a reload. */
+let promoState = null; // null -> not yet seen, "dismissed", "subscribed"
 const PROMO_HTML = `
   <span class="eyebrow" style="color:var(--accent)">Welcome</span>
   <h3>Get 10% Off Your First Piece</h3>
@@ -532,11 +535,16 @@ function initCardActions() {
 
 /* ---- HOME (hero slider + hamburger) ---- */
 function initHome() {
-  /* Bestsellers: 4 featured products, no swipe */
-  const best = PRODUCTS.filter((p) => p.featured && !p.soldOut);
+  /* Bestsellers: a fixed curated set of 8, capped and ordered on purpose
+     (not just "every featured product") — mirrors the hardcoded handle-list
+     pattern already used by initVariant(). Ends with a "View All" card
+     linking to the full collections page. */
+  const bestHandles = ["giyu-ring", "gojo-x-geto", "giyu-pin", "shenhe-necklace", "zhongli-necklace", "higuruma-necklace", "collector-club-box", "venti-bracelet"];
+  const best = bestHandles.map((h) => kaProduct(h)).filter(Boolean);
   const strip = document.querySelector("[data-bestsellers]");
   if (strip) {
-    strip.innerHTML = best.map((p) => productCard(p, { approach: false })).join("");
+    const viewAllCard = `<a class="viewall-card" href="coleccion.html"><span>View All<br>&rarr;</span></a>`;
+    strip.innerHTML = best.map((p) => productCard(p, { approach: false })).join("") + viewAllCard;
     strip.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important";
     strip.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
 
@@ -545,12 +553,13 @@ function initHome() {
   /* Journal preview: first 3 posts */
   renderPosts("[data-posts-home]", BLOG_POSTS.slice(0, 3));
 
-  /* Promo popup: auto-open once, right after the visitor scrolls past the
-     hero slider — never if they've already dismissed or subscribed. */
+  /* Promo popup: auto-open once per page load, right after the visitor
+     scrolls past the hero slider — not if they've already dismissed or
+     subscribed during THIS load (see promoState above). */
   const heroSection = document.querySelector(".hero-slider");
-  if (heroSection && !localStorage.getItem("ka_promo")) {
+  if (heroSection && !promoState) {
     const promoObserver = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting && entry.boundingClientRect.top < 0 && !localStorage.getItem("ka_promo")) {
+      if (!entry.isIntersecting && entry.boundingClientRect.top < 0 && !promoState) {
         openPromoModal();
         promoObserver.disconnect();
       }
@@ -717,8 +726,8 @@ function initPLP() {
   if (!colParam) {
     const tiles = document.createElement("div");
     tiles.className = "w";
-    tiles.style.padding = "1.5rem 0 0";
-    tiles.innerHTML = `<div class="scroll-row" style="display:flex;gap:.75rem;padding:.5rem var(--gutter) 0">
+    tiles.style.padding = ".75rem 0 0";
+    tiles.innerHTML = `<div class="scroll-row" style="display:flex;gap:1rem;padding:0 var(--gutter)">
       <a class="ftile" href="coleccion.html?collection=jjk" style="background-image:url(assets/banner4.png);background-size:cover;background-position:center;min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">JJK</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Precision and presence</p></div></a>
       <a class="ftile" href="coleccion.html?collection=kny" style="background-image:url(assets/banner2.png);background-size:cover;background-position:center;min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">KNY</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Forged in flame</p></div></a>
       <a class="ftile" href="coleccion.html?collection=genshin" style="background-image:url(assets/banner3.png);background-size:cover;background-position:center;min-width:55vw;min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Genshin</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Elemental weight</p></div></a>
@@ -746,31 +755,15 @@ function initPLP() {
     }).join("");
   subHost.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important";
 
-  /* Sort chips — inline and iconed, not tucked away in the filter panel.
-     This is the primary "which pieces float to the top" control, so it lives
-     right on the page, not one tap deep. */
-  const sortHost = document.querySelector("[data-sortbar]");
+  /* Sort icons — chips live inside the Filters panel (see filterPanel below),
+     not inline on the page. */
   const sortIcons = {
-    trending: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 7l-8.5 8.5-5-5L1 18"/><path d="M16 7h6v6"/></svg>`,
-    newest: `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
-    "price-asc": `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>`,
-    "price-desc": `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>`,
+    trending: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-right:6px;vertical-align:-3px"><path d="M22 7l-8.5 8.5-5-5L1 18"/><path d="M16 7h6v6"/></svg>`,
+    newest: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-right:6px;vertical-align:-3px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`,
+    "price-asc": `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-right:6px;vertical-align:-3px"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>`,
+    "price-desc": `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-right:6px;vertical-align:-3px"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>`,
   };
   const sortLabels = { trending: "Trending", newest: "Newest", "price-asc": "Price: Low", "price-desc": "Price: High" };
-  if (sortHost) {
-    sortHost.innerHTML = Object.keys(sortLabels).map((v) =>
-      `<button class="sub ${activeSort===v?"active":""}" data-sort="${v}">${sortIcons[v]}<b>${sortLabels[v]}</b></button>`
-    ).join("");
-    sortHost.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important";
-    sortHost.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-sort]");
-      if (!btn) return;
-      activeSort = btn.dataset.sort;
-      sortHost.querySelectorAll(".sub").forEach((s) => s.classList.toggle("active", s === btn));
-      updateFilterUI();
-      apply();
-    });
-  }
 
   const grid = document.querySelector("[data-plp-grid]");
   const countEl = document.querySelector("[data-plp-count]");
@@ -849,6 +842,12 @@ function initPLP() {
   filterPanel.innerHTML = `
     <div class="fp__top"><span class="fp__title">Filters</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
     <div class="fp__body">
+      <div class="v-group">
+        <p class="v-label">Sort by</p>
+        <div class="v-row" data-fil-group="sort">
+          ${Object.keys(sortLabels).map((v) => `<button class="v-chip v-chip--sort${activeSort===v?" selected":""}" data-fil-val="${v}">${sortIcons[v]}${sortLabels[v]}</button>`).join("")}
+        </div>
+      </div>
       ${!colParam ? `
       <div class="v-group">
         <p class="v-label">Collection</p>
@@ -894,7 +893,7 @@ function initPLP() {
     filterPanel.querySelectorAll(".v-chip").forEach((c) => {
       const grp = c.closest("[data-fil-group]").dataset.filGroup, val = c.dataset.filVal;
       c.classList.toggle("selected",
-        (grp==="col"&&filterCol===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
+        (grp==="col"&&filterCol===val)||(grp==="sort"&&activeSort===val)||(grp==="mat"&&filterMat===val)||(grp==="price"&&filterPrice===val)||(grp==="avail"&&filterAvail===val));
     });
     const n = (filterMat?1:0)+(filterPrice?1:0)+(filterAvail?1:0);
     fpCount.textContent = n; fpCount.classList.toggle("show", n > 0);
@@ -905,6 +904,7 @@ function initPLP() {
     if (chip) {
       const grp = chip.closest("[data-fil-group]").dataset.filGroup, val = chip.dataset.filVal;
       if (grp === "col") filterCol = filterCol === val ? null : val;
+      else if (grp === "sort") { activeSort = val; updateFilterUI(); apply(); return; }
       if (grp==="mat") filterMat = filterMat===val?null:val;
       else if (grp==="price") filterPrice = filterPrice===val?null:val;
       else if (grp==="avail") filterAvail = filterAvail===val?null:val;
@@ -1328,8 +1328,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.closest("[data-close-cart]") || e.target.closest("[data-scrim]")) closeCart();
     if (e.target.closest("[data-close-search]")) { closeSearch(); document.querySelector("[data-search-results]").innerHTML = ""; return; }
     if (e.target.closest("[data-close-modal]")) {
-      if (document.querySelector('[data-modal="promo"]') && localStorage.getItem("ka_promo") !== "subscribed") {
-        localStorage.setItem("ka_promo", "dismissed");
+      if (document.querySelector('[data-modal="promo"]') && promoState !== "subscribed") {
+        promoState = "dismissed";
         showPromoFab();
       }
       closeModal();
@@ -1369,7 +1369,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("submit", (e) => {
     if (!e.target.matches("[data-promo-form]")) return;
     e.preventDefault();
-    localStorage.setItem("ka_promo", "subscribed");
+    promoState = "subscribed";
     hidePromoFab();
     e.target.closest(".modal__box").innerHTML = `
       <span class="eyebrow" style="color:var(--accent)">You are in</span>
@@ -1377,7 +1377,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <p class="small muted">Check your inbox for the code. (Mockup only, no email was sent.)</p>
       <button class="btn btn--dark btn--full" data-close-modal style="margin-top:1rem">Continue Shopping</button>`;
   });
-  if (localStorage.getItem("ka_promo") === "dismissed") showPromoFab();
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") { closeCart(); closeSearch(); closeModal(); }
