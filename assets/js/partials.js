@@ -27,7 +27,19 @@ const HEADER_HTML = `
   <div class="hdr-bar">
     <button class="hamburger" data-open-menu aria-label="Menu"><span></span><span></span><span></span></button>
     <a class="hdr-logo" href="index.html"><img src="assets/SVG/kraymer-logo.svg" alt="Kraymer" height="14"></a>
+    <nav class="dsk-nav" data-dsk-nav aria-label="Main">
+      <a href="coleccion.html">Collections</a>
+      <a href="coleccion.html?collection=jjk">JJK</a>
+      <a href="coleccion.html?collection=kny">KNY</a>
+      <a href="coleccion.html?collection=genshin">Genshin</a>
+      <a href="coleccion.html?type=sets">Sets</a>
+      <a href="about.html">Our Story</a>
+      <a href="blog.html">Journal</a>
+      <a href="quiz.html">Quiz</a>
+    </nav>
     <div class="hdr-actions">
+      <button class="ico dsk-only" data-open-search aria-label="Search">${ICONS.search}</button>
+      <button class="ico dsk-only" data-open-wishlist aria-label="Wishlist">${ICONS.heart}</button>
       <a class="ico" href="#" aria-label="Account" title="Not in mockup">${ICONS.account}</a>
       <button class="ico" data-open-cart aria-label="Cart">${ICONS.bag}<span class="n" data-cart-count hidden>0</span></button>
     </div>

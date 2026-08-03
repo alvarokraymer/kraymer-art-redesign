@@ -120,6 +120,17 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .hdr-logo{display:flex;align-items:center}
 .hdr-logo img{display:block;filter:invert(1)}
 .hdr-actions{margin-left:auto;display:flex;align-items:center;gap:2px}
+/* Desktop-only header nav + extra icons (search/wishlist) — added 2026-08-08
+   for the desktop pass. Hidden here so mobile stays byte-for-byte identical;
+   shown only in the min-width:1180px block below, alongside the hamburger
+   being hidden there (the off-canvas .mob-nav becomes unreachable at that
+   width on purpose, replaced by this inline nav).
+   .ico.dsk-only, not .dsk-only alone: .ico below also sets display:flex at
+   equal specificity, and it comes later in the cascade — a bare .dsk-only
+   rule here loses to it, which is exactly the bug this compound selector
+   avoids (caught in testing: the icons were showing on mobile). */
+.dsk-nav{display:none}
+.ico.dsk-only{display:none}
 .ico{position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm)}
 .ico:active{background:var(--line)}
 .ico svg{width:20px;height:20px;stroke:var(--dark);fill:none;stroke-width:1.5}
@@ -383,10 +394,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* scroll-row */
 .scroll-row{display:flex;flex-wrap:nowrap;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;scrollbar-width:none;scroll-padding-left:24px;scroll-padding-right:24px}
 .scroll-row::-webkit-scrollbar{display:none}
-.scroll-row>*{flex:none;scroll-snap-align:start;width:62vw}
+/* min()-capped, not a bare vw: at 375-414px these always resolve to the vw
+   value (well under the px ceiling), so mobile is byte-for-byte unaffected —
+   but uncapped 62vw/42vw on a wide desktop viewport would render ~1190px/
+   ~800px cards. Ceiling added in the 2026-08-08 desktop pass. */
+.scroll-row>*{flex:none;scroll-snap-align:start;width:min(62vw,300px)}
 /* Best Sellers: smaller cards than the default scroll-row (e.g. PDP cross-sell) */
-.scroll-row--compact>*{width:42vw}
-.viewall-card{flex:none;scroll-snap-align:start;width:42vw;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;text-align:center;border:1.5px dashed var(--line);border-radius:var(--radius);color:var(--dark);font-family:var(--display);font-size:1rem;font-weight:300;transition:border-color .2s}
+.scroll-row--compact>*{width:min(42vw,200px)}
+.viewall-card{flex:none;scroll-snap-align:start;width:min(42vw,200px);aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;text-align:center;border:1.5px dashed var(--line);border-radius:var(--radius);color:var(--dark);font-family:var(--display);font-size:1rem;font-weight:300;transition:border-color .2s}
 .viewall-card:active{border-color:var(--accent)}
 
 /* ── Fandom tiles ── */
@@ -856,5 +871,22 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 }
 @media(min-width:1024px){
   .pgrid{grid-template-columns:repeat(4,1fr)}
+}
+
+/* ── Wider desktop pass (2026-08-08) ──
+   Client brief: 99% of traffic is mobile — mobile stays untouched, above is
+   still the real design. This is only a *functional* desktop adaptation, not
+   a redesign: widen the content column and swap the off-canvas mobile menu
+   for a plain inline nav once there's room for one. 1180px (not 1024, which
+   is already spoken for by the .pgrid 4-col bump above) so tablet-landscape
+   still gets the off-canvas nav — cramming 8 links in below ~1180px risks
+   overflow against the header icons. */
+@media(min-width:1180px){
+  .w{max-width:1400px}
+  .hamburger{display:none}
+  .dsk-nav{display:flex;align-items:center;gap:1.35rem;margin-left:2rem}
+  .dsk-nav a{font-size:.8rem;font-weight:600;color:var(--dark);letter-spacing:.02em;white-space:nowrap}
+  .dsk-nav a:hover{color:var(--accent)}
+  .ico.dsk-only{display:flex}
 }
 @media(prefers-reduced-motion){*,*::before,*::after{animation:none!important;transition:none!important}}

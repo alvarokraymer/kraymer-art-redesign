@@ -616,10 +616,59 @@ per-page override as a "bug fix."
   `.ft-founder__avatar`. Don't remove the avatar slot thinking it's an empty
   bug.
 
+- **Functional (not redesigned) desktop pass, ≥1180px** (2026-08-08, client
+  explicit brief: "no tocar nada en móvil, pero que el 1% de escritorio al
+  menos pueda navegar" — this is a usability floor, not a visual redesign).
+  Everything below 1180px, including the existing 768px/1024px tablet
+  breakpoints, is completely untouched.
+  - `.w` grows to `max-width:1400px` (from 1080px) only in this block — more
+    breathing room once the viewport actually has it.
+  - The off-canvas `.mob-nav` (hamburger + slide-in drawer) is fully
+    functional at any width already — it's just an unconventional look on a
+    desktop screen. `.hamburger` is hidden ≥1180px and replaced by `.dsk-nav`,
+    a plain inline link row injected into `.hdr-bar` in `HEADER_HTML`
+    (`partials.js`) right after the logo: Collections/JJK/KNY/Genshin/Sets/
+    Our Story/Journal/Quiz. `.mob-nav` itself is untouched in markup and CSS —
+    it simply becomes unreachable at this width since its only trigger is
+    hidden, not deleted.
+  - `.dsk-only` (new utility class, `display:none` until 1180px) marks two
+    new header icons — search and wishlist — added to `.hdr-actions` so
+    desktop has some way to reach them now that the off-canvas menu (which
+    carries the mobile-only "Search" row and the wishlist/theme footer
+    buttons) is hidden. Both reuse the existing delegated
+    `[data-open-search]`/`[data-open-wishlist]` handlers in `app.js`
+    unchanged — no new JS. Dark mode toggle was deliberately **not** given a
+    desktop icon: `initHeader()`'s theme-sync code does
+    `document.querySelector("[data-theme-toggle]")` (singular), so a second
+    instance in the header would silently desync its sun/moon icon from the
+    mobile nav's — not worth it for a toggle that's reachable one click away
+    from parity in scope.
+  - 1180px, not the existing 1024px breakpoint, on purpose: 1024px is already
+    spoken for by the `.pgrid` 4-column bump, and cramming 8 nav links plus 4
+    header icons into a ~1024px-1180px viewport risked overflow/wrap. Tablet
+    landscape (1024-1180px) keeps the off-canvas nav; only genuinely wide
+    viewports get the inline one.
+  - Three vw-based widths that had no pixel ceiling — `.scroll-row>*` (62vw),
+    `.scroll-row--compact>*`/`.viewall-card` (42vw) — were switched to
+    `min(Xvw, Ypx)`. At 375-414px this resolves to the exact same vw value as
+    before (mobile is unaffected, not just "close enough"); uncapped on a
+    1920px desktop viewport they rendered ~1190px/~800px cards. Same fix
+    applied to two JS-generated inline styles: the "All Collections" promo
+    tiles in `initPLP()` (`min-width:55vw` → `min-width:min(55vw,320px)`) and
+    the Immersive PDP (`approach=4`) gallery thumbnail strip
+    (`width:25vw` → `width:min(25vw,110px)`). Every other vw-based width in
+    the codebase already carried its own `max-width` (`.ugc-card`,
+    `.collectible-card`, `.rev-scroll>.rv`, `.rvc`) and didn't need this.
+  - Not touched, deliberately: `.pdp-narrative__img`'s `100vw` full-bleed
+    breakout (that's the point of a bleed image, capping it would defeat it),
+    and every fixed-overlay component (`.fp` filter panel, `.drawer` cart,
+    `.search` overlay, `.modal`) — all already `min(92vw, <px>)` or otherwise
+    pre-capped, so they were already desktop-safe.
+
 ## Hard rules (from the brief, do not regress)
 
 1. **Mobile-first, non-negotiable.** Base styles target 375–414px. Desktop only
-   via `min-width` media queries (currently 3, all at 768px/1024px — resist
+   via `min-width` media queries (currently 4, at 768px/1024px/1180px — resist
    adding `max-width` queries, they're the mobile-first tell). 98.8% of real
    traffic is mobile. Verify every change at 375px width *and* with dark mode
    toggled on, not just the default state.
