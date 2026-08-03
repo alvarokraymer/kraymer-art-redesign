@@ -112,17 +112,19 @@ const FOOTER_HTML = `
 <footer class="ft">
   <div class="w">
     <div class="ft-founder">
-      <img class="ft-founder__avatar" src="assets/kraymerProfile.jpg" alt="Kraymer" style="object-fit:cover">
-      <div class="ft-founder__text">
-        <div><div class="ft-founder__name">Kraymer</div><div class="ft-founder__role">Founder</div></div>
-        <p class="ft-founder__bio">I spent years teaching art and shipping pieces to collectors before opening this store. Every piece here is still something I would wear on my own hand.</p>
-        <a class="ft-founder__cta" href="about.html">Our Story &rarr;</a>
+      <div class="ft-founder__row">
+        <img class="ft-founder__avatar" src="assets/kraymerProfile.jpg" alt="Kraymer" style="object-fit:cover">
+        <div class="ft-founder__text">
+          <div><div class="ft-founder__name">Kraymer</div><div class="ft-founder__role">Founder</div></div>
+          <a class="ft-founder__cta" href="about.html">Our Story &rarr;</a>
+        </div>
+        <div class="ft-social">
+          <a href="https://instagram.com/kraymer.art" target="_blank" rel="noopener" aria-label="Instagram, 50k followers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span><span class="ft-soc__count">50k</span></a>
+          <a href="https://youtube.com/@KraymerArt" target="_blank" rel="noopener" aria-label="YouTube, 85k subscribers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l6 3-6 3z" fill="currentColor" stroke="none"/></svg></span><span class="ft-soc__count">85k</span></a>
+          <a href="https://tiktok.com/@kraymer.art" target="_blank" rel="noopener" aria-label="TikTok, 10k followers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 3c.5 2.5 2 4 4.5 4.3"/></svg></span><span class="ft-soc__count">10k</span></a>
+        </div>
       </div>
-      <div class="ft-social">
-        <a href="https://instagram.com/kraymer.art" target="_blank" rel="noopener" aria-label="Instagram, 50k followers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span><span class="ft-soc__count">50k</span></a>
-        <a href="https://youtube.com/@KraymerArt" target="_blank" rel="noopener" aria-label="YouTube, 85k subscribers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l6 3-6 3z" fill="currentColor" stroke="none"/></svg></span><span class="ft-soc__count">85k</span></a>
-        <a href="https://tiktok.com/@kraymer.art" target="_blank" rel="noopener" aria-label="TikTok, 10k followers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 3c.5 2.5 2 4 4.5 4.3"/></svg></span><span class="ft-soc__count">10k</span></a>
-      </div>
+      <p class="ft-founder__bio">I spent years teaching art and shipping pieces to collectors before opening this store. Every piece here is still something I would wear on my own hand.</p>
     </div>
     <div class="ft-cols">
       <div>

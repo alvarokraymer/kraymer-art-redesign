@@ -528,15 +528,18 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    background is just a loading-state fallback. Social icons use lucide,
    sized up and on a translucent dark chip so they read as a deliberate row,
    not afterthought text links. */
-/* align-items:flex-start, not stretch (changed 2026-08-08 round 7 when a
-   bio paragraph was added to .ft-founder__text): stretch was there so
-   justify-content:space-between on the text column could pin "Our Story"
-   to the avatar's bottom edge — worked when the text column's only real
-   content was a one-line name/role. With a bio paragraph in between now,
-   the text column is taller than the 56px avatar on its own merits, so
-   everything just top-aligns like a normal footer row instead of the
-   avatar/social icons stretching to chase a taller text column. */
-.ft-founder{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem 0 1rem;border-bottom:1px solid rgba(246,246,246,.1)}
+/* Round 10 (2026-08-08): client wanted the bio line moved below the
+   avatar/name/social row instead of squeezed into the narrow text column
+   between them, and given the full column width instead of a ~42ch clamp
+   ("que ocupe toda la columna para que no quede tan estrecho"). .ft-founder
+   is now a plain vertical stack (.ft-founder__row, then .ft-founder__bio);
+   .ft-founder__row carries the flex-row layout .ft-founder itself used to
+   have. align-items:flex-start on that row (not stretch) for the same
+   reason as before round 7's bio addition — the text column (now just
+   name/role + CTA, a short, fixed-height block again) shouldn't force the
+   avatar/social icons to stretch to match anything taller. */
+.ft-founder{padding:1.25rem 0 1rem;border-bottom:1px solid rgba(246,246,246,.1)}
+.ft-founder__row{display:flex;align-items:flex-start;gap:1rem}
 .ft-founder__avatar{width:56px;height:56px;border-radius:50%;background:#4A4645;flex:none}
 .ft-founder__text{display:flex;flex-direction:column;gap:.5rem}
 /* Hardcoded literals, not tokens — .ft's background is forced to stay dark in
@@ -548,8 +551,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Bio line (2026-08-08 round 7, client: "un par de frases con su
    historia"): condenses the same two facts about.html's own founder
    section already states (years teaching art before opening the store,
-   personally approving every design) rather than inventing new backstory. */
-.ft-founder__bio{font-size:.8rem;color:rgba(246,246,246,.6);line-height:1.5;max-width:42ch}
+   personally approving every design) rather than inventing new backstory.
+   No max-width now (round 10) — spans the full .ft-founder column. */
+.ft-founder__bio{margin-top:1rem;font-size:.8rem;color:rgba(246,246,246,.6);line-height:1.5}
 .ft-founder__cta{display:inline-block;font-size:.7rem;font-weight:600;color:var(--accent)}
 .ft-social{display:flex;gap:1.1rem;margin-left:auto}
 .ft-social a{display:flex;flex-direction:column;align-items:center;gap:5px;color:#F6F6F6}

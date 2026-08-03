@@ -1152,6 +1152,26 @@ per-page override as a "bug fix."
     generic "dark mode needs work" pass without one risks re-fixing things
     that already work.
 
+- **Round 10 (2026-08-08): footer bio moved below the avatar/social row.**
+  Round 7 put the bio paragraph in the narrow `.ft-founder__text` column
+  squeezed between the avatar and the social icons; client wanted it below
+  that whole row instead, spanning the full column ("que ocupe toda la
+  columna para que no quede tan estrecho"). `.ft-founder` is no longer
+  itself the flex row — its former flex properties moved to a new
+  `.ft-founder__row` wrapper (avatar + name/role+CTA + social icons), and
+  `.ft-founder__bio` is now a sibling `<p>` after that row, full width, no
+  `max-width` clamp. Applies to mobile and desktop both (same as round 7's
+  bio addition — this is a follow-up refinement of it, not a new mobile
+  exception). **Testing gotcha, not a real bug:** verifying this in-browser
+  initially showed the OLD flex layout still rendering even after fetching
+  fresh CSS — caused by repeated `fetch+inject <style>` cache-busting calls
+  across the session accumulating multiple `<style>` tags in `<head>` (the
+  refresh snippet only ever removed the original `<link>`, never previous
+  injected `<style>` tags), and the leftover stale one was for some reason
+  winning the cascade. Clearing every `<style>`/`<link[href*=styles.css]>`
+  before injecting one fresh copy resolved it. Not a codebase bug — purely
+  an artifact of how this session was hot-reloading CSS for verification.
+
 ## Hard rules (from the brief, do not regress)
 
 1. **Mobile-first, non-negotiable.** Base styles target 375–414px. Desktop only
