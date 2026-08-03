@@ -997,4 +997,54 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .dsk-nav a:hover{color:var(--accent)}
   .ico.dsk-only{display:flex}
 }
+
+/* ── Desktop scale pass (2026-08-08, round 4) ──
+   Client, on a 27" 16:9 monitor: things "se ven rascas" — thin, mobile-sized
+   chrome floating in a much bigger canvas. Everything up to here fixed
+   alignment and blowups; this pass is proportion/scale. Every font-size,
+   padding and gap in this file is already rem-based (confirmed by grep —
+   zero hardcoded px font-sizes anywhere in styles.css or app.js), so a
+   single root font-size bump scales headings, body copy, buttons, chips,
+   badges and spacing together, proportionally, instead of hand-tuning
+   dozens of individual rules — the "mucho criterio" version of this fix is
+   one lever, not fifty overrides. Scoped to the same ≥1180px tier as the
+   rest of the "real desktop" chrome (nav, 1400px .w) — tablet (768-1179px)
+   is untouched, mobile obviously untouched. */
+@media(min-width:1180px){
+  html{font-size:18px}
+  /* Header chrome specifically does NOT scale from the root bump above:
+     --header-h is a hardcoded px token (not rem, since it's also used in
+     mobile-only contexts like .mob-nav's padding calc), the logo's height
+     comes from an HTML attribute (height="14" in partials.js, not CSS), and
+     .ico's box/svg are px. Left alone, a 52px bar with a 14px logo and 20px
+     icons would still look like a thin mobile sliver even after body copy
+     around it grew. Bumped together, with .ubar's sticky offset following
+     --header-h (it was hardcoded to 52px, not var(--header-h), so it goes
+     stale silently if header-h changes without this — that gap is exactly
+     the kind of thing worth grepping for before editing --header-h again). */
+  :root{--header-h:68px}
+  .hdr-logo img{height:18px}
+  .ico{width:46px;height:46px}
+  .ico svg{width:22px;height:22px}
+  .ubar{top:68px}
+  /* Section rhythm: 2.25rem/1.5rem (.sec/.sec--sm) was deliberately
+     tightened for mobile scroll fatigue (see the 2026-08-02/08-05 notes
+     earlier in this file) — that reasoning doesn't hold on a wide desktop
+     screen, where the same gap reads as sections bunched on top of each
+     other rather than a considered layout. Only affects sections using the
+     bare class: a handful (Best Sellers, Shop by Collection, FAQ's bottom)
+     carry an inline style="padding:..." override from the mobile pass, which
+     inline styles always win over this rule regardless — left as-is rather
+     than refactored into classes just for this, since they're the sections
+     the client tightened most recently and on purpose. */
+  .sec{padding:3.5rem 0}
+  .sec--sm{padding:2.25rem 0}
+  /* Shop-by-Collection tiles: min-height:150px is a deliberate "panoramic,
+     not portrait" mobile call (see the .ftile note earlier in this file),
+     but at a ~450px-wide desktop column (1400px ÷ 3) that same 150px reads
+     as a squat 2.4:1 sliver rather than a considered card. Bumped to a
+     closer-to-2:1 desktop proportion; mobile's full-width single column
+     keeps the original ratio since this only applies ≥1180px. */
+  .ftile{min-height:230px}
+}
 @media(prefers-reduced-motion){*,*::before,*::after{animation:none!important;transition:none!important}}

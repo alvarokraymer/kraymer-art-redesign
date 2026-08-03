@@ -774,6 +774,61 @@ per-page override as a "bug fix."
   - All of the above only activates once `.dsk-nav` itself is visible
     (≥1180px for the nav-dependent grid change; the alignment fixes use the
     768px/1180px pair like `.w`) — nothing here touches mobile.
+  - **Follow-up same day:** the dropdown above shipped broken — client
+    report: "el drop-down no funciona." `.dsk-drop` has no explicit height,
+    so its `:hover` box is exactly as tall as the trigger link (~20px); the
+    panel's `margin-top:.6rem` put 9.6px of dead space below that box, off
+    `.dsk-drop` entirely. Moving the cursor from the link down toward
+    JJK/KNY/etc crossed that dead space and lost `:hover` before ever
+    reaching them, closing the panel mid-motion. Fixed by moving the gap
+    inside the panel as `padding-top` instead of `margin-top` on the panel
+    itself, so the panel's own box touches the trigger with zero dead
+    pixels. Verified with an actual simulated hover-then-move-then-click
+    through the gap into JJK, confirmed it navigates.
+
+- **Desktop pass, round 4: proportion/scale on a 27" 16:9 monitor**
+  (2026-08-08, same day, client: "cosas que siguen viéndose rascas... con
+  mucho criterio"). Rounds 1-3 fixed alignment, blowups and nav structure;
+  at a real 2560px width the remaining problem was proportion — mobile-sized
+  chrome (52px header, 14px logo, 20px icons, 12.8px nav text) and
+  never-bumped section headings floating in a much bigger canvas.
+  - **One lever, not fifty:** every font-size/padding/gap in `styles.css`
+    and `app.js` is rem-based (verified by grepping for hardcoded px
+    font-sizes — zero results in either file), so `html{font-size:18px}` at
+    ≥1180px scales headings, body copy, buttons, chips, badges and rem-based
+    spacing together, proportionally, in one rule instead of hand-tuning
+    dozens of individual ones. Confirmed in testing: `h2` (2026-08-06
+    default, never explicitly bumped before) went 28px→31.5px, `.pdp-title`/
+    `.pdp-price` 28px→31.5px, `.card__title` ~17.6px→18.9px, all without
+    touching a single one of those rules directly.
+  - **What does NOT scale from that lever, and had to be bumped separately:**
+    anything already in hardcoded px rather than rem, since px is absolute.
+    `--header-h` (52px→68px — it's px, not rem, because it's also read by
+    `.mob-nav`'s padding calc on mobile and needed to stay a stable physical
+    value there), the logo's height (an HTML `height="14"` attribute in
+    `partials.js`, not CSS at all — overridden via `.hdr-logo img{height:
+    18px}`), and `.ico`'s box/svg (42px/20px → 46px/22px). `.ubar{top:52px}`
+    was hardcoded rather than `var(--header-h)` — bumped to `68px` alongside
+    it in the same rule; this is exactly the kind of silent staleness that
+    happens when a sticky-offset doesn't reference the token it depends on,
+    worth grepping for again if `--header-h` changes a third time.
+  - **Section rhythm, desktop-only:** `.sec`/`.sec--sm` (2.25rem/1.5rem) were
+    tightened repeatedly for mobile scroll fatigue — see the 2026-08-02/
+    08-05 notes earlier in this file — but that reasoning is mobile-specific
+    and reads as cramped on a wide desktop screen. Bumped to 3.5rem/2.25rem
+    ONLY ≥1180px. Only affects sections using the bare class: Best Sellers,
+    Shop by Collection and the FAQ's bottom carry an inline
+    `style="padding:..."` from the mobile-tightening pass, and inline styles
+    always beat this rule — left as-is rather than refactored into classes
+    only for this, since those are the sections the client tightened most
+    recently and on purpose (inline styles can't be responsive at all, so
+    this is a real ceiling on how far a "make desktop breathe more" pass can
+    go without touching markup).
+  - **`.ftile` proportion:** `min-height:150px` is a deliberate mobile
+    "panoramic, not portrait" call (see the note earlier in this file), but
+    at a ~450px-wide desktop column (1400px ÷ 3) that reads as a squat
+    2.4:1 sliver. Bumped to `230px` (≥1180px only) for a ~1.85:1 desktop
+    proportion; mobile's single full-width column is unaffected.
 
 ## Hard rules (from the brief, do not regress)
 
