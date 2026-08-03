@@ -58,6 +58,12 @@
   --radius-pill: 999px;
   --gutter:      1.5rem;
   --header-h:    52px;
+  /* Horizontal-scroll rows keep a flat 24px right inset on desktop (matches
+     the pre-existing JS-forced padding, not --gutter's 40px there) but bleed
+     to 0 on mobile so the last card can reach the true screen edge instead
+     of stopping at a second gutter — see the mobile-scroll-bleed rules
+     below and the round-11 note on .post-scroll/.ugc-scroll/etc. */
+  --scrollbleed-pr: 0px;
 
   --surface:      #F3F3F2;  /* neutral card/section fill — keep this gray, not cream */
   --surface-soft: #F8F8F7;
@@ -425,6 +431,19 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* scroll-row */
 .scroll-row{display:flex;flex-wrap:nowrap;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:1rem;scrollbar-width:none;scroll-padding-left:24px;scroll-padding-right:24px}
 .scroll-row::-webkit-scrollbar{display:none}
+/* Mobile scroll bleed (round 11, client: horizontal scrolls should "empezar
+   ... con el margen ... pero al scrollear llegar hasta los margenes de la
+   pantalla") — these rows sit inside a .w-padded ancestor, so their own box
+   is narrower than the viewport on both sides already. Pulling the right
+   edge out by --gutter with a negative margin lets the last card scroll
+   flush to the true screen edge instead of stopping at a second gutter,
+   while the left edge (unchanged) keeps lining up with the page margin.
+   Reset to 0 at desktop — that tier already gets its own boxing from the
+   .scrollx-wrap JS wraps in app.js, untouched by this. Rows that are already
+   fullwidth themselves (bestsellers/.sub-scroll) get the equivalent fix via
+   --scrollbleed-pr on their own padding-right instead, see :root above. */
+.post-scroll,.rev-scroll,.ugc-scroll,.collectible-scroll,.gal-strip,
+[data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-right:calc(-1 * var(--gutter))}
 /* min()-capped, not a bare vw: at 375-414px these always resolve to the vw
    value (well under the px ceiling), so mobile is byte-for-byte unaffected —
    but uncapped 62vw/42vw on a wide desktop viewport would render ~1190px/
@@ -976,7 +995,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 
 /* ── Desktop ── */
 @media(min-width:768px){
-  :root{--gutter:2.5rem}
+  :root{--gutter:2.5rem;--scrollbleed-pr:24px}
+  /* Undo the mobile scroll-bleed trick above — desktop keeps its existing
+     symmetric boxing via the .scrollx-wrap JS wraps, untouched by round 11. */
+  .post-scroll,.rev-scroll,.ugc-scroll,.collectible-scroll,.gal-strip,
+  [data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-right:0}
   /* Height bumped slightly (640->680px), not dramatically — client:
      "no quiero cambiar mucho la altura, igual un poco más" — mostly to
      give the background-position fixes below a little more room to work
