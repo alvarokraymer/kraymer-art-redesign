@@ -1083,7 +1083,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
      edge-to-edge while everything else was capped. Mirrors .w's own two
      breakpoints exactly (1080px from 768px, 1400px from 1180px below) so
      every edge lines up at every width, not just past 1180px. */
-  .hero-slider{max-width:1080px;margin:0 auto}
+  .hero-slider{max-width:1080px;margin:1.5rem auto 0;border-radius:var(--radius)}
   .plp-hero{max-width:1080px;margin:0 auto}
   .sub-scroll{max-width:1080px;margin:0 auto}
   .hdr-bar{max-width:1080px;margin:0 auto}
