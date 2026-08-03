@@ -1049,6 +1049,32 @@ per-page override as a "bug fix."
     uses (`shield`/`rotate-ccw`/`clock`, `stroke:var(--accent)`) rather than
     inventing a new icon convention for one section.
 
+- **Round 8 (2026-08-08): hero image off-center on desktop.** Client:
+  "aparece la imagen descentrada... no quiero cambiar mucho la altura,
+  igual un poco más." `.hs-slide{background-position:center}` centers the
+  *frame*, not the subject — checked by reading the actual source images
+  (`genshin_hero.png`/`jj_hero.png` are 1254×1254, `giyuRing_hero_AI.png` is
+  1080×800) and doing the crop-window math rather than guessing.
+  `genshin_hero.png`'s pendant sits in the upper ~26-60% of the square with
+  mostly empty background below; center-cropped into the ~2:1 wide desktop
+  box, the crop window lands almost exactly at the pendant's top edge and
+  shows a lot of empty space below it — reads as pushed-to-the-top, which
+  is the reported bug. Fixed **per-slide**, not a blanket value, since the
+  3 hero photos have different compositions: new `.hs-slide--genshin`/
+  `.hs-slide--kny`/`.hs-slide--jjk` classes on the slide divs in
+  `index.html` (previously unclassed beyond the shared `.hs-slide`), with
+  `background-position:center 35%`/`center 42%` (genshin/jjk) at ≥768px
+  only — `jj_hero.png`'s jewelry spread is close to symmetric top-to-bottom
+  already so it only needed a mild nudge, and `giyuRing_hero_AI.png` crops
+  a comparable amount off both ends under plain center already, so it's
+  left at the default. `.hero-slider`'s desktop `max-height` also bumped
+  640px→680px — a small assist for the position fixes' margin, not the fix
+  itself, per the explicit "no quiero cambiar mucho" ask. Mobile is
+  untouched: the per-slide classes carry no rule outside the ≥768px block,
+  so mobile keeps the plain centered crop it already had (confirmed — a
+  taller/narrower mobile crop doesn't have this problem in the first
+  place).
+
 ## Hard rules (from the brief, do not regress)
 
 1. **Mobile-first, non-negotiable.** Base styles target 375–414px. Desktop only

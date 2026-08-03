@@ -943,9 +943,32 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* ── Desktop ── */
 @media(min-width:768px){
   :root{--gutter:2.5rem}
-  .hero-slider{height:64vh;max-height:640px}
+  /* Height bumped slightly (640->680px), not dramatically — client:
+     "no quiero cambiar mucho la altura, igual un poco más" — mostly to
+     give the background-position fixes below a little more room to work
+     with, not as the fix itself. */
+  .hero-slider{height:64vh;max-height:680px}
   .hs-content h2{font-size:4rem}
   .hs-content p{font-size:1.35rem}
+  /* Hero images off-center on desktop (2026-08-08, client: "aparece la
+     imagen descentrada"). Root cause: .hs-slide{background-position:center}
+     centers the *frame*, not the subject — genshin_hero.png (1254x1254) has
+     its pendant sitting in the upper ~26-60% of the square, with mostly
+     empty background below it. Center-cropped into a ~2:1 wide box, the
+     crop window (roughly the middle 46% of the scaled image) lands at
+     27-73%, i.e. it starts almost exactly at the pendant's top edge and
+     then shows a lot of empty space below — the pendant reads as pushed to
+     the top with a visible gap under it, exactly the "descentrada"
+     complaint. Fixed per-slide (each of the 3 hero photos has a different
+     composition) via background-position, not a blanket value, and only
+     ≥768px — the mobile crop is much taller/narrower and doesn't have this
+     problem (confirmed by viewing each source image directly and doing the
+     crop-window math, not guessing). jj_hero.png's jewelry spread is close
+     to symmetric top-to-bottom already, so it only needed a mild nudge;
+     giyuRing_hero_AI.png's rings already crop off comparable amounts at
+     both ends under plain center, so it's left at the default. */
+  .hs-slide--genshin{background-position:center 35%}
+  .hs-slide--jjk{background-position:center 42%}
   /* Round 5 (2026-08-08): client felt the Best Sellers -> Trust -> founder
      teaser stretch of the home page read inconsistently — a narrow quiz
      card, then a full-width "stripe" with tiny text, then a narrow founder
