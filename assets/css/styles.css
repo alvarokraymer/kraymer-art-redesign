@@ -559,7 +559,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .fbtn__n{display:none;width:18px;height:18px;border-radius:50%;background:var(--accent);color:#fff;font-size:.55rem;font-weight:700;line-height:18px;text-align:center}
 .fbtn__n.show{display:inline-block}
 .plp-grid{padding:1.5rem 0}
-.plp-grid .pgrid,.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem;align-items:start}
+/* Was ".plp-grid .pgrid,.pgrid{...}" — a leftover duplicate of the base
+   .pgrid rule above, but the two-class ".plp-grid .pgrid" half gave it
+   higher specificity (0,2,0) than the column-count bumps in the responsive
+   block below (plain ".pgrid", 0,1,0). Specificity beats source order, so
+   the PLP grid was silently pinned to 2 columns at every width, on tablet
+   too, not just desktop — caught during the 2026-08-08 desktop review. The
+   properties were identical to .pgrid's, so this was pure dead weight once
+   the higher-specificity half is dropped. */
 .load-more{text-align:center;padding:0}
 .load-more__bar{height:1px;background:var(--line);margin-top:.75rem}
 
@@ -734,7 +741,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 }
 
 /* ── Post cards (journal / blog) ── */
-.post-scroll{display:grid;grid-auto-flow:column;grid-auto-columns:75%;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.5rem;scrollbar-width:none}
+/* min()-capped, same reasoning as .scroll-row above: 75% at 375-414px is
+   always well under the 320px ceiling (mobile unaffected), but uncapped on a
+   1400px+ desktop .w this rendered ~1050px-wide post cards — the tallest of
+   the "giant image" reports from the 2026-08-08 desktop review. */
+.post-scroll{display:grid;grid-auto-flow:column;grid-auto-columns:min(75%,320px);gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.5rem;scrollbar-width:none}
 .post-scroll::-webkit-scrollbar{display:none}
 .post-scroll>*{scroll-snap-align:start}
 .post-grid{display:grid;grid-template-columns:1fr;gap:1.75rem}
@@ -866,6 +877,44 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .pdp-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
   .pdp-meta{padding-top:0}
   .quiz-wrap{max-width:600px;margin:0 auto}
+  /* .rev-list (Classic/Editorial/Immersive's plain vertical review list —
+     .rev-scroll's own cards already cap at max-width:340px and don't need
+     this) had no width limit of its own: at a 1300px+ PDP column, review
+     paragraphs were stretching past 1200px per line, unreadable. Same
+     narrow-column treatment as .founder/.quiz-wrap above. */
+  .rev-list{max-width:640px;margin:0 auto}
+  /* Sticky ATC bar: uncapped, it stretched the thumbnail/title to the left
+     edge and the Add to Cart button to the right edge of the viewport, with
+     a canyon of empty space between them at desktop widths. */
+  .sticky-atc{max-width:640px;margin-left:auto;margin-right:auto}
+  /* Search overlay: input/results used to run the full viewport width.
+     width:100% is load-bearing, not decorative: both are flex items in
+     .search's column flex layout, and a flex item with an auto cross-axis
+     margin doesn't get the default stretch behavior — without an explicit
+     width the browser sized these to fit-content (~310px) and centered
+     *that*, ignoring the 640px cap entirely (caught in testing). */
+  .search__bar{width:100%;max-width:640px;margin:0 auto}
+  .search__body{width:100%;max-width:640px;margin:0 auto}
+  /* Footer newsletter input was stretching to match the full (now 1400px)
+     .ft-cols column — capped so it reads as a normal email field again. */
+  .ft-news form{max-width:420px}
+  /* "The story behind the piece" full-bleed image (storyHTML, PDP Classic):
+     width is a deliberate 100vw breakout (kept, that's the point of a bleed
+     image) but its aspect-ratio:4/3 against a 1400px+ .w produced a
+     1000px+-tall image. Height is now explicit instead of ratio-derived —
+     an explicit height always wins over aspect-ratio when both width and
+     height are already definite, no !important needed since this is a
+     plain class rule, not fighting an inline style. */
+  .pdp-narrative__img{height:420px}
+  /* Approach 4 "Immersive" hero gallery: its aspect-ratio:3/4 is set via an
+     inline style in app.js (approach==="4" branch), so overriding it here
+     needs !important — a class-only rule loses to inline style otherwise.
+     Uncapped, a 1400px-wide portrait-ratio image rendered ~1866px tall.
+     Scoped to .pdp--immersive: [data-gallery-main] alone would also hit the
+     plain .gal element approaches 1/2/3 use (mainGal() sets the same data
+     attribute there), which is already correctly sized via its own
+     aspect-ratio:1 and must not be touched. */
+  .pdp--immersive [data-gallery-main]{aspect-ratio:auto!important;height:560px!important}
   .modal{align-items:center}
   .modal__box{max-width:520px;border-radius:var(--radius)}
 }

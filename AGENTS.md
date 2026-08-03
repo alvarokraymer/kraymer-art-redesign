@@ -661,9 +661,69 @@ per-page override as a "bug fix."
     `.collectible-card`, `.rev-scroll>.rv`, `.rvc`) and didn't need this.
   - Not touched, deliberately: `.pdp-narrative__img`'s `100vw` full-bleed
     breakout (that's the point of a bleed image, capping it would defeat it),
-    and every fixed-overlay component (`.fp` filter panel, `.drawer` cart,
-    `.search` overlay, `.modal`) — all already `min(92vw, <px>)` or otherwise
-    pre-capped, so they were already desktop-safe.
+    and the `.fp` filter panel / `.drawer` cart — both already `min(92vw,
+    <px>)`, so already desktop-safe. **Correction:** an earlier version of
+    this note also claimed `.search` overlay was already pre-capped — it
+    wasn't, see the follow-up pass immediately below. Verify the actual
+    rendered width before trusting a claim like this, this file included.
+
+- **Desktop pass follow-up: things the first pass missed** (2026-08-08, same
+  day, client feedback after seeing it live: "hay imagenes gigantes, cosas
+  sin sentido" — review everything full-width). The first pass above fixed
+  the header/nav and the vw-based rail widths but didn't audit every
+  full-bleed and fixed-position element; this pass did, using actual
+  `getBoundingClientRect()` measurements at 1440px rather than eyeballing.
+  - **Real bug, not desktop-only:** `.plp-grid .pgrid,.pgrid{...}` (the PLP
+    grid rule) was a leftover duplicate of the base `.pgrid` rule, but the
+    `.plp-grid .pgrid` half of that selector list has specificity (0,2,0) —
+    higher than the plain `.pgrid` used by the 768px/1024px column-count
+    bumps (0,1,0). Specificity beats source order, so the PLP grid had been
+    silently pinned to 2 columns at *every* width, including the existing
+    tablet breakpoints, for as long as that duplicate existed. Fixed by
+    dropping the over-specific half; the properties were byte-identical to
+    the base rule, so nothing else changed. This one predates the desktop
+    pass entirely — it just took a real 1024px+ measurement to surface it.
+  - **Giant images**, all from the same root cause (a percentage/vw width or
+    an aspect-ratio multiplying up against the now-1400px `.w`, with no
+    pixel ceiling): the home "Wear and Care" journal rail
+    (`.post-scroll{grid-auto-columns:75%}` → `min(75%,320px)`, same
+    mobile-safe `min()` pattern as the first pass's `.scroll-row` fix); the
+    PDP Classic "story behind the piece" bleed image
+    (`.pdp-narrative__img`, was 1080px tall at 1440px viewport — kept the
+    deliberate 100vw breakout, gave it an explicit `height:420px` instead of
+    letting `aspect-ratio:4/3` drive it); and the Immersive (`approach=4`)
+    hero gallery (`[data-gallery-main]`, was ~1866px tall — its
+    `aspect-ratio:3/4` is set via inline style in `app.js`, so the override
+    needs `!important` *and* must be scoped to `.pdp--immersive
+    [data-gallery-main]`, not the bare attribute selector, since `mainGal()`
+    puts the same `data-gallery-main` attribute on the plain `.gal` element
+    approaches 1/2/3 use — which was already correctly sized and must not be
+    touched).
+  - **Full-width things with no reason to be:** the PDP `.rev-list` (the
+    plain vertical review list approaches 1/2/4 share — `.rev-scroll`'s own
+    cards already cap at 340px and were unaffected) had review paragraphs
+    stretching past 1200px per line; capped `.rev-list{max-width:640px;
+    margin:0 auto}`. `.sticky-atc` stretched the thumbnail to the left edge
+    and the button to the right edge of the viewport with a canyon of empty
+    space between — same `max-width:640px` centering fix. The footer
+    newsletter `<input>` was matching the full (now 1400px) `.ft-cols`
+    column width — `.ft-news form{max-width:420px}` (left-aligned, not
+    centered, to match the rest of that column).
+  - **Search overlay, and a real flexbox gotcha:** `.search__bar`/
+    `.search__body` needed the same `max-width:640px;margin:0 auto`
+    centering — but adding just that produced a ~310px box, not 640px. Both
+    are flex items in `.search`'s column flex layout, and a flex item with
+    an `auto` cross-axis margin does **not** get the default stretch
+    behavior — without an explicit `width`, the browser sized the box to
+    fit-content first and then centered *that* narrow box, silently
+    ignoring the `max-width` cap. Fixed by adding `width:100%` alongside the
+    existing `max-width`/`margin:0 auto` (now `min(100%, 640px)`, correctly
+    centered). Worth remembering for any *other* flex-item-plus-auto-margin
+    centering attempt in this file.
+  - Every fix above lives in the existing `@media(min-width:768px)` "Desktop"
+    block (not the newer 1180px one from the first pass) since none of them
+    are nav-real-estate-dependent — they're plain "don't let this blow up"
+    fixes that are equally correct starting at tablet width.
 
 ## Hard rules (from the brief, do not regress)
 
