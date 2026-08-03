@@ -454,7 +454,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Boxed on --surface-soft, which stays fixed-light in dark mode — text needs
    the same hardcoded-literal treatment as .card (see dark-mode notes above),
    not the inverting --dark token. */
-.trust{text-align:center;padding-top:1.25rem;padding-bottom:1.25rem;background:var(--surface-soft);box-shadow:0 1px 3px rgba(24,21,20,.05);margin:.75rem auto}
+.founder-trust{background:var(--surface)}
+[data-theme="dark"] .founder-trust{background:#2D2929}
+.founder-trust__top{display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap;padding:2rem 0}
+.founder-trust__bottom{text-align:center;background:var(--surface-soft);border-radius:var(--radius) var(--radius) 0 0;padding:1.25rem 0 1.5rem}
 .trust__row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
 .trust__icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(196,168,130,.14);margin:0 auto .6rem}
 .trust__item b{display:block;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#181514}
@@ -1007,7 +1010,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
      .rev-list is capped below) matches it to the same ~narrow-card family
      as .quiz-wrap/.founder, and the text inside is bumped since it read as
      too small for a box that size. */
-  .trust.w{max-width:900px;margin:1rem auto}
   .trust__item b{font-size:.8rem}
   .trust__item span{font-size:.72rem}
   .trust__proof{font-size:1rem}
@@ -1020,7 +1022,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
      Selector is `.founder > a.btn--ghost`, not a bare class, because
      about.html's own (much bigger) .founder section has no direct-child
      anchor at all — this only ever matches the home-page teaser. */
-  .founder > a.btn--ghost{flex-basis:100%;margin-top:.5rem}
+  .founder-trust__top > a.btn--ghost{flex-basis:100%;margin-top:.5rem}
   /* Promo gift FAB: was sized for a mobile thumb-reach target; bumped for
      desktop where it reads as small next to everything else's new scale. */
   .promo-fab{width:76px;height:76px}
