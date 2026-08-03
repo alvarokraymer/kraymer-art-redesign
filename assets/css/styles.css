@@ -523,6 +523,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .ft-cols h3{font-family:var(--body);font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(246,246,246,.5);margin-bottom:.75rem}
 .ft-cols a{display:block;padding:3px 0;font-size:.875rem;color:rgba(246,246,246,.6)}
 .ft-cols a.mail{color:var(--accent)}
+.ft-care{grid-column:1/-1}
 /* Founder photo + social row — sits above the shop/care/brand columns.
    Avatar is a real <img src="assets/kraymerProfile.jpg"> (2026-08-03); the
    background is just a loading-state fallback. Social icons use lucide,
@@ -1091,7 +1092,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .post-grid{grid-template-columns:repeat(3,1fr)}
   .craft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
   .founder{max-width:600px;margin-left:auto;margin-right:auto}
-  .ft-cols{grid-template-columns:2fr 1fr 1fr 1fr}
+  .ft-cols{grid-template-columns:1fr 1fr 1fr}
+  .ft-care{grid-column:auto}
   /* align-items:start, not the grid default (stretch): without it, the
      image column silently stretches to match the (usually taller) meta
      column's height — invisible since neither column has its own

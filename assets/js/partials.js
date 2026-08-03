@@ -141,7 +141,7 @@ const FOOTER_HTML = `
         <a href="quiz.html">Find Your Domain</a>
         <a href="index.html#reviews">Customer Reviews</a>
       </div>
-      <div style="grid-column:1/-1">
+      <div class="ft-care">
         <h3>Customer Care</h3>
         <a href="#" data-open-sizeguide>Ring Size Guide</a>
         <a href="#">Shipping &amp; Handmade Timeline</a>
