@@ -62,6 +62,7 @@ const BLOG_POSTS = [
   { slug:"choosing-your-metal", category:"Guides", title:"Choosing Your Metal: Silver or Gold Plate", excerpt:"Both are solid, hypoallergenic and built to last. The difference is tone against your skin, not durability.", image:"assets/productPhotos/anyaXyor_PP/anaXyor_variation.webp" },
   { slug:"inside-the-workshop", category:"Behind the Scenes", title:"Inside the Workshop: How a Piece Gets Made", excerpt:"From wax sculpture to hand-set stone. A look at the bench work behind every numbered batch.", image:"assets/productPhotos/giyuPin_PP/giyuPin_detail1.webp" },
   { slug:"gift-guide", category:"Gifting", title:"A Gift Guide for the Fan Who Has Everything", excerpt:"Pieces that read as fine jewelry first. The reference is there for anyone who already knows.", image:"assets/productPhotos/anyaXyor_PP/anyaXyor_model2.webp" },
+  { slug:"reading-a-batch-number", category:"Behind the Scenes", title:"Reading Your Batch Number", excerpt:"Every piece is stamped with a batch and a number. Here's what those digits actually track, and why we keep it.", image:"assets/productPhotos/giyuPin_PP/giyuPin_detail2.webp" },
 ];
 
 function kaProduct(handle) {

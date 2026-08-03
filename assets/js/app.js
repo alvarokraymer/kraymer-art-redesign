@@ -489,6 +489,120 @@ function initCardTitleMarquee() {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
+/* Top announcement ticker (2026-08-08 round 5 fix): the static markup on
+   every page is two identical halves of 4 items, sized for a 375-414px
+   screen — comfortably wider than any phone, so the translateX(-50%) loop
+   is seamless there. On a wide desktop viewport the same content is
+   narrower than the screen itself: the track runs out mid-viewport
+   (visible blank marquee background) and then hard-cuts back to the start
+   instead of flowing continuously — client: "el texto se corta y pega
+   cambio." Fixed at runtime rather than in the static HTML/CSS: this keeps
+   working at literally any width (a fixed CSS breakpoint would just move
+   the same bug to whatever monitor is wider than that breakpoint's
+   assumption) without duplicating the announcement markup across every
+   page a third time. If the current single half already covers the
+   viewport (true on mobile — this is why mobile is unaffected), nothing is
+   touched at all. */
+function initMarquee() {
+  document.querySelectorAll(".marquee__track").forEach((track) => {
+    const kids = Array.from(track.children);
+    const half = kids.length / 2;
+    if (!half || !Number.isInteger(half)) return;
+    const firstHalf = kids.slice(0, half);
+    const unitWidth = firstHalf[half - 1].getBoundingClientRect().right - firstHalf[0].getBoundingClientRect().left;
+    if (!unitWidth || unitWidth <= 0) return;
+    const repeats = Math.ceil((window.innerWidth * 1.2) / unitWidth);
+    if (repeats <= 1) return;
+    const unitHTML = firstHalf.map((el) => el.outerHTML).join("");
+    const halfHTML = unitHTML.repeat(repeats);
+    track.innerHTML = halfHTML + halfHTML;
+    /* Original CSS duration (28s) implies unitWidth/28 px/s. Each half is
+       now `repeats` units wide, so duration = repeats * 28s keeps that same
+       px/s speed instead of the text suddenly whizzing by faster on a
+       wider screen just because there's more of it to cover in the same
+       28s. */
+    track.style.animationDuration = (28 * repeats) + "s";
+  });
+}
+
+/* Horizontal scroll rows had no way to be scrolled with a mouse alone on
+   desktop (scrollbar-width:none hides the native bar, there's no touch
+   gesture without a touchscreen) — client: "no puedo hacerlos, habria que
+   poner un drag, unas flechas o algo." Adds prev/next arrow buttons, hidden
+   below 768px (see .scrollx-arrow in styles.css). Wired via the same
+   MutationObserver-on-body + dataset-flag pattern as
+   initCardTitleMarquee() above, for the same reason: these rows get their
+   content filled from many different call sites (home bestsellers, PDP's
+   3 cross-sell rails, reviews, PLP), not one central place. */
+function initScrollArrows() {
+  const arrowSvg = (dir) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="${dir === "l" ? "M15 18l-6-6 6-6" : "M9 18l6-6-6-6"}"/></svg>`;
+  function attach(host, row) {
+    const prevBtn = document.createElement("button");
+    prevBtn.type = "button";
+    prevBtn.className = "scrollx-arrow scrollx-arrow--prev";
+    prevBtn.setAttribute("aria-label", "Scroll left");
+    prevBtn.innerHTML = arrowSvg("l");
+    const nextBtn = document.createElement("button");
+    nextBtn.type = "button";
+    nextBtn.className = "scrollx-arrow scrollx-arrow--next";
+    nextBtn.setAttribute("aria-label", "Scroll right");
+    nextBtn.innerHTML = arrowSvg("r");
+    host.appendChild(prevBtn);
+    host.appendChild(nextBtn);
+    prevBtn.addEventListener("click", () => row.scrollBy({ left: -row.clientWidth * 0.8, behavior: "smooth" }));
+    nextBtn.addEventListener("click", () => row.scrollBy({ left: row.clientWidth * 0.8, behavior: "smooth" }));
+    const update = () => {
+      const max = row.scrollWidth - row.clientWidth;
+      prevBtn.classList.toggle("is-hidden", row.scrollLeft <= 4);
+      nextBtn.classList.toggle("is-hidden", max <= 4 || row.scrollLeft >= max - 4);
+    };
+    row.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    /* Stashed on the row, not just closed over — see below: every row this
+       function has already wired needs its arrows re-checked on every later
+       mutation too, not just its own scroll/resize events. */
+    row._scrollxUpdate = update;
+    update();
+  }
+  /* Rows with no alignment of their own yet — get wrapped in .scrollx-wrap
+     (see styles.css), which both hosts the arrows and fixes these rows
+     running edge-to-edge past the boxed .w column at desktop widths
+     (client, round 5: cards going "hasta los márgenes"). */
+  document.querySelectorAll(".scroll-row, .rev-scroll, .post-scroll, .ugc-scroll, .collectible-scroll, .sub-scroll").forEach((row) => {
+    if (row.dataset.arrowsInit) {
+      /* Already wired — but the row this function first saw may have been
+         empty (the mount div exists before its cards get rendered in, e.g.
+         home bestsellers/PDP cross-sell are filled by a *later* mutation
+         than the one that first revealed the empty <div data-bestsellers>).
+         update() computed off a 0-width row hides both arrows correctly for
+         that instant, but nothing re-ran it once real cards arrived — caught
+         in testing: the next arrow stayed hidden despite real overflow.
+         Re-running update() on every mutation this observer sees (cheap:
+         a scrollWidth/clientWidth read and two classList.toggle calls)
+         keeps it honest regardless of when content actually lands. */
+      if (row._scrollxUpdate) row._scrollxUpdate();
+      return;
+    }
+    row.dataset.arrowsInit = "1";
+    if (row.classList.contains("sub-scroll")) {
+      /* .sub-scroll already has its own .w-matching alignment (see the
+         earlier round-3 fix in styles.css) — no extra wrap needed. */
+      attach(row, row);
+    } else {
+      const wrap = document.createElement("div");
+      wrap.className = "scrollx-wrap";
+      row.parentNode.insertBefore(wrap, row);
+      wrap.appendChild(row);
+      attach(wrap, row);
+    }
+  });
+}
+function initScrollArrowsWatch() {
+  initScrollArrows();
+  const observer = new MutationObserver(() => initScrollArrows());
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
 /* ---------------- 8. Page initializers ---------------- */
 
 /* Shared quick-add + wish + notify + image swipe (PLP only) */
@@ -576,7 +690,7 @@ function initHome() {
   }
 
   /* Journal preview: first 3 posts */
-  renderPosts("[data-posts-home]", BLOG_POSTS.slice(0, 3));
+  renderPosts("[data-posts-home]", BLOG_POSTS.slice(0, 4));
 
   /* Promo popup: auto-open once per page load, right after the visitor
      scrolls past the hero slider — not if they've already dismissed or
@@ -1046,10 +1160,19 @@ function initPDP() {
      reviewsHTML/home, not newly invented people. Video cards are a taller
      9:16 placeholder with a static play glyph — never autoplaying, nothing
      to un-mute since there's no real media wired up yet. */
+  /* 9 items, not 6 (2026-08-08 round 5): at the new wider desktop rail
+     width, 6 cards left visible dead space trailing off the row before the
+     new scroll arrows even had anything to scroll to. Chloe M. is the one
+     name from the shared reviewer pool not already used here; the rest
+     reuse existing names for a second post (a real customer posting both a
+     photo and a video separately is a normal UGC pattern, not a new
+     fabricated identity). */
   const ugcItems = [
     { name: "Priya N.", video: false }, { name: "Daniel K.", video: true },
     { name: "Sam T.", video: false }, { name: "Maria L.", video: true },
     { name: "Jordan P.", video: false }, { name: "Alex R.", video: false },
+    { name: "Chloe M.", video: false }, { name: "Priya N.", video: true },
+    { name: "Sam T.", video: true },
   ];
   const ugcHTML = `
     <section class="sec sec--sm" aria-label="Customer photos and videos">
@@ -1110,6 +1233,14 @@ function initPDP() {
         <div class="collectible-card">
           <div class="collectible-card__img"></div>
           <div class="collectible-card__body"><h3>Solid, Not Plated</h3><p>925 sterling silver and 18K gold, the same standard as fine jewelry, not the base metal most costume pieces are built on.</p></div>
+        </div>
+        <div class="collectible-card">
+          <div class="collectible-card__img"></div>
+          <div class="collectible-card__body"><h3>Free Lifetime Resizing</h3><p>Rings ship true to size, and if it ever needs adjusting, resizing is free for as long as you own the piece.</p></div>
+        </div>
+        <div class="collectible-card">
+          <div class="collectible-card__img"></div>
+          <div class="collectible-card__body"><h3>Your Batch, Numbered</h3><p>Every piece is stamped with its batch number by hand, the same one printed on your certificate.</p></div>
         </div>
       </div>
     </section>`;
@@ -1300,8 +1431,11 @@ function initPDP() {
   host.innerHTML = html;
   if (cssClass) host.classList.add(cssClass);
 
-  /* Cross-sell */
-  const cross = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && (x.character===p.character || x.collection===p.collection)).slice(0,4);
+  /* Cross-sell. Slice bumped 4->5 (2026-08-08 round 5): client wants these
+     rails to fill a full desktop row (5 cards at the new wider
+     .scroll-row--compact desktop size fit ~1400px without scrolling) rather
+     than leaving a visibly short row. */
+  const cross = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && (x.character===p.character || x.collection===p.collection)).slice(0,5);
   const crossEl = host.querySelector("[data-crosssell]");
   if (crossEl) {
     crossEl.innerHTML = cross.map((cp) => productCard(cp, { approach: false })).join("");
@@ -1310,13 +1444,13 @@ function initPDP() {
   /* Classic-only split rails */
   const sameEl = host.querySelector("[data-crosssell-same]");
   if (sameEl) {
-    const sameCollection = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && x.collection===p.collection).slice(0,4);
+    const sameCollection = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && x.collection===p.collection).slice(0,5);
     sameEl.innerHTML = sameCollection.map((cp) => productCard(cp, { approach: false })).join("");
     sameEl.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
   }
   const otherEl = host.querySelector("[data-crosssell-other]");
   if (otherEl) {
-    const otherPicks = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && x.collection!==p.collection).slice(0,4);
+    const otherPicks = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && x.collection!==p.collection).slice(0,5);
     otherEl.innerHTML = otherPicks.map((cp) => productCard(cp, { approach: false })).join("");
     otherEl.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
   }
@@ -1432,14 +1566,21 @@ function initPDP() {
     });
   }
 
-  /* Sticky ATC bar */
+  /* Sticky ATC bar. .sticky-atc__inner carries "w" (2026-08-08 round 5):
+     the bar itself stays a true full-width fixed strip (client explicitly
+     asked for full width on desktop, reversing the earlier max-width:640px
+     cap), but its content lines up with the rest of the page instead of
+     stretching thumb-far-left/button-far-right with a canyon between them
+     — the same .w-alignment trick already used for the header/hero. */
   if (atcBtn) {
     const bar = document.createElement("div");
     bar.className = "sticky-atc";
     bar.innerHTML = `
-      <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}</div>
-      <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
-      <button class="btn btn--dark" ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":"Add to Cart"}</button>`;
+      <div class="sticky-atc__inner w">
+        <div class="sticky-atc__thumb">${ph(p.title, { type: p.type, gemColor, img: phImg(p) })}</div>
+        <div class="sticky-atc__meta"><b>${p.title}</b><span>${kaMoney(p.price)}</span></div>
+        <button class="btn btn--dark" ${p.soldOut?"disabled":""}>${p.soldOut?"Sold Out":"Add to Cart"}</button>
+      </div>`;
     document.body.appendChild(bar);
     bar.querySelector("button").addEventListener("click", () => {
       Cart.add(p.handle, selectedMetal, selectedSize);
@@ -1461,14 +1602,15 @@ document.addEventListener("DOMContentLoaded", () => {
   /* Restore theme */
   if (localStorage.getItem("ka_theme") === "dark") {
     document.documentElement.setAttribute("data-theme","dark");
-    const btn = document.querySelector("[data-theme-toggle]");
-    if (btn) btn.classList.add("on");
+    document.querySelectorAll("[data-theme-toggle]").forEach((btn) => btn.classList.add("on"));
   }
   updateBadges();
   renderCart();
   initCardActions();
   initCardTitleMarquee();
   initAccordions();
+  initMarquee();
+  initScrollArrowsWatch();
 
   document.addEventListener("click", (e) => {
     if (e.target.closest("[data-open-menu]")) { document.querySelector("[data-mob-nav]").classList.toggle("on"); document.querySelector(".hamburger").classList.toggle("on"); document.querySelector(".mob-scrim").classList.toggle("on"); if (document.querySelector("[data-mob-nav]").classList.contains("on")) lockScroll(); else unlockScroll(); return; }
@@ -1491,10 +1633,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.closest("[data-checkout]")) openModal(CHECKOUT_MOCK_HTML);
     if (e.target.closest("[data-open-sizeguide]")) { e.preventDefault(); openModal(SIZE_GUIDE_HTML); }
     if (e.target.closest("[data-theme-toggle]")) {
-      const btn = document.querySelector("[data-theme-toggle]");
+      /* querySelectorAll, not querySelector — there are now two instances
+         (mobile nav footer + the desktop header icon added 2026-08-08
+         round 5), and a single querySelector left whichever one wasn't
+         first in the DOM permanently out of sync with the actual theme. */
+      const btns = document.querySelectorAll("[data-theme-toggle]");
       const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-      if (isDark) { document.documentElement.removeAttribute("data-theme"); btn.classList.remove("on"); localStorage.setItem("ka_theme","light"); }
-      else { document.documentElement.setAttribute("data-theme","dark"); btn.classList.add("on"); localStorage.setItem("ka_theme","dark"); }
+      if (isDark) { document.documentElement.removeAttribute("data-theme"); btns.forEach((b) => b.classList.remove("on")); localStorage.setItem("ka_theme","light"); }
+      else { document.documentElement.setAttribute("data-theme","dark"); btns.forEach((b) => b.classList.add("on")); localStorage.setItem("ka_theme","dark"); }
       return;
     }
     if (e.target.closest("[data-open-wishlist]")) {

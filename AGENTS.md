@@ -830,6 +830,148 @@ per-page override as a "bug fix."
     2.4:1 sliver. Bumped to `230px` (≥1180px only) for a ~1.85:1 desktop
     proportion; mobile's single full-width column is unaffected.
 
+- **Desktop pass, round 5: specific fixes from a live-site walkthrough**
+  (2026-08-08, same day). Client reviewed the deployed rounds 1-4 and called
+  out concrete items; the one deliberate mobile exception this round is
+  called out explicitly below, everything else is desktop-only.
+  - **Marquee runtime fix, `initMarquee()` in `app.js`:** the static 2-half
+    ticker markup is sized for 375-414px and was never touched — on a wide
+    desktop viewport the loop ran out of content mid-screen and hard-cut
+    back to start ("el texto se corta y pega cambio"). Fixed at runtime, not
+    via a CSS breakpoint, so it holds at any width: measures the existing
+    first half, and if a screen is wider than it, rebuilds the track as N
+    repeats of that same half (both halves still byte-identical, preserving
+    the seamless-loop invariant from the note earlier in this file) with
+    `animation-duration` scaled by the same factor N so the scroll speed
+    (px/s) doesn't change just because there's more content to cover. If one
+    half already covers the viewport — true on mobile — nothing runs at all.
+  - **Desktop dark-mode toggle:** there wasn't one (round 1 deliberately
+    skipped it — see that note — because `initHeader()`'s theme-sync used a
+    singular `document.querySelector("[data-theme-toggle]")`, which a
+    second instance would have desynced). Client wanted the toggle back, so
+    the actual fix landed instead of skipping it: both the restore-on-load
+    check and the click handler now use `querySelectorAll(...).forEach(...)`.
+    New icon button in `.hdr-actions` (`.ico.dsk-only.theme-btn`, reusing
+    the existing generic `.theme-btn .theme-sun/.theme-moon` show/hide
+    rules — they were never scoped to the mobile-only `.mob-action-btn`
+    wrapper, so no new CSS was needed for the icon swap itself).
+  - **Horizontal scroll rows had no way to be scrolled with a mouse alone**
+    (`scrollbar-width:none` hides the native bar; there's no touch gesture
+    without a touchscreen) — client: "no puedo hacerlos." `initScrollArrows()`
+    in `app.js` adds prev/next arrows to every `.scroll-row`, `.rev-scroll`,
+    `.post-scroll`, `.ugc-scroll`, `.collectible-scroll` and `.sub-scroll`,
+    wired via the same MutationObserver-on-`document.body` + dataset-flag
+    pattern `initCardTitleMarquee()` already uses (these rows get filled
+    from many different call sites, not one central place). Rows without
+    their own alignment get wrapped in a new `.scrollx-wrap` (mirrors `.w`'s
+    two breakpoints) — this doubles as the fix for those same rows running
+    edge-to-edge past the boxed column at desktop widths ("que no se vayan
+    hasta los márgenes"); `.sub-scroll` already had its own alignment from
+    round 3, so it gets arrows without a wrap. **Real bug caught in
+    testing:** the arrows' hidden/visible state was computed once, at attach
+    time — but the empty `<div data-bestsellers>` mount often gets arrows
+    *before* `renderCards()` fills it in a later, separate mutation, so
+    "next" could compute `max<=0` and hide itself against a still-empty row,
+    then never re-check once real cards landed. Fixed by stashing the
+    `update` closure on the row (`row._scrollxUpdate`) and re-running it for
+    every already-initialized row on every subsequent mutation the observer
+    sees, not just that row's own scroll/resize events.
+  - **Best Sellers / PDP cross-sell card width:** round 1's `200px` cap was
+    the minimum "don't blow up" fix; client wants these "un poco más
+    grande," and separately wants the two PDP cross-sell rails wide enough
+    that 5 products fill a full desktop row without scrolling. One number
+    (`250px`) serves both — at the 1310px content width inside a 1400px
+    `.w`, 5 cards at 250px + 4×1rem gaps fit almost exactly. The two
+    cross-sell `.slice(0,4)` calls in `initPDP()` became `.slice(0,5)` to
+    match (a rail can still render fewer than 5 if a collection doesn't
+    have that many eligible products — that's a real data limit, not a bug).
+  - **Home page rhythm:** `.trust.w` (both classes — see the "why not just
+    `.trust`" specificity note this trick requires, same reasoning as
+    `.rev-list` above) capped to `900px`, matching the `.quiz-wrap`/
+    `.founder` narrow-card family either side of it on the page, and its
+    text bumped (`.62rem/.58rem` read as too small for the box — client:
+    "contextos muy pequeños"). The founder teaser's "Read our full story"
+    link moved to its own row on desktop only, via
+    `.founder > a.btn--ghost{flex-basis:100%}` — no HTML change; this
+    selector is deliberately structural (direct-child anchor) rather than a
+    new class, since about.html's own, much larger `.founder` section has
+    no direct-child anchor at all and so is untouched by it. Mobile already
+    stacks this by necessity (insufficient width for one row) — desktop had
+    room to keep it inline, which read wrong once there was that much room.
+  - **4th blog post** added to `BLOG_POSTS` (`reading-a-batch-number`) and
+    the home preview slice bumped `slice(0,3)`→`slice(0,4)`: 3 cards at the
+    new 320px-capped `.post-scroll` width left a visibly empty trailing gap
+    in the row before it needed to scroll at all. `blog.html`'s own grid
+    (`.post-grid`, all posts, 3 columns) now has 7 and ends with a lone
+    item in its last row — normal for a page grid, not the same "dead
+    space in one viewport" problem the horizontal rail had.
+  - **Promo gift FAB** bumped `60px`→`76px` (≥768px) — sized for a mobile
+    thumb-reach target, read as small once everything around it scaled up.
+  - **PDP gallery, two real bugs from the same root cause (square source
+    photos, non-square desktop crops):** Approach 4 "Immersive"'s hero image
+    was `height:560px` on a full-width (up to 1400px) box — round 1 fixed
+    "1866px-tall giant image" but didn't check what a 2.5:1 crop does to a
+    real photo. All four fully-shot products' source photos are natural
+    squares (2000×2000, confirmed in testing) — cropped into 2.5:1, `cover`
+    only shows the middle ~40% of the photo's height, a much harder zoom
+    than intended (client: "super escalada"). Fixed by capping the box to a
+    square (`aspect-ratio:1`) at a sane `max-width:640px` instead of
+    stretching it across the full column — shows the whole photo, centered,
+    uncropped. Separately, `.pdp-layout{align-items:start}` (grid default is
+    `stretch`) — without it the shorter gallery column silently stretches
+    to match the taller meta column's height, an invisible-but-real "hueco
+    raro" (no visible border/background on that column, so it wasn't a
+    visible artifact, but the wrong box model regardless — client's "usar
+    toda la columna principal... que no haya huecos raros" ask is the
+    correct standard to hold this to even where the bug wasn't visible).
+  - **"The story behind the piece" redesign — mobile AND desktop, the one
+    deliberate exception to "no tocar el móvil" this round** (client named
+    it explicitly). Was a true 100vw/-50vw full-bleed breakout with a 4:3
+    crop (2026-08-06 call, reaffirmed as deliberate in round 3); now a
+    contained card matching the rest of the site's card language
+    (`--surface-soft` fill, radius, shadow — plus the matching
+    `[data-theme="dark"]` text override every fixed-background card in this
+    file needs) with a true square photo. Stacked (photo on top) on mobile;
+    a 2-column grid (photo left, text vertically centered right) at
+    ≥768px.
+  - **Collectible rail** ("What's in the box") grew from 3 cards to 5 —
+    "Free Lifetime Resizing" and "Your Batch, Numbered" — both restate
+    claims already made elsewhere on the site (ring-size-guide copy,
+    handmade-timeline/certificate copy), not new invented claims, per Hard
+    rule 5's spirit. **UGC rail** ("Seen in the wild") grew from 6 to 9 —
+    added Chloe M. (the one name from the shared reviewer pool not already
+    used here) plus a second post each for two existing names (a real
+    customer posting a photo and a video separately, not a new fabricated
+    identity). Both were sized to fill a full desktop row instead of
+    leaving trailing empty space before the new scroll arrows even had
+    anything to scroll to.
+  - **Sticky ATC bar reversed back to full-width on desktop** — round 3
+    had capped it to `640px` to fix a canyon of empty space between the
+    thumbnail and the button; client explicitly asked for the bar itself to
+    span full width after all. Resolved the *same* canyon problem a
+    different way instead of just reverting: the bar's markup in `app.js`
+    now wraps its three children in `.sticky-atc__inner` carrying the `w`
+    class, so the fixed strip's background/border stay true full-width
+    while its content aligns to the same boxed column as everything else —
+    the same trick the header/hero already use, applied here for the first
+    time to a component that explicitly wants a full-width *background*.
+  - **A few desktop-only hover states** (≥768px; client: "algún hover...
+    que en móvil no hemos ni planteado" — mobile has no hover, so none of
+    this was ever considered for it): `.card`/`.post-card` lift + deepen
+    shadow, `.ftile` a subtle scale, `.gal-strip` thumbnails and
+    `.viewall-card` a border-color cue — each mirrors that element's
+    existing `:active` (touch) treatment at a gentler intensity, not a new
+    interaction language.
+  - **Known limitation, not fixed this round:** neither `initMarquee()` nor
+    the section-rhythm/`.trust` sizing re-measure on window resize after
+    initial load (the scroll arrows' `update()` does, via a `resize`
+    listener — that one was cheap to add since the function already
+    existed for the scroll event). A user resizing their browser mid-session
+    won't see the marquee re-balance. Given this is a design mockup
+    reviewed at a fixed viewport per session, not a production concern
+    worth the added complexity — flag if that judgment call turns out
+    wrong.
+
 ## Hard rules (from the brief, do not regress)
 
 1. **Mobile-first, non-negotiable.** Base styles target 375–414px. Desktop only

@@ -131,6 +131,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    avoids (caught in testing: the icons were showing on mobile). */
 .dsk-nav{display:none}
 .ico.dsk-only{display:none}
+/* Hidden by default — a <button> has no display:none of its own, so
+   without this base rule the horizontal-scroll arrows initScrollArrows()
+   injects (see the 768px block) would render on mobile immediately, before
+   any media query ever hides them. */
+.scrollx-arrow{display:none}
 /* Collections dropdown inside .dsk-nav (2026-08-08 follow-up: "All
    Collections" replaced the flat JJK/KNY/Genshin/Sets links). Shown on
    :hover *and* :focus-within, not hover alone — a keyboard user tabbing to
@@ -701,18 +706,20 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .ugc-card__play{position:absolute;inset:0;margin:auto;width:38px;height:38px;border-radius:50%;background:rgba(24,21,20,.55);display:flex;align-items:center;justify-content:center;color:#fff;border:0}
 .ugc-card__cap{margin-top:.4rem;font-size:.7rem;color:var(--muted)}
 
-/* ── PDP: "The story behind the piece" editorial module ── */
+/* ── PDP: "The story behind the piece" editorial module ──
+   Redesigned 2026-08-08 (round 5) — the client asked for this one section
+   specifically to change on MOBILE too, the one deliberate exception to
+   "no tocar el móvil" in this whole round. Was a true 100vw/-50vw full-bleed
+   breakout (2026-08-06) with a 4:3 crop; now a proper contained card —
+   square photo, rounded corners, background/shadow like every other card
+   on the site (.card, .rv, .post-card), not a bespoke bleed treatment. */
+.pdp-narrative{background:var(--surface-soft);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(24,21,20,.05)}
+.pdp-narrative__img{aspect-ratio:1;background-size:cover;background-position:center;width:100%}
+.pdp-narrative__text{padding:1.25rem 1.25rem 1.5rem}
 .pdp-narrative p{font-size:.875rem;color:var(--muted);line-height:1.6}
 .pdp-narrative p+p{margin-top:.75rem}
-/* Single image, true edge-to-edge (breaks out of the ambient .w gutter that
-   every PDP section otherwise sits in — PDP's <main> IS .w, so a full-bleed
-   child needs the viewport-breakout trick, not just "no padding"), square
-   corners on purpose (2026-08-06). The text below it gets its OWN extra
-   inset (.pdp-narrative__text) instead of sitting flush with the section's
-   edge — image bleeds, text doesn't, a deliberate asymmetry. */
-.pdp-narrative__img{aspect-ratio:4/3;background-size:cover;background-position:center;width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;margin-bottom:1rem}
-.pdp-narrative__text{padding:0 .5rem}
 .pdp-narrative__cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:.75rem;font-weight:600;color:var(--accent);font-size:.9rem}
+[data-theme="dark"] .pdp-narrative{color:#181514}
 
 /* ── PDP: "The complete collectible experience" rail ── */
 .collectible-scroll{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:.5rem}
@@ -828,9 +835,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 @keyframes promo-fab-pop{from{transform:scale(0)}to{transform:scale(1)}}
 @keyframes promo-fab-pulse{0%,100%{box-shadow:0 4px 16px rgba(20,17,16,.25),0 0 0 0 rgba(196,168,130,.25)}50%{box-shadow:0 4px 16px rgba(20,17,16,.25),0 0 0 6px rgba(196,168,130,0)}}
 
-/* ── Sticky ATC ── */
-.sticky-atc{position:fixed;left:0;right:0;bottom:0;z-index:55;display:flex;align-items:center;gap:1rem;padding:.5rem var(--gutter);background:var(--light);border-top:1px solid var(--line);box-shadow:0 -4px 20px rgba(35,31,32,.08);transform:translateY(105%);transition:transform .3s cubic-bezier(.22,1,.36,1)}
+/* ── Sticky ATC ──
+   .sticky-atc itself has no horizontal padding of its own — that now lives
+   on .sticky-atc__inner (which carries the "w" class in app.js, so it gets
+   the exact same max-width/gutter/centering as the rest of the page at
+   every breakpoint), so the bar's own background/border can stay a true
+   full-width fixed strip while its content aligns with everything else. */
+.sticky-atc{position:fixed;left:0;right:0;bottom:0;z-index:55;padding:.5rem 0;background:var(--light);border-top:1px solid var(--line);box-shadow:0 -4px 20px rgba(35,31,32,.08);transform:translateY(105%);transition:transform .3s cubic-bezier(.22,1,.36,1)}
 .sticky-atc.show{transform:translateY(0)}
+.sticky-atc__inner{display:flex;align-items:center;gap:1rem}
 .sticky-atc__thumb{width:40px;height:50px;border-radius:6px;overflow:hidden;background:var(--surface);flex:none;position:relative}
 .sticky-atc__thumb .ph{position:absolute;inset:0;border-radius:inherit}
 .sticky-atc__meta{flex:1;min-width:0}
@@ -894,6 +907,68 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .hero-slider{height:64vh;max-height:640px}
   .hs-content h2{font-size:4rem}
   .hs-content p{font-size:1.35rem}
+  /* Round 5 (2026-08-08): client felt the Best Sellers -> Trust -> founder
+     teaser stretch of the home page read inconsistently — a narrow quiz
+     card, then a full-width "stripe" with tiny text, then a narrow founder
+     card again. .trust.w (both classes, so this beats .w's own max-width
+     rule regardless of source order — see the note on that trick where
+     .rev-list is capped below) matches it to the same ~narrow-card family
+     as .quiz-wrap/.founder, and the text inside is bumped since it read as
+     too small for a box that size. */
+  .trust.w{max-width:900px;margin:1rem auto}
+  .trust__item b{font-size:.8rem}
+  .trust__item span{font-size:.72rem}
+  .trust__proof{font-size:1rem}
+  /* "Read our full story" CTA: on mobile, .founder's flex-wrap naturally
+     drops it to its own line since the avatar+text row alone rarely fits a
+     narrow screen with room to spare. On desktop there's plenty of room, so
+     it stayed inline to the right of the text instead — client wants it
+     below regardless of available width. flex-basis:100% forces it onto a
+     new row in the wrapping flex container without touching the HTML.
+     Selector is `.founder > a.btn--ghost`, not a bare class, because
+     about.html's own (much bigger) .founder section has no direct-child
+     anchor at all — this only ever matches the home-page teaser. */
+  .founder > a.btn--ghost{flex-basis:100%;margin-top:.5rem}
+  /* Promo gift FAB: was sized for a mobile thumb-reach target; bumped for
+     desktop where it reads as small next to everything else's new scale. */
+  .promo-fab{width:76px;height:76px}
+  .promo-fab svg{width:30px;height:30px}
+  /* Best Sellers / cross-sell card width: 200px (round 1) was the minimum
+     fix for "don't blow up on a wide viewport" — client (round 5) wants
+     these "a bit bigger" and, separately, wants the two PDP cross-sell
+     rails wide enough that 5 products fill a full desktop row without
+     scrolling. One number serves both: at a 1310px content width (1400px
+     .w minus its own gutters), 5 cards at 250px + 4 gaps of 1rem fit with
+     room to spare. */
+  .scroll-row--compact>*{width:min(42vw,250px)}
+  /* Horizontal scroll rows had no way to be scrolled with a mouse alone —
+     scrollbar-width:none hides the native bar, and there's no touch
+     gesture on desktop (client: "no puedo hacerlos"). .scrollx-wrap/
+     .scrollx-arrow are added by initScrollArrows() in app.js, which wraps
+     every .scroll-row/.rev-scroll/.post-scroll/.ugc-scroll/
+     .collectible-scroll (and .sub-scroll, which already has its own
+     alignment) the first time it sees one, via the same
+     MutationObserver-on-body pattern initCardTitleMarquee() already uses
+     for the same reason (rows get filled from many different render call
+     sites). Base rules (hidden) live here since .scrollx-wrap needs no
+     special mobile styling at all — a plain wrapper div doesn't change
+     mobile's rendered layout. */
+  .scrollx-wrap{position:relative;max-width:1080px;margin:0 auto;padding:0 var(--gutter)}
+  .sub-scroll{position:relative}
+  .scrollx-arrow{display:flex;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:var(--light);border:1px solid var(--line);align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(20,17,16,.15);cursor:pointer;z-index:6;color:var(--dark);transition:opacity .2s,background .2s,color .2s}
+  .scrollx-arrow--prev{left:.25rem}
+  .scrollx-arrow--next{right:.25rem}
+  .scrollx-arrow:hover{background:var(--dark);color:var(--light)}
+  .scrollx-arrow.is-hidden{opacity:0;pointer-events:none}
+  /* Desktop-only hover states — mobile has no hover, these were never
+     considered for it (client, round 5: "algún hover... que en móvil no
+     hemos ni planteado"). Mirrors each element's existing :active (touch)
+     treatment where one exists, at a gentler, non-"pressed" intensity. */
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(24,21,20,.12)}
+  .post-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(24,21,20,.1)}
+  .ftile:hover{transform:scale(1.02)}
+  .gal-strip button:hover:not(.on){border-color:var(--muted)}
+  .viewall-card:hover{border-color:var(--accent)}
   /* 2026-08-08 follow-up: client asked for the whole page — not just the
      .w-wrapped sections — to line up inside the same boxed column, having
      seen the live site with the hero/header/PLP chip row still running
@@ -910,7 +985,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .craft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
   .founder{max-width:600px;margin-left:auto;margin-right:auto}
   .ft-cols{grid-template-columns:2fr 1fr 1fr 1fr}
-  .pdp-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+  /* align-items:start, not the grid default (stretch): without it, the
+     image column silently stretches to match the (usually taller) meta
+     column's height — invisible since neither column has its own
+     background, but still the wrong box model for "usar toda la columna
+     principal... que no haya huecos raros" (client, round 5). Each column
+     now sizes to its own content. */
+  .pdp-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
   .pdp-meta{padding-top:0}
   .quiz-wrap{max-width:600px;margin:0 auto}
   /* .rev-list (Classic/Editorial/Immersive's plain vertical review list —
@@ -919,10 +1000,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
      paragraphs were stretching past 1200px per line, unreadable. Same
      narrow-column treatment as .founder/.quiz-wrap above. */
   .rev-list{max-width:640px;margin:0 auto}
-  /* Sticky ATC bar: uncapped, it stretched the thumbnail/title to the left
-     edge and the Add to Cart button to the right edge of the viewport, with
-     a canyon of empty space between them at desktop widths. */
-  .sticky-atc{max-width:640px;margin-left:auto;margin-right:auto}
+  /* Sticky ATC bar's max-width:640px cap (round 3 fix for the canyon-of-
+     empty-space bug) was superseded in round 5: client asked for the bar
+     itself to be full width on desktop after all — see .sticky-atc__inner
+     in the "Sticky ATC" section above, which solves the same canyon problem
+     by aligning the *content* to .w instead of capping the whole bar. */
   /* Search overlay: input/results used to run the full viewport width.
      width:100% is load-bearing, not decorative: both are flex items in
      .search's column flex layout, and a flex item with an auto cross-axis
@@ -934,25 +1016,28 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   /* Footer newsletter input was stretching to match the full (now 1400px)
      .ft-cols column — capped so it reads as a normal email field again. */
   .ft-news form{max-width:420px}
-  /* "The story behind the piece" image (storyHTML, PDP Classic): the base
-     rule's 100vw/-50vw breakout was a deliberate full-bleed choice when
-     first built (2026-08-06), but the 2026-08-08 follow-up asks for every
-     element to stay inside the boxed column — overridden back to a plain
-     100%-of-parent width here. Height is explicit instead of ratio-derived
-     (an explicit height always wins over aspect-ratio when both width and
-     height are already definite) since the old aspect-ratio:4/3 against a
-     1400px-wide .w produced a 1000px+-tall image regardless of the
-     breakout question. */
-  .pdp-narrative__img{width:100%;left:auto;right:auto;margin-left:0;margin-right:0;height:420px}
+  /* "The story behind the piece" (round 5 redesign, see the base rule):
+     side-by-side card instead of stacked, square photo on the left. */
+  .pdp-narrative{display:grid;grid-template-columns:1fr 1fr}
+  .pdp-narrative__img{aspect-ratio:auto;height:100%;min-height:320px}
+  .pdp-narrative__text{padding:2.25rem;display:flex;flex-direction:column;justify-content:center}
   /* Approach 4 "Immersive" hero gallery: its aspect-ratio:3/4 is set via an
      inline style in app.js (approach==="4" branch), so overriding it here
      needs !important — a class-only rule loses to inline style otherwise.
-     Uncapped, a 1400px-wide portrait-ratio image rendered ~1866px tall.
      Scoped to .pdp--immersive: [data-gallery-main] alone would also hit the
      plain .gal element approaches 1/2/3 use (mainGal() sets the same data
      attribute there), which is already correctly sized via its own
-     aspect-ratio:1 and must not be touched. */
-  .pdp--immersive [data-gallery-main]{aspect-ratio:auto!important;height:560px!important}
+     aspect-ratio:1 and must not be touched.
+     Round 3 first fixed this with height:560px on a full-width (1400px) box
+     — that fixed the "1866px-tall giant image" bug, but traded it for a
+     worse one (client, round 5: "super escalada"): the real product photos
+     are natural squares (2000x2000, confirmed in testing), so cropping one
+     into a 1400x560 (2.5:1) box means "cover" only shows the middle ~40% of
+     its height — a much more aggressive zoom than round 3's comment
+     accounted for. Capping the box to a square at a sane max-width instead
+     of stretching it across the full column shows the whole photo,
+     uncropped, centered in the wider column. */
+  .pdp--immersive [data-gallery-main]{aspect-ratio:1!important;height:auto!important;max-width:640px;margin:0 auto}
   .modal{align-items:center}
   .modal__box{max-width:520px;border-radius:var(--radius)}
 }
@@ -976,6 +1061,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .hero-slider{max-width:1400px}
   .plp-hero{max-width:1400px}
   .sub-scroll{max-width:1400px}
+  .scrollx-wrap{max-width:1400px}
   .hamburger{display:none}
   /* Header goes from a plain centered flex bar (768px block, no nav yet) to
      a 3-column grid once .dsk-nav appears: logo pinned left, nav truly
