@@ -55,7 +55,7 @@
       </div>
     </section>
 
-    <section class="sec">
+    <section class="sec" style="padding-top:1.25rem">
       <div class="w">
         <div class="ct" style="margin-bottom:1.25rem">
           <span class="eyebrow">Most collected</span>
@@ -111,7 +111,7 @@
       </div>
     </section>
 
-    <div class="trust w" style="margin-top:1.25rem">
+    <div class="trust w">
       <div class="trust__row">
         <div class="trust__item"><span class="trust__icon"><i data-lucide="shield" style="width:20px;height:20px;stroke:var(--accent)"></i></span><b>Lifetime Warranty</b><span>Every piece, forever</span></div>
         <div class="trust__item"><span class="trust__icon"><i data-lucide="rotate-ccw" style="width:20px;height:20px;stroke:var(--accent)"></i></span><b>60-Day Returns</b><span>No questions asked</span></div>
@@ -123,8 +123,8 @@
     <!-- section: founder-teaser — full story + craft process now live on about.html only -->
     <section class="sec sec--sm sec--warm" id="craft">
       <div class="w">
-        <div class="founder" style="margin-top:0;display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap">
-          <span class="founder__avatar" style="width:56px;height:56px;flex:none"></span>
+        <div class="founder" style="margin-top:0;display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap">
+          <img class="founder__avatar" src="assets/kraymerProfile.jpg" alt="Kraymer" style="width:56px;height:56px;flex:none;object-fit:cover">
           <div style="flex:1;min-width:200px">
             <span class="eyebrow">From the founder</span>
             <p style="margin-top:.4rem">Every piece here is something I would put on my own hand. That is the whole standard.</p>
@@ -146,24 +146,23 @@
       </div>
     </section>
 
-    <!-- REVIEWS: carousel -->
+    <!-- REVIEWS: horizontal cards, photo + avatar per review -->
     <section class="sec sec--sm" id="reviews">
       <div class="w">
         <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">Word of mouth</span><h2>What People Say</h2></div>
-        <div class="rev-carousel" data-rev-carousel>
-          <div class="rev-track" data-rev-track>
-            <div class="rev-slide"><div class="rv"><p style="font-family:var(--display);font-style:italic">"The level of detail is unlike anything I have ever seen."</p><p class="who"><span class="rv__avatar"></span><span>Priya N., Jujutsu Kaisen collector</span></p></div></div>
-            <div class="rev-slide"><div class="rv"><p style="font-family:var(--display);font-style:italic">"I wear my ring every day. People ask where I got it. I just smile."</p><p class="who"><span class="rv__avatar"></span><span>Daniel K., Demon Slayer collector</span></p></div></div>
-            <div class="rev-slide"><div class="rv"><p style="font-family:var(--display);font-style:italic">"Finally, jewelry that feels like me. Subtle, but mine."</p><p class="who"><span class="rv__avatar"></span><span>Sam T., Genshin Impact collector</span></p></div></div>
-          </div>
-          <div class="rev-dots" data-rev-dots>
-            <button class="on"></button><button></button><button></button>
-          </div>
+        <div class="rev-scroll rev-scroll--home">
+          <div class="rvc"><div class="rvc__photo"></div><div class="rvc__body"><div class="rvc__who"><span class="rv__avatar rv__avatar--sm"></span><span><b>Priya N.</b><small>Jujutsu Kaisen collector</small></span></div><p class="rvc__quote">"The level of detail is unlike anything I have ever seen."</p></div></div>
+          <div class="rvc"><div class="rvc__photo"></div><div class="rvc__body"><div class="rvc__who"><span class="rv__avatar rv__avatar--sm"></span><span><b>Daniel K.</b><small>Demon Slayer collector</small></span></div><p class="rvc__quote">"I wear my ring every day. People ask where I got it. I just smile."</p></div></div>
+          <div class="rvc"><div class="rvc__photo"></div><div class="rvc__body"><div class="rvc__who"><span class="rv__avatar rv__avatar--sm"></span><span><b>Sam T.</b><small>Genshin Impact collector</small></span></div><p class="rvc__quote">"Finally, jewelry that feels like me. Subtle, but mine."</p></div></div>
+          <div class="rvc"><div class="rvc__photo"></div><div class="rvc__body"><div class="rvc__who"><span class="rv__avatar rv__avatar--sm"></span><span><b>Maria L.</b><small>Jujutsu Kaisen collector</small></span></div><p class="rvc__quote">"Better finish than pieces I have paid three times as much for."</p></div></div>
+          <div class="rvc"><div class="rvc__photo"></div><div class="rvc__body"><div class="rvc__who"><span class="rv__avatar rv__avatar--sm"></span><span><b>Jordan P.</b><small>Demon Slayer collector</small></span></div><p class="rvc__quote">"Exactly as pictured, and the box alone felt like a gift."</p></div></div>
+          <div class="rvc"><div class="rvc__photo"></div><div class="rvc__body"><div class="rvc__who"><span class="rv__avatar rv__avatar--sm"></span><span><b>Alex R.</b><small>Genshin Impact collector</small></span></div><p class="rvc__quote">"Ordered two more the week after my first piece arrived."</p></div></div>
+          <div class="rvc"><div class="rvc__photo"></div><div class="rvc__body"><div class="rvc__who"><span class="rv__avatar rv__avatar--sm"></span><span><b>Chloe M.</b><small>Jujutsu Kaisen collector</small></span></div><p class="rvc__quote">"My partner asked where I got it and I just smiled."</p></div></div>
         </div>
       </div>
     </section>
 
-    <section class="sec sec--sm sec--warm" id="faq">
+    <section class="sec sec--sm sec--warm" id="faq" style="padding-bottom:0">
       <div class="w">
         <h2 class="ct" style="margin-bottom:1.5rem">Good questions</h2>
         <div class="faq">

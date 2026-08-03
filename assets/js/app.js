@@ -245,22 +245,21 @@ function renderCart() {
 
   if (!items.length) {
     foot.hidden = true;
-    const recs = PRODUCTS.filter((p) => p.badges.includes("bestseller") && !p.soldOut).slice(0, 2);
+    /* Only 2 products actually carry the "bestseller" tag and aren't sold
+       out — pad with other featured, in-stock pieces so this always shows
+       a full 4, not just however many happen to be tagged. */
+    const recs = PRODUCTS.filter((p) => p.badges.includes("bestseller") && !p.soldOut);
+    if (recs.length < 4) {
+      const extra = PRODUCTS.filter((p) => !p.soldOut && !recs.includes(p) && (p.featured || p.isFeatured));
+      recs.push(...extra.slice(0, 4 - recs.length));
+    }
+    recs.length = Math.min(recs.length, 4);
     body.innerHTML = `
       <div class="cart-empty">
         <h3>Your cart is empty</h3>
         <p>Start with a piece people keep coming back for.</p>
         <div class="cart-rec">
-          ${recs.map((p) => `
-            <div>
-              <a class="card__img" href="producto.html?id=${p.handle}" style="display:block;position:relative;margin-bottom:var(--s)">${ph(p.title, { type: p.type, gemColor: accentColors[p.collection] || PH_GOLD, img: phImg(p) })}</a>
-              <div class="card__body">
-                <span class="card__series">${COLLECTIONS[p.collection].name}</span>
-                <h3 class="card__title" style="font-size:.9rem"><a href="producto.html?id=${p.handle}">${p.title}</a></h3>
-                <div class="card__price"><span>${kaMoney(p.price)}</span></div>
-                <button class="btn btn--line sm" data-add="${p.handle}" style="margin-top:var(--s)">Add</button>
-              </div>
-            </div>`).join("")}
+          ${recs.map((p) => productCard(p, { approach: false })).join("")}
         </div>
       </div>`;
     return;
@@ -594,22 +593,6 @@ function initHome() {
     }, {passive:true});
   }
 
-  /* Reviews carousel: dots + swipe only, no arrows */
-  const revTrack = document.querySelector("[data-rev-track]");
-  const revDots = document.querySelector("[data-rev-dots]");
-  if (revTrack && revDots) {
-    const rTotal = revTrack.children.length;
-    let rCur = 0;
-    const rGo = (i) => { rCur = ((i % rTotal) + rTotal) % rTotal; revTrack.style.transform = `translateX(-${rCur * 100}%)`; revDots.querySelectorAll("button").forEach((d,j) => d.classList.toggle("on", j === rCur)); };
-    revDots.addEventListener("click", (e) => { const btn = e.target.closest("button"); if (!btn) return; rGo(Array.from(revDots.children).indexOf(btn)); });
-    let rsx = 0;
-    revTrack.addEventListener("touchstart", (e) => { rsx = e.changedTouches[0].screenX; }, {passive:true});
-    revTrack.addEventListener("touchend", (e) => {
-      const dx = rsx - e.changedTouches[0].screenX;
-      if (Math.abs(dx) > 40) rGo(dx > 0 ? rCur + 1 : rCur - 1);
-    }, {passive:true});
-  }
-
   initQuizWidget();
 }
 
@@ -832,10 +815,6 @@ function initPLP() {
     genshin: svgIco(`<path d="M12 2l2.5 7H22l-6 4.5L18.5 21 12 16.5 5.5 21 8 13.5 2 9h7.5z"/>`),
     silver: svgIco(`<circle cx="12" cy="12" r="8"/>`),
     gold: svgIco(`<path d="M6 3h12l3 6-9 12L3 9z"/>`),
-    under100: svgIco(`<path d="M12 2v20M8 6h5.5a3 3 0 0 1 0 6H8m0 0h6.5a3 3 0 0 1 0 6H8"/>`),
-    "100-200": svgIco(`<path d="M12 2v20M8 6h5.5a3 3 0 0 1 0 6H8m0 0h6.5a3 3 0 0 1 0 6H8"/>`),
-    "200-300": svgIco(`<path d="M12 2v20M8 6h5.5a3 3 0 0 1 0 6H8m0 0h6.5a3 3 0 0 1 0 6H8"/>`),
-    "300+": svgIco(`<path d="M12 2v20M8 6h5.5a3 3 0 0 1 0 6H8m0 0h6.5a3 3 0 0 1 0 6H8"/>`),
     "in-stock": svgIco(`<path d="M20 6L9 17l-5-5"/>`),
     "pre-order": svgIco(`<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>`),
   };
@@ -867,10 +846,10 @@ function initPLP() {
       <div class="v-group">
         <p class="v-label">Price</p>
         <div class="v-row" data-fil-group="price">
-          <button class="v-chip" data-fil-val="under100">${filIcons.under100}Under $100</button>
-          <button class="v-chip" data-fil-val="100-200">${filIcons["100-200"]}$100–$200</button>
-          <button class="v-chip" data-fil-val="200-300">${filIcons["200-300"]}$200–$300</button>
-          <button class="v-chip" data-fil-val="300+">${filIcons["300+"]}$300+</button>
+          <button class="v-chip" data-fil-val="under100">Under $100</button>
+          <button class="v-chip" data-fil-val="100-200">$100–$200</button>
+          <button class="v-chip" data-fil-val="200-300">$200–$300</button>
+          <button class="v-chip" data-fil-val="300+">$300+</button>
         </div>
       </div>
       <div class="v-group">
@@ -1006,8 +985,10 @@ function initPDP() {
   };
   const pdpCTA = (extraStyle) => {
     if (p.soldOut) return `<button class="btn btn--dark" disabled style="opacity:.5;cursor:notallowed;${extraStyle||""}">Sold Out</button>`;
-    if (p.comingSoon) return `<button class="btn btn--dark" data-notify="${p.handle}" style="${extraStyle||""}">Notify Me When Available</button>`;
-    return `<button class="btn btn--dark" data-pdp-atc style="${extraStyle||""}">Add to Cart · ${kaMoney(p.price)}</button>`;
+    if (p.comingSoon) return `<button class="btn btn--dark" data-notify="${p.handle}" style="${extraStyle||""}"><i data-lucide="bell" style="width:16px;height:16px"></i>Notify Me When Available</button>`;
+    return `
+      <button class="btn btn--dark" data-pdp-atc style="${extraStyle||""}"><i data-lucide="shopping-bag" style="width:16px;height:16px"></i>Add to Cart · ${kaMoney(p.price)}</button>
+      <button class="btn btn--line pdp-buynow" data-pdp-buynow><i data-lucide="zap" style="width:16px;height:16px"></i>Buy Now</button>`;
   };
   const pdpPrice = (extraStyle) => {
     const sale = p.compareAt ? `<span style="text-decoration:line-through;color:var(--muted);font-weight:300;margin-left:.5rem;font-size:.9em">${kaMoney(p.compareAt)}</span><span class="pdp-discount">-${Math.round((1-p.price/p.compareAt)*100)}%</span>` : "";
@@ -1083,7 +1064,7 @@ function initPDP() {
       <nav class="bread" aria-label="Breadcrumb"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
       <div class="pdp-layout">
         <div>
-          ${mainGal('style="border:0;aspect-ratio:4/3"')}
+          ${mainGal('style="border:0"')}
           ${thumbStrip('style="padding:0;gap:.5rem"')}
         </div>
         <div class="pdp-meta">
@@ -1096,7 +1077,7 @@ function initPDP() {
           <div class="pdp-config" style="background:transparent;padding:1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:1.5rem 0">
             ${variantsHTML("chips","v-row","v-row")}
           </div>
-          <div style="display:flex;gap:.75rem;align-items:center">
+          <div class="pdp-cta-row" style="display:flex;gap:.75rem;align-items:center">
             ${pdpCTA("flex:1")}
           </div>
           <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
@@ -1272,12 +1253,23 @@ function initPDP() {
     atcBtn.addEventListener("click", () => {
       Cart.add(p.handle, selectedMetal, selectedSize);
       atcBtn.classList.add("done");
-      atcBtn.textContent = "Added ✓";
+      atcBtn.innerHTML = "Added ✓";
       setTimeout(() => {
         atcBtn.classList.remove("done");
-        atcBtn.textContent = p.soldOut ? "Sold Out" : `Add to Cart · ${kaMoney(p.price)}`;
+        atcBtn.innerHTML = p.soldOut ? "Sold Out" : `<i data-lucide="shopping-bag" style="width:16px;height:16px"></i>Add to Cart · ${kaMoney(p.price)}`;
+        if (typeof lucide !== "undefined") lucide.createIcons();
         openCart();
       }, 600);
+    });
+  }
+
+  /* Buy Now: adds the item then jumps straight to the (mocked) checkout,
+     skipping the cart drawer — no real payment processing in this mockup. */
+  const buyNowBtn = host.querySelector("[data-pdp-buynow]");
+  if (buyNowBtn) {
+    buyNowBtn.addEventListener("click", () => {
+      Cart.add(p.handle, selectedMetal, selectedSize);
+      openModal(CHECKOUT_MOCK_HTML);
     });
   }
 

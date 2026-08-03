@@ -224,14 +224,17 @@ nothing by itself — both have an explicit `display` in their own rule, which
 beats the UA stylesheet's `[hidden]{display:none}` on specificity/source-order.
 Every element toggled via the `hidden` attribute needs its own
 `.selector[hidden]{display:none}` line; don't assume the attribute alone works.
-`.promo-fab`'s `bottom` offset is page-conditional (2026-07-31): the base rule
-sits it low (`1.35rem` + safe-area), close to the thumb, but
-`body[data-page="pdp"] .promo-fab` bumps it back up to the old `5.5rem` —
-PDP is the one page with `.sticky-atc`, a full-width fixed bar that occupies
-roughly the bottom 4.5rem once the visitor scrolls past the buy box, and
-would sit under the FAB at the low offset. If another page ever grows its own
-bottom-fixed bar, give it the same override rather than raising the shared
-base value back up for everyone.
+`.promo-fab`'s `bottom` offset is the same everywhere (`1.35rem` + safe-area),
+close to the thumb — including on PDP. This used to be page-conditional
+(2026-07-31: `body[data-page="pdp"] .promo-fab` bumped it to `5.5rem` since
+`.sticky-atc`, PDP's full-width fixed bar, occupies roughly the bottom 4.5rem
+once the visitor scrolls past the buy box), but the client explicitly asked
+2026-08-03 for the FAB to sit in "the same spot as home, everywhere" — so the
+override was removed outright, on PDP the FAB now visually sits over the top
+of `.sticky-atc` once it's showing (FAB's `z-index:56` > the bar's `55`, so
+it renders on top, not hidden behind it). If that overlap turns out to bother
+anyone, the fix is a fresh, deliberate ask — don't quietly restore the old
+per-page override as a "bug fix."
 
 ## Component inventory
 
@@ -417,12 +420,20 @@ base value back up for everyone.
   `10,000+`, matching the marquee/footer (that also resolves the old
   "known content gap" below — the founder's "2,000" is explicitly framed as
   *before* opening Kraymer, a different claim, not a conflicting one).
-- **Reviews carousel is swipe/dots only** (arrows removed 2026-07-31): the
-  `.rev-arrows` buttons were positioned wrong and are gone along with their
-  click handlers; `[data-rev-track]` now has its own touchstart/touchend pair
-  (same 40px-threshold pattern as the hero slider's `[data-hs-track]`, just a
-  lower threshold since review slides are shorter). Dots stay, both as a
-  progress indicator and a click target — don't reintroduce arrow buttons.
+- **Home reviews are a horizontal scroll of cards, not a swipe carousel**
+  (changed 2026-08-03): the old single-slide `.rev-carousel`/`.rev-track`/
+  `.rev-dots` swipe widget (dots-only, arrows removed 2026-07-31) was
+  replaced with `.rev-scroll.rev-scroll--home`, ~7 compact `.rvc` cards
+  (`.rvc__photo` + `.rv__avatar--sm` + quote), matching the same
+  scroll-row mechanics used everywhere else (Best Sellers, PDP cross-sell,
+  PDP's own reviews). The old carousel CSS/JS (`initHome()`'s
+  `[data-rev-track]`/`[data-rev-dots]` wiring) was deleted outright, not
+  left dormant — don't resurrect a swipe carousel for reviews without being
+  asked again. `.rvc__photo` is a grey placeholder (a real per-review customer
+  photo, not just the avatar) — same "client will supply photos later"
+  convention as `.rv__avatar`. `.rvc` sits on `--surface` (fixed, doesn't
+  invert) so its text needs the same hardcoded dark-mode override as
+  `.card`/`.post-card` above (`[data-theme="dark"] .rvc{color:#181514}`).
 - **Founder, craft process and FAQ live on `about.html` only** (consolidated
   2026-08-02): home used to duplicate the full founder copy and the 3-item
   craft grid (`#craft` section) and also carried its own 4-item FAQ
