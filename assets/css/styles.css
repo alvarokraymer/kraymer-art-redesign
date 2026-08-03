@@ -193,7 +193,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Wishlist + Dark Mode: matched pill buttons, icon + label, not a bare text
    link and a bare icon circle anymore. */
 .mob-foot-actions{display:flex;gap:.6rem;padding:.25rem 0 .75rem}
-.mob-action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;border:1px solid var(--line);border-radius:var(--radius-pill);background:transparent;color:var(--dark);font-size:.8rem;font-weight:600}
+.mob-action-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;border:1px solid var(--muted);border-radius:var(--radius-pill);background:transparent;color:var(--dark);font-size:.8rem;font-weight:600}
 .mob-action-btn:active{background:var(--line)}
 .mob-foot-icons{display:flex;justify-content:center;gap:1.25rem;padding:.25rem 0 1rem}
 /* Hardcoded icon color, not a token — the circle backdrop (--surface) never
@@ -502,7 +502,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .quiz__step{margin-top:1rem}
 .quiz__q{font-size:.875rem;font-weight:600;margin-bottom:.75rem}
 .quiz__opts{display:flex;flex-wrap:wrap;gap:.5rem}
-.quiz__opt{min-height:48px;padding:0 1.25rem;border:1px solid var(--line);border-radius:var(--radius-pill);font-size:.875rem;transition:all .15s}
+.quiz__opt{min-height:48px;padding:0 1.25rem;border:1px solid var(--muted);border-radius:var(--radius-pill);font-size:.875rem;transition:all .15s}
 .quiz__opt.selected{background:var(--dark);border-color:var(--dark);color:var(--light)}
 .quiz__result{margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--line)}
 .quiz__result a{color:var(--accent);font-weight:600;font-size:.875rem;letter-spacing:.04em}
@@ -593,7 +593,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .sub-scroll{display:flex;gap:.65rem;overflow-x:auto;scrollbar-width:none;padding:.75rem var(--gutter) .5rem;scroll-snap-type:x proximity}
 .sub-scroll::-webkit-scrollbar{display:none}
 .sub-scroll::after{content:"";flex:none;width:1px}
-.sub{flex:none;padding:.7rem 1.25rem;border:1.5px solid var(--line);border-radius:var(--radius-pill);font-size:.9rem;white-space:nowrap;cursor:pointer;transition:all .25s cubic-bezier(.25,.46,.45,.94);background:transparent;color:var(--muted);font-weight:450;scroll-snap-align:start;min-height:48px;display:flex;align-items:center;gap:.6rem}
+.sub{flex:none;padding:.7rem 1.25rem;border:1.5px solid var(--muted);border-radius:var(--radius-pill);font-size:.9rem;white-space:nowrap;cursor:pointer;transition:all .25s cubic-bezier(.25,.46,.45,.94);background:transparent;color:var(--muted);font-weight:450;scroll-snap-align:start;min-height:48px;display:flex;align-items:center;gap:.6rem}
 .sub b{font-weight:500;font-size:.875rem;transition:all .25s cubic-bezier(.25,.46,.45,.94)}
 .sub span{font-size:.6rem;color:var(--muted);opacity:.7;margin-left:1px;transition:all .25s cubic-bezier(.25,.46,.45,.94)}
 .sub svg{width:16px;height:16px;flex:none}
@@ -646,24 +646,31 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    on mobile AND desktop both, per explicit client instruction, not gated
    behind a min-width query like most of this file's desktop-only additions.
    Hardcoded colors, not tokens: always sits over a photo, same reasoning as
-   .gal-info right next to it. */
-.gal-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.85);color:#181514;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(20,17,16,.18);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);cursor:pointer}
+   .gal-info right next to it. Sized down and lightened (round 9, client:
+   "las quiero más sutiles y elegantes") — was a bolder 36px/.85-opacity
+   disc; also gave the icon its own explicit size, which this rule never
+   had — the inline svg in app.js carries no width/height attribute, so it
+   was rendering at the SVG element's unstyled default (~300px canvas,
+   scaled down oddly by the flex centering rather than actually sized to
+   fit the button) until this rule constrained it. */
+.gal-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.7);color:#181514;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(20,17,16,.14);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);cursor:pointer}
+.gal-arrow svg{width:14px;height:14px}
 .gal-arrow--prev{left:.6rem}
 .gal-arrow--next{right:.6rem}
-.gal-arrow:hover{background:#fff}
+.gal-arrow:hover{background:rgba(255,255,255,.92)}
 .pdp-meta{padding-top:1rem}
 .pdp-meta .eyebrow{display:block;margin-bottom:.4rem}
 .pdp-tag{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
-.pdp-state-badge{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius-pill);border:1px solid var(--line);color:var(--muted);margin-bottom:.5rem}
+.pdp-state-badge{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius-pill);border:1px solid var(--muted);color:var(--muted);margin-bottom:.5rem}
 .pdp-state--sold{border-style:solid;color:var(--muted-d)}
 .pdp-state--coming{border-style:dashed}
 .pdp-state--low{border-style:dashed;color:var(--muted)}
 .pdp-state--new{border-style:solid}
-.pdp-discount{display:inline-block;font-size:.7rem;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:var(--radius-pill);padding:2px 8px;margin-left:.5rem;vertical-align:middle}
+.pdp-discount{display:inline-block;font-size:.7rem;font-weight:600;color:var(--muted);border:1px solid var(--muted);border-radius:var(--radius-pill);padding:2px 8px;margin-left:.5rem;vertical-align:middle}
 .pdp-headline{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.35rem}
 .pdp-title{font-size:1.75rem;font-weight:300;flex:1}
 .metal-cards{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
-.metal-card{display:flex;align-items:center;justify-content:center;min-height:56px;padding:0 1rem;border:1px solid var(--line);border-radius:var(--radius-sm);background:transparent;cursor:pointer;transition:all .2s;width:100%}
+.metal-card{display:flex;align-items:center;justify-content:center;min-height:56px;padding:0 1rem;border:1px solid var(--muted);border-radius:var(--radius-sm);background:transparent;cursor:pointer;transition:all .2s;width:100%}
 .metal-card span{font-size:.8rem;font-weight:500;color:var(--muted);letter-spacing:.02em}
 .metal-card.selected{border-color:var(--dark)}
 .metal-card.selected span{color:var(--dark);font-weight:600}
@@ -676,7 +683,19 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .pdp-rating .stars.pdp-rating__stars{font-size:1.5rem;margin-right:.5rem;line-height:1}
 .pdp-rating a{text-decoration:underline;text-underline-offset:2px;color:var(--muted)}
 .pdp-price{font-family:var(--body);font-size:1.75rem;font-weight:700;flex:none}
-.pdp-wish{position:static;width:auto;height:auto;display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;background:transparent;border:1px solid var(--line);border-radius:var(--radius-pill);box-shadow:none;margin-bottom:1rem}
+/* border:var(--muted), not var(--line) (round 9, 2026-08-08, client:
+   "hay algunas cápsulas que no se les ve el borde... la de los likes del
+   pdp") — --line (#E8E2DE) against the page's own --light (#E6E6E6)
+   background is a ~2-point difference, invisible in practice on any
+   transparent-background pill. Same fix applied to every other
+   transparent-bg pill/chip in this file that had the identical problem:
+   .mob-action-btn, .quiz__opt, .sub, .pdp-state-badge, .pdp-discount,
+   .metal-card, .v-chip, .trust-row-s span, .qty-ctl — deliberately NOT a
+   global --line token change, since --line still reads fine as a subtle
+   hairline divider against the lighter --surface/--surface-soft
+   backgrounds elsewhere (card borders, section dividers), just not on
+   transparent chips sitting directly on the page background. */
+.pdp-wish{position:static;width:auto;height:auto;display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;background:transparent;border:1px solid var(--muted);border-radius:var(--radius-pill);box-shadow:none;margin-bottom:1rem}
 .pdp-wish svg{position:static;width:16px;height:16px}
 .pdp-wish__count{font-size:.8rem;color:var(--muted);font-weight:600}
 .pdp-wish.active{border-color:var(--pink)}
@@ -690,7 +709,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .v-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:flex;justify-content:space-between}
 .v-label button{color:var(--accent);font-weight:500}
 .v-row{display:flex;flex-wrap:wrap;gap:.5rem}
-.v-chip{min-height:44px;padding:0 1.5rem;border:1px solid var(--line);border-radius:var(--radius-pill);font-size:.875rem;color:var(--muted);background:transparent;transition:all .15s}
+.v-chip{min-height:44px;padding:0 1.5rem;border:1px solid var(--muted);border-radius:var(--radius-pill);font-size:.875rem;color:var(--muted);background:transparent;transition:all .15s}
 .v-chip.selected{background:var(--dark);border-color:var(--dark);color:var(--light)}
 /* Sort chips: the one group in the Filters panel that should read as bigger
    and more eye-catching than plain Material/Price/Availability pills — an
@@ -714,7 +733,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .pdp-assurance .pdp-guarantee{border-top:1px solid var(--line);margin-top:0}
 .pdp-details-head{margin-top:1.75rem;margin-bottom:.25rem}
 .trust-row-s{display:flex;gap:.5rem;margin-top:1rem}
-.trust-row-s span{flex:1;text-align:center;padding:.75rem .5rem;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:.75rem;color:var(--muted)}
+.trust-row-s span{flex:1;text-align:center;padding:.75rem .5rem;border:1px solid var(--muted);border-radius:var(--radius-sm);font-size:.75rem;color:var(--muted)}
 .trust-row-s span b{display:block;color:var(--dark);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
 /* 3 columns, centered icon-over-label — same language as home's
    .trust__row/.trust__icon, not a vertical list. */
@@ -743,9 +762,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    breakout (2026-08-06) with a 4:3 crop; now a proper contained card —
    square photo, rounded corners, background/shadow like every other card
    on the site (.card, .rv, .post-card), not a bespoke bleed treatment. */
-.pdp-narrative{background:var(--surface-soft);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(24,21,20,.05)}
-.pdp-narrative__img{aspect-ratio:1;background-size:cover;background-position:center;width:100%}
-.pdp-narrative__text{padding:1.25rem 1.25rem 1.5rem}
+/* padding on the card itself + the image's own border-radius (round 9,
+   2026-08-08, client: "le faltan márgenes laterales") — the image used to
+   bleed flush to the card's own edge with zero inset while the text side
+   had generous padding, an asymmetry that read as a missing margin on the
+   photo half specifically. Now both halves sit inset from the card's
+   edge consistently. */
+.pdp-narrative{background:var(--surface-soft);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(24,21,20,.05);padding:.75rem}
+.pdp-narrative__img{aspect-ratio:1;background-size:cover;background-position:center;width:100%;border-radius:var(--radius-sm)}
+.pdp-narrative__text{padding:1.25rem .25rem 1rem}
 .pdp-narrative p{font-size:.875rem;color:var(--muted);line-height:1.6}
 .pdp-narrative p+p{margin-top:.75rem}
 .pdp-narrative__cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:.75rem;font-weight:600;color:var(--accent);font-size:.9rem}
@@ -909,7 +934,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .cart-row__info b{display:block;font-size:.875rem}
 .cart-row__info .var{font-size:.65rem;color:var(--muted)}
 .cart-row__actions{display:flex;align-items:center;justify-content:space-between;margin-top:1rem}
-.qty-ctl{display:flex;align-items:center;border:1px solid var(--line);border-radius:var(--radius-pill)}
+.qty-ctl{display:flex;align-items:center;border:1px solid var(--muted);border-radius:var(--radius-pill)}
 .qty-ctl button{width:30px;height:30px;color:var(--muted)}
 .qty-ctl b{min-width:22px;text-align:center;font-size:.875rem}
 .cart-row__price{font-weight:600;font-size:.875rem}
@@ -1017,11 +1042,27 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
      mobile's rendered layout. */
   .scrollx-wrap{position:relative;max-width:1080px;margin:0 auto;padding:0 var(--gutter)}
   .sub-scroll{position:relative}
-  .scrollx-arrow{display:flex;position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:var(--light);border:1px solid var(--line);align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(20,17,16,.15);cursor:pointer;z-index:6;color:var(--dark);transition:opacity .2s,background .2s,color .2s}
+  /* Made smaller/quieter (round 9, 2026-08-08, client: "las quiero más
+     sutiles y elegantes") — was a bolder 44px filled circle with a visible
+     border; dropped the border entirely (a soft shadow alone still reads
+     as a "raised" floating disc, standard low-key-button pattern) and
+     started the icon in --muted instead of --dark so it doesn't compete
+     with card content until actually hovered. */
+  .scrollx-arrow{display:flex;position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:var(--light);border:none;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(20,17,16,.14);cursor:pointer;z-index:6;color:var(--muted);transition:opacity .2s,background .2s,color .2s,box-shadow .2s}
+  .scrollx-arrow svg{width:16px;height:16px}
   .scrollx-arrow--prev{left:.25rem}
   .scrollx-arrow--next{right:.25rem}
-  .scrollx-arrow:hover{background:var(--dark);color:var(--light)}
+  .scrollx-arrow:hover{background:var(--dark);color:var(--light);box-shadow:0 4px 14px rgba(20,17,16,.2)}
   .scrollx-arrow.is-hidden{opacity:0;pointer-events:none}
+  /* Shadow-clipping fix (round 9, client: "al hacer el hover se ve como se
+     corta la sombra"): .card's hover lift below needs room to render its
+     shadow above the card, but overflow-x:auto on these rows forces
+     overflow-y to a non-visible value too (a CSS rule: one axis "auto"
+     forces the other away from "visible"), clipping that shadow flush at
+     the row's own top edge with zero padding-top. Desktop-only — mobile
+     has no hover to need clearance for, and this only lives in the ≥768px
+     block already covering the hover states themselves below. */
+  .scroll-row,.rev-scroll,.post-scroll,.ugc-scroll,.collectible-scroll{padding-top:1.5rem}
   /* Desktop-only hover states — mobile has no hover, these were never
      considered for it (client, round 5: "algún hover... que en móvil no
      hemos ni planteado"). Mirrors each element's existing :active (touch)
@@ -1093,9 +1134,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .ft-news form{max-width:420px}
   /* "The story behind the piece" (round 5 redesign, see the base rule):
      side-by-side card instead of stacked, square photo on the left. */
-  .pdp-narrative{display:grid;grid-template-columns:1fr 1fr}
+  .pdp-narrative{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:1.25rem}
   .pdp-narrative__img{aspect-ratio:auto;height:100%;min-height:320px}
-  .pdp-narrative__text{padding:2.25rem;display:flex;flex-direction:column;justify-content:center}
+  .pdp-narrative__text{padding:1rem 1rem 1rem 0;display:flex;flex-direction:column;justify-content:center}
   /* Approach 4 "Immersive" hero gallery: its aspect-ratio:3/4 is set via an
      inline style in app.js (approach==="4" branch), so overriding it here
      needs !important — a class-only rule loses to inline style otherwise.

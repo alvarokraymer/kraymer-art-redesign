@@ -1075,6 +1075,83 @@ per-page override as a "bug fix."
   taller/narrower mobile crop doesn't have this problem in the first
   place).
 
+- **Round 9 (2026-08-08): PDP layout gap, story-card margins, scroll-shadow
+  clipping, arrow refinement, capsule border contrast.** Six items, mostly
+  desktop, one HTML restructure that also (harmlessly) touches mobile.
+  - **PDP two-column gap:** client: "no podemos dejar ese hueco... esa
+    columna tan larga a la derecha." Root cause: `specsHTML` (the 5-item
+    Specs/Concept/Shipping/Care/Licensing accordion) was rendered *inside*
+    `.pdp-meta`, in all three approaches that use it (Classic, Editorial,
+    Side) — making the buy-box column vastly taller than the gallery
+    column next to it (align-items:start, added round 5, just meant the
+    imbalance was honest instead of invisibly stretched). Moved
+    `${specsHTML}` out of `.pdp-meta` to sit as its own full-width section
+    right after `.pdp-layout` closes, for all three approaches — Classic
+    already had its "Back to collection" link outside the grid, so
+    Editorial/Side's copies moved out alongside specsHTML to match. This is
+    a structural HTML change, not a media-query override, so it applies at
+    every width — verified harmless on mobile (specsHTML was always
+    stacked in normal flow there regardless of which parent div it sat in,
+    so the visual result is identical).
+  - **Story-card side margins:** client: "le falta márgenes laterales."
+    The photo half bled flush to the card's own edge with zero inset while
+    the text half had generous padding — an asymmetry that read as a
+    missing margin specifically on the photo side. `.pdp-narrative` gained
+    its own `padding` (.75rem mobile, 1.25rem ≥768px) and
+    `.pdp-narrative__img` its own `border-radius:var(--radius-sm)`, so the
+    photo now sits inset within the card like a framed photo rather than
+    forming half the card's own silhouette. Applies to mobile too, per the
+    same "this one section can change on mobile" exception from round 5.
+  - **Horizontal-scroll hover shadow clipping:** client: "al hacer el hover
+    se ve como se corta la sombra." `overflow-x:auto` forces `overflow-y`
+    to a non-`visible` value too (per spec, one axis can't be visible if
+    the other isn't) — with zero `padding-top`, `.card`/`.post-card`'s
+    hover lift-and-shadow (round 5) got clipped flush at the row's own top
+    edge. Added `padding-top:1.5rem` to `.scroll-row`/`.rev-scroll`/
+    `.post-scroll`/`.ugc-scroll`/`.collectible-scroll`, **desktop-only**
+    (≥768px, alongside the hover states themselves) — mobile has no hover
+    to need clearance for, and unconditional padding would have shifted
+    every rail down slightly there for no reason.
+  - **Arrows made more subtle** (client: "las quiero más sutiles y
+    elegantes" — both `.scrollx-arrow`, the horizontal-rail arrows from
+    round 5, and `.gal-arrow`, the PDP image-nav arrows from round 6).
+    `.scrollx-arrow`: 44px→38px, dropped its `var(--line)` border entirely
+    (a soft shadow alone still reads as a raised disc — see the border-
+    contrast fix below for why `var(--line)` specifically wasn't a good
+    border color anyway), icon color started in `--muted` instead of
+    `--dark` so it's quieter until actually hovered. `.gal-arrow`: 36px→
+    30px, background opacity .85→.7. Also gave it an explicit
+    `svg{width:14px;height:14px}` it never had — the inline svg in
+    `galArrowsHTML` (app.js) carries no width/height attribute of its own,
+    so without this rule the icon was rendering at the browser's unstyled
+    SVG default rather than actually being sized to the button.
+  - **Capsule borders invisible** (client: "hay algunas cápsulas que no se
+    les ve el borde... la de los likes del pdp, la de colección en pdp
+    etc"). Root cause: `--line` (#E8E2DE) and `--light` (#E6E6E6) are only
+    a couple of points apart — any `border:1px solid var(--line)` on a
+    `background:transparent` pill sitting on the plain page background is
+    functionally invisible. Fixed on every transparent-background pill/chip
+    with this exact problem: `.pdp-wish` (explicitly named), `.v-chip`,
+    `.sub` (the PLP/nav collection filter chips — almost certainly the
+    second example named), `.mob-action-btn`, `.quiz__opt`,
+    `.pdp-state-badge`, `.pdp-discount`, `.metal-card`, `.trust-row-s
+    span`, `.qty-ctl` — all switched from `border-color:var(--line)` to
+    `var(--muted)`, a real gray with actual contrast against `--light` in
+    both themes (confirmed: `--muted` is `#8D847E` light / `#978F85` dark,
+    both clearly separated from their respective `--light` values, unlike
+    `--line`). Deliberately **not** a global `--line` token change — it
+    still reads fine as a subtle hairline divider against the lighter
+    `--surface`/`--surface-soft` backgrounds elsewhere (card borders,
+    section dividers), just not on transparent chips sitting directly on
+    the page background.
+  - **Dark-mode general sweep:** re-checked home, PLP (grid, filter panel),
+    cart drawer, and the promo modal in dark mode — no further bugs found
+    beyond the capsule-border fix above (which was equally invisible in
+    dark mode, arguably more so). If something specific is still off,
+    it needs a concrete repro (page + component) to chase further; a
+    generic "dark mode needs work" pass without one risks re-fixing things
+    that already work.
+
 ## Hard rules (from the brief, do not regress)
 
 1. **Mobile-first, non-negotiable.** Base styles target 375–414px. Desktop only

@@ -1325,10 +1325,12 @@ function initPDP() {
             ${pdpCTA()}
             <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
           </div>
-          ${specsHTML}
-          <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to collection</a>
         </div>
       </div>
+      ${specsHTML}
+      <section class="sec sec--sm" style="text-align:center;padding-top:0">
+        <a class="btn btn--link" href="coleccion.html">&larr; Back to collection</a>
+      </section>
       ${crossHTML}
       ${reviewsHTML}`;
 
@@ -1356,10 +1358,12 @@ function initPDP() {
             ${pdpCTA("flex:1")}
           </div>
           <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
-          ${specsHTML}
-          <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to collection</a>
         </div>
       </div>
+      ${specsHTML}
+      <section class="sec sec--sm" style="text-align:center;padding-top:0">
+        <a class="btn btn--link" href="coleccion.html">&larr; Back to collection</a>
+      </section>
       ${crossHTML}`;
 
   } else if (approach === "4") {
@@ -1425,9 +1429,9 @@ function initPDP() {
             ${pdpCTA()}
             <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
           </div>
-          ${specsHTML}
         </div>
       </div>
+      ${specsHTML}
       ${storyHTML}
       ${collectibleHTML}
       ${ugcHTML}
