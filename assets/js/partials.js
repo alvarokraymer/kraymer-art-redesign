@@ -95,7 +95,8 @@ const FOOTER_HTML = `
       <img class="ft-founder__avatar" src="assets/kraymerProfile.jpg" alt="Kraymer" style="object-fit:cover">
       <div>
         <div class="ft-founder__name">Kraymer</div>
-        <div class="ft-founder__role">Founder &amp; Designer</div>
+        <div class="ft-founder__role">Founder</div>
+        <a class="ft-founder__cta" href="about.html">Our Story &rarr;</a>
       </div>
       <div class="ft-social">
         <a href="https://instagram.com/kraymer.art" target="_blank" rel="noopener" aria-label="Instagram, 50k followers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span><span class="ft-soc__count">50k</span></a>

@@ -86,8 +86,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 
 /* ── Utilities ── */
 .w{max-width:1080px;margin:0 auto;padding:0 var(--gutter)}
-.sec{padding:2.75rem 0}
-.sec--sm{padding:2rem 0}
+.sec{padding:2.25rem 0}
+.sec--sm{padding:1.5rem 0}
 .sec--dark{background:var(--dark);color:var(--light)}
 .sec--warm{background:var(--surface)}
 .eyebrow{font-family:var(--body);font-size:.65rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.5rem}
@@ -234,10 +234,18 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    18px-top-only for soft), showing as a mismatched notch/gap at the corners
    where the two disagree. */
 .card__img .ph{position:absolute;inset:0;z-index:0;border-radius:inherit}
-.card__body{padding:.9rem 1rem 1.1rem;display:flex;flex-direction:column;gap:3px;text-decoration:none;color:inherit}
+.card__body{padding:.9rem .9rem 1.1rem;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:inherit}
 .card__body:hover .card__title{text-decoration:underline;text-underline-offset:3px}
 .card__series{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.card__title{font-family:var(--display);font-size:1.1rem;font-weight:300;line-height:1.2}
+/* Always one line, never wraps to two — cards stay a consistent height even
+   with a long product name. Static titles get an ellipsis; titles too long
+   to fit at all get wired up (checkCardTitleMarquee in app.js) into a
+   seamless looping ticker instead, so the full name is still readable. */
+.card__title{font-family:var(--display);font-size:1.1rem;font-weight:300;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card__title--marquee{text-overflow:clip}
+.card__title__track{display:inline-block;white-space:nowrap;animation:card-title-marquee 8s linear infinite}
+.card__title__sep{margin:0 1.5rem;opacity:.4}
+@keyframes card-title-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .card__price{font-size:.875rem;font-weight:600}
 .card__price s{color:var(--muted);font-weight:400;margin-left:.5rem}
 .sold{opacity:.4}
@@ -400,7 +408,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Boxed on --surface-soft, which stays fixed-light in dark mode — text needs
    the same hardcoded-literal treatment as .card (see dark-mode notes above),
    not the inverting --dark token. */
-.trust{text-align:center;padding-top:1.25rem;padding-bottom:1.25rem;background:var(--surface-soft);border-radius:var(--radius);box-shadow:0 1px 3px rgba(24,21,20,.05);margin:1.25rem auto}
+.trust{text-align:center;padding-top:1.25rem;padding-bottom:1.25rem;background:var(--surface-soft);border-radius:var(--radius);box-shadow:0 1px 3px rgba(24,21,20,.05);margin:1rem auto}
 .trust__row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
 .trust__icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(196,168,130,.14);margin:0 auto .6rem}
 .trust__item b{display:block;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#181514}
@@ -445,6 +453,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .faq{border-top:1px solid var(--line)}
 .faq__item{border-bottom:1px solid var(--line)}
 .faq__btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0;text-align:left;font-size:1rem;font-weight:400;font-family:var(--display)}
+.faq__btn-label{display:flex;align-items:center}
 .faq__btn::after{content:"";width:8px;height:8px;border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg);transition:transform .2s}
 .faq__item.on .faq__btn::after{transform:rotate(225deg)}
 .faq__panel{max-height:0;overflow:hidden;transition:max-height .25s}
@@ -461,14 +470,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    background is just a loading-state fallback. Social icons use lucide,
    sized up and on a translucent dark chip so they read as a deliberate row,
    not afterthought text links. */
-.ft-founder{display:flex;align-items:center;gap:1rem;padding:1.75rem 0 1.5rem;border-bottom:1px solid rgba(246,246,246,.1)}
+.ft-founder{display:flex;align-items:flex-start;gap:1rem;padding:1.5rem 0 1.25rem;border-bottom:1px solid rgba(246,246,246,.1)}
 .ft-founder__avatar{width:56px;height:56px;border-radius:50%;background:#4A4645;flex:none}
 /* Hardcoded literals, not tokens — .ft's background is forced to stay dark in
    dark mode (see the .ft override above), so var(--light)/var(--dark) would
    invert against a background that never does. Same bug class documented at
    the top of this file for .ft-cols/.marquee. */
 .ft-founder__name{font-family:var(--display);font-size:1.05rem;color:#F6F6F6;font-weight:400}
-.ft-founder__role{font-size:.7rem;color:rgba(246,246,246,.5);margin-top:2px}
+.ft-founder__role{font-size:.7rem;color:rgba(246,246,246,.5);margin-top:1px}
+.ft-founder__cta{display:inline-block;margin-top:.4rem;font-size:.7rem;font-weight:600;color:var(--accent)}
 .ft-social{display:flex;gap:1.1rem;margin-left:auto}
 .ft-social a{display:flex;flex-direction:column;align-items:center;gap:5px;color:#F6F6F6}
 .ft-soc__icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(246,246,246,.08);border:1px solid rgba(246,246,246,.16);transition:background .2s,border-color .2s,transform .2s}
@@ -553,28 +563,32 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .gal-strip::-webkit-scrollbar{display:none}
 .gal-strip button{flex:none;width:56px;height:56px;border-radius:var(--radius-sm);background-size:cover;background-position:center;border:1px solid #E0E0E0;cursor:pointer;padding:0;transition:border-color .15s;background-color:#F0F0F0}
 .gal-strip button.on{border:1.5px solid var(--dark)}
-.pdp-meta{padding-top:2rem}
-.pdp-meta .eyebrow{display:block;margin-bottom:.5rem}
-.pdp-tag{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
-.pdp-state-badge{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius-pill);border:1px solid var(--line);color:var(--muted);margin-bottom:.75rem}
+.pdp-meta{padding-top:1rem}
+.pdp-meta .eyebrow{display:block;margin-bottom:.4rem}
+.pdp-tag{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.pdp-state-badge{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius-pill);border:1px solid var(--line);color:var(--muted);margin-bottom:.5rem}
 .pdp-state--sold{border-style:solid;color:var(--muted-d)}
 .pdp-state--coming{border-style:dashed}
 .pdp-state--low{border-style:dashed;color:var(--muted)}
 .pdp-state--new{border-style:solid}
 .pdp-discount{display:inline-block;font-size:.7rem;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:var(--radius-pill);padding:2px 8px;margin-left:.5rem;vertical-align:middle}
-.pdp-headline{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.5rem}
+.pdp-headline{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.35rem}
 .pdp-title{font-size:1.75rem;font-weight:300;flex:1}
 .metal-cards{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .metal-card{display:flex;align-items:center;justify-content:center;min-height:56px;padding:0 1rem;border:1px solid var(--line);border-radius:var(--radius-sm);background:transparent;cursor:pointer;transition:all .2s;width:100%}
 .metal-card span{font-size:.8rem;font-weight:500;color:var(--muted);letter-spacing:.02em}
 .metal-card.selected{border-color:var(--dark)}
 .metal-card.selected span{color:var(--dark);font-weight:600}
-.pdp-desc{font-family:var(--display);font-size:1.35rem;font-weight:300;line-height:1.3;color:var(--muted);margin-bottom:1rem}
-.pdp-rating{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;font-size:.9rem;color:var(--muted);margin-bottom:1.5rem}
+.pdp-desc{font-family:var(--display);font-size:1.35rem;font-weight:300;line-height:1.3;color:var(--muted);margin-bottom:.75rem}
+.pdp-rating{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;font-size:.9rem;color:var(--muted);margin-bottom:.5rem}
 .pdp-rating .stars{color:var(--dark);letter-spacing:.04em;font-size:1rem}
+/* Bigger, more visible — client felt the default size read as an
+   afterthought under the description (2026-08-05). Needs the extra
+   .stars.pdp-rating__stars specificity to beat .pdp-rating .stars above. */
+.pdp-rating .stars.pdp-rating__stars{font-size:1.5rem;margin-right:.5rem;line-height:1}
 .pdp-rating a{text-decoration:underline;text-underline-offset:2px;color:var(--muted)}
 .pdp-price{font-family:var(--body);font-size:1.75rem;font-weight:700;flex:none}
-.pdp-wish{position:static;width:auto;height:auto;display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;background:transparent;border:1px solid var(--line);border-radius:var(--radius-pill);box-shadow:none;margin-bottom:1.25rem}
+.pdp-wish{position:static;width:auto;height:auto;display:inline-flex;align-items:center;gap:.5rem;padding:.5rem .9rem;background:transparent;border:1px solid var(--line);border-radius:var(--radius-pill);box-shadow:none;margin-bottom:1rem}
 .pdp-wish svg{position:static;width:16px;height:16px}
 .pdp-wish__count{font-size:.8rem;color:var(--muted);font-weight:600}
 .pdp-wish.active{border-color:var(--pink)}
@@ -582,9 +596,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .pdp-wish--inline{margin-left:auto;margin-bottom:0;padding:0;border:0;gap:.3rem}
 .pdp-wish--inline svg{width:14px;height:14px}
 .pdp-wish--inline .pdp-wish__count{font-size:.8rem}
-.pdp-config{padding:1.25rem 0;margin-bottom:1.5rem;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.pdp-config{padding:1rem 0;margin-bottom:1rem;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .pdp-config .v-group:last-child{margin-bottom:0}
-.v-group{margin-bottom:1.25rem}
+.v-group{margin-bottom:1rem}
 .v-label{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;display:flex;justify-content:space-between}
 .v-label button{color:var(--accent);font-weight:500}
 .v-row{display:flex;flex-wrap:wrap;gap:.5rem}
@@ -635,9 +649,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* ── PDP: "The story behind the piece" editorial module ── */
 .pdp-narrative p{font-size:.875rem;color:var(--muted);line-height:1.6}
 .pdp-narrative p+p{margin-top:.75rem}
-.pdp-narrative__media{display:flex;gap:.6rem;margin-bottom:1rem}
-.pdp-narrative__img{flex:2;aspect-ratio:4/3;border-radius:var(--radius);background-size:cover;background-position:center}
-.pdp-narrative__img--sm{flex:1;aspect-ratio:3/4}
+/* Single, full-width image — simplified from a two-image row (2026-08-05). */
+.pdp-narrative__img{aspect-ratio:4/3;border-radius:var(--radius);background-size:cover;background-position:center;margin-bottom:1rem}
+.pdp-narrative__cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:.75rem;font-weight:600;color:var(--accent);font-size:.9rem}
 
 /* ── PDP: "The complete collectible experience" rail ── */
 .collectible-scroll{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:.5rem}
@@ -653,8 +667,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* ── PDP: reviews rating summary + show-more ── */
 .pdp-rating-summary{font-size:.9rem;color:var(--muted)}
 .pdp-rating-summary .stars{color:var(--dark);letter-spacing:.04em;font-size:1rem;margin-right:.4rem}
-.rev-more{margin-top:1rem}
-.rev-more[hidden]{display:none}
+/* Reviews as a plain vertical list (was a horizontal scroll-row) — relies
+   on the existing .rv+.rv{margin-top:1rem} rule for spacing between items;
+   [data-rev-extra][hidden] needs no rule of its own since .rv has no
+   explicit display to out-specificity the UA [hidden]{display:none}. */
 .pdp--editorial{padding-bottom:1rem}
 .pdp--editorial .pdp-story h3{font-family:var(--display);font-size:1.2rem;font-weight:400;margin-bottom:.5rem}
 .pdp--editorial .pdp-story p{font-size:.875rem;color:var(--muted);line-height:1.6}

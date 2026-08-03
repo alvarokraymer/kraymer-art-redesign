@@ -463,6 +463,32 @@ function initAccordions(scope = document) {
   });
 }
 
+/* Product-card titles: force a single line everywhere (see .card__title in
+   styles.css); if the full name still doesn't fit, turn it into a seamless
+   looping ticker instead of just clipping it — used site-wide (home,
+   PLP grid, PDP cross-sell rails, cart), so wired via a MutationObserver
+   watching the whole document rather than called from every render site
+   individually. Two identical text+separator copies + translateX(-50%) is
+   the same seamless-loop technique as the header marquee — a gap between
+   copies via flex `gap` would reintroduce that marquee's old stutter bug
+   (see AGENTS.md), so the separator is real text content, not layout gap. */
+function checkCardTitleMarquee(el) {
+  if (el.dataset.marqueeChecked) return;
+  el.dataset.marqueeChecked = "1";
+  if (el.scrollWidth > el.clientWidth + 1) {
+    const text = el.textContent;
+    el.classList.add("card__title--marquee");
+    el.innerHTML = `<span class="card__title__track">${text}<span class="card__title__sep">&bull;</span>${text}<span class="card__title__sep">&bull;</span></span>`;
+  }
+}
+function initCardTitleMarquee() {
+  document.querySelectorAll(".card__title").forEach(checkCardTitleMarquee);
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll(".card__title:not([data-marquee-checked])").forEach(checkCardTitleMarquee);
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
 /* ---------------- 8. Page initializers ---------------- */
 
 /* Shared quick-add + wish + notify + image swipe (PLP only) */
@@ -1001,14 +1027,15 @@ function initPDP() {
     </button>`;
 
   const conceptLine = p.line || "Designed as a piece you can wear anywhere, that another fan recognizes across the room.";
+  const faqIco = (path) => `<i data-lucide="${path}" style="width:16px;height:16px;margin-right:.6rem;flex:none"></i>`;
   const specsHTML = `
     <div class="pdp-details-head"><span class="eyebrow">Details</span></div>
     <div class="specs faq">
-      <div class="faq__item"><button class="faq__btn">Specs &amp; Materials</button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m)=>m.includes("Gold"))?" or 18K gold plated over sterling silver":""}. Hand-set ${p.gem?p.gem.toLowerCase():"stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
-      <div class="faq__item"><button class="faq__btn">Concept &amp; Inspiration</button><div class="faq__panel"><p>${conceptLine}</p></div></div>
-      <div class="faq__item"><button class="faq__btn">Shipping &amp; Returns</button><div class="faq__panel"><p>Handcrafted to order, ships in 9&ndash;20 days with photo updates along the way, then tracked worldwide. 60-day returns, no questions asked.</p></div></div>
-      <div class="faq__item"><button class="faq__btn">Care Instructions</button><div class="faq__panel"><p>Wipe with the included polishing cloth after wear. Store in the pouch. Your lifetime warranty covers the rest.</p></div></div>
-      <div class="faq__item"><button class="faq__btn">Is this official licensed merchandise?</button><div class="faq__panel"><p>No. Every piece is an original design inspired by the worlds we grew up loving, hand-sculpted in our own studio, not a licensed reproduction.</p></div></div>
+      <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("gem")}Specs &amp; Materials</span></button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m)=>m.includes("Gold"))?" or 18K gold plated over sterling silver":""}. Hand-set ${p.gem?p.gem.toLowerCase():"stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
+      <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("sparkles")}Concept &amp; Inspiration</span></button><div class="faq__panel"><p>${conceptLine}</p></div></div>
+      <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("truck")}Shipping &amp; Returns</span></button><div class="faq__panel"><p>Handcrafted to order, ships in 9&ndash;20 days with photo updates along the way, then tracked worldwide. 60-day returns, no questions asked.</p></div></div>
+      <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("droplet")}Care Instructions</span></button><div class="faq__panel"><p>Wipe with the included polishing cloth after wear. Store in the pouch. Your lifetime warranty covers the rest.</p></div></div>
+      <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("badge-check")}Is this official licensed merchandise?</span></button><div class="faq__panel"><p>No. Every piece is an original design inspired by the worlds we grew up loving, hand-sculpted in our own studio, not a licensed reproduction.</p></div></div>
     </div>`;
   /* "Seen in the wild" — UGC rail. No real customer photos/videos exist yet
      (client instruction 2026-08-04: reserve the space with grey placeholders
@@ -1034,24 +1061,24 @@ function initPDP() {
       </div>
     </section>`;
 
-  /* "The story behind the piece" — compressed editorial module. Intro reuses
-     the product's own Concept & Inspiration line rather than a duplicate
-     paragraph; images reuse real photoshoot frames (imgs[0]/imgs[1]) for the
-     4 products that have one, otherwise the same placeholder fallback used
-     everywhere else. The fuller craft narrative already lives on
-     about.html#craft — linked, not copy-pasted wholesale, to avoid the exact
-     duplication this redesign is meant to remove. */
-  const storySupportImg = imgs[1] || mainImg;
+  /* "The story behind the piece" — compressed editorial module, moved above
+     the UGC rail 2026-08-05 (client liked this section, wanted it earlier
+     and simplified to one well-placed image instead of a two-image row).
+     Intro reuses the product's own Concept & Inspiration line rather than a
+     duplicate paragraph; image reuses the real hero photoshoot frame
+     (mainImg) for the 4 products that have one, otherwise the same
+     placeholder fallback used everywhere else. The fuller craft narrative
+     already lives on about.html#craft — linked via its own prominent CTA
+     line, not copy-pasted wholesale, to avoid the exact duplication this
+     redesign is meant to remove. */
   const storyHTML = `
     <section class="sec sec--sm sec--warm">
       <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">The story behind the piece</span><h2>${p.title}</h2></div>
       <div class="pdp-narrative">
-        <div class="pdp-narrative__media">
-          <div class="pdp-narrative__img" style="background-image:url(${mainImg})"></div>
-          <div class="pdp-narrative__img pdp-narrative__img--sm" style="background-image:url(${storySupportImg})"></div>
-        </div>
+        <div class="pdp-narrative__img" style="background-image:url(${mainImg})"></div>
         <p>${conceptLine}</p>
-        <p>Every piece starts as a wax sculpture at the bench, not a die-cast mold, then goes out in small numbered batches. <a href="about.html#craft">Read the full craft process &rarr;</a></p>
+        <p>Every piece starts as a wax sculpture at the bench, not a die-cast mold, then goes out in small numbered batches.</p>
+        <a class="pdp-narrative__cta" href="about.html#craft"><i data-lucide="arrow-right" style="width:16px;height:16px"></i>Read the full craft process</a>
       </div>
     </section>`;
 
@@ -1075,28 +1102,45 @@ function initPDP() {
       </div>
     </section>`;
 
+  /* Reviews: a plain vertical list of 5 (was a 3-card scroll-row + a
+     3-more toggle) with a single review behind "Load More", matching the
+     PLP's own load-more convention (label swaps, button disables — nothing
+     left to reveal after that, since only 6 review quotes exist in this
+     mockup). Kept as the very last section on the page per 2026-08-05
+     instruction. */
   const reviewsHTML = `
     <section class="sec sec--sm" id="reviews">
       <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
       <div class="ct pdp-rating-summary" style="margin-bottom:1.5rem"><span class="stars">★★★★★</span> ${RATING_DEFAULT}</div>
-      <div class="rev-scroll">
+      <div class="rev-list">
         <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><span class="rv__avatar"></span><span><b>Priya N.</b> · Verified Buyer</span></p></div>
         <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><span class="rv__avatar"></span><span><b>Daniel K.</b> · Verified Buyer</span></p></div>
         <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><span class="rv__avatar"></span><span><b>Sam T.</b> · Verified Buyer</span></p></div>
+        <div class="rv"><span class="stars">★★★★★</span><h4>Better than expected</h4><p>Better finish than pieces I have paid three times as much for.</p><p class="who"><span class="rv__avatar"></span><span><b>Maria L.</b> · Verified Buyer</span></p></div>
+        <div class="rv"><span class="stars">★★★★★</span><h4>Great unboxing</h4><p>Exactly as pictured, and the box alone felt like a gift.</p><p class="who"><span class="rv__avatar"></span><span><b>Jordan P.</b> · Verified Buyer</span></p></div>
+        <div class="rv" data-rev-extra hidden><span class="stars">★★★★★</span><h4>Ordered a second piece</h4><p>Ordered two more the week after my first piece arrived.</p><p class="who"><span class="rv__avatar"></span><span><b>Alex R.</b> · Verified Buyer</span></p></div>
       </div>
-      <div class="rev-more" data-rev-more hidden>
-        <div class="rev-scroll">
-          <div class="rv"><span class="stars">★★★★★</span><h4>Better than expected</h4><p>Better finish than pieces I have paid three times as much for.</p><p class="who"><span class="rv__avatar"></span><span><b>Maria L.</b> · Verified Buyer</span></p></div>
-          <div class="rv"><span class="stars">★★★★★</span><h4>Great unboxing</h4><p>Exactly as pictured, and the box alone felt like a gift.</p><p class="who"><span class="rv__avatar"></span><span><b>Jordan P.</b> · Verified Buyer</span></p></div>
-          <div class="rv"><span class="stars">★★★★★</span><h4>Ordered a second piece</h4><p>Ordered two more the week after my first piece arrived.</p><p class="who"><span class="rv__avatar"></span><span><b>Alex R.</b> · Verified Buyer</span></p></div>
-        </div>
-      </div>
-      <div class="ct" style="margin-top:1rem"><button class="btn--ghost" data-rev-toggle>Show more reviews &rarr;</button></div>
+      <div class="ct" style="margin-top:1rem"><button class="btn btn--line" data-rev-loadmore>Load More Reviews</button></div>
     </section>`;
   const crossHTML = `
     <section class="sec sec--sm">
       <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">You may also like</span><h2>Complete the look</h2></div>
       <div class="scroll-row" data-crosssell></div>
+    </section>`;
+  /* Classic-only: related products split into two rails per 2026-08-05
+     instruction (same-collection "Complete the Look" vs. broader "You May
+     Also Like") — smaller cards (.scroll-row--compact) than the old single
+     crossHTML rail. crossHTML itself is untouched and still used as-is by
+     the other 3 approaches. */
+  const completeLookHTML = `
+    <section class="sec sec--sm">
+      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">${col.name}</span><h2>Complete the Look</h2></div>
+      <div class="scroll-row scroll-row--compact" data-crosssell-same></div>
+    </section>`;
+  const alsoLikeHTML = `
+    <section class="sec sec--sm">
+      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">Other collectors' picks</span><h2>You May Also Like</h2></div>
+      <div class="scroll-row scroll-row--compact" data-crosssell-other></div>
     </section>`;
 
   /* ===== APPROACH ROUTING ===== */
@@ -1217,7 +1261,8 @@ function initPDP() {
           <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
           ${pdpPrice('style="margin-bottom:.75rem"')}
           <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
-          <div class="pdp-rating"><span class="stars">★★★★★</span> ${RATING_DEFAULT} · <a href="#reviews">Read reviews</a> ${pdpWish("", "pdp-wish--inline")}</div>
+          <div class="pdp-rating"><span class="stars pdp-rating__stars">★★★★★</span> ${RATING_DEFAULT} · <a href="#reviews">Read reviews</a></div>
+          ${pdpWish()}
           <div class="pdp-config">
             ${variantsHTML("chips","metal-cards","metal-cards")}
           </div>
@@ -1226,14 +1271,17 @@ function initPDP() {
             <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
           </div>
           ${specsHTML}
-          <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to all collections</a>
         </div>
       </div>
-      ${ugcHTML}
       ${storyHTML}
+      ${ugcHTML}
       ${collectibleHTML}
-      ${reviewsHTML}
-      ${crossHTML}`;
+      <section class="sec sec--sm" style="text-align:center">
+        <a class="btn btn--line" href="coleccion.html"><i data-lucide="arrow-left" style="width:16px;height:16px"></i>Back to All Collections</a>
+      </section>
+      ${completeLookHTML}
+      ${alsoLikeHTML}
+      ${reviewsHTML}`;
   }
 
   /* ===== RENDER ===== */
@@ -1247,19 +1295,30 @@ function initPDP() {
     crossEl.innerHTML = cross.map((cp) => productCard(cp, { approach: false })).join("");
     crossEl.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
   }
+  /* Classic-only split rails */
+  const sameEl = host.querySelector("[data-crosssell-same]");
+  if (sameEl) {
+    const sameCollection = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && x.collection===p.collection).slice(0,4);
+    sameEl.innerHTML = sameCollection.map((cp) => productCard(cp, { approach: false })).join("");
+    sameEl.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
+  }
+  const otherEl = host.querySelector("[data-crosssell-other]");
+  if (otherEl) {
+    const otherPicks = PRODUCTS.filter((x) => x.handle!==p.handle && !x.soldOut && x.collection!==p.collection).slice(0,4);
+    otherEl.innerHTML = otherPicks.map((cp) => productCard(cp, { approach: false })).join("");
+    otherEl.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
+  }
 
   /* Info button: toggles the caption panel over whichever image is showing */
   applyImgNote(0);
   host.addEventListener("click", (e) => {
     const infoBtn = e.target.closest("[data-gal-info]");
     if (infoBtn) { infoBtn.nextElementSibling.hidden = !infoBtn.nextElementSibling.hidden; }
-    const revToggle = e.target.closest("[data-rev-toggle]");
-    if (revToggle) {
-      const more = host.querySelector("[data-rev-more]");
-      if (more) {
-        more.hidden = !more.hidden;
-        revToggle.textContent = more.hidden ? "Show more reviews →" : "Show fewer reviews ↑";
-      }
+    const revLoadBtn = e.target.closest("[data-rev-loadmore]");
+    if (revLoadBtn) {
+      host.querySelectorAll("[data-rev-extra]").forEach((el) => { el.hidden = false; });
+      revLoadBtn.textContent = "That is every review in this mockup";
+      revLoadBtn.disabled = true;
     }
   });
 
@@ -1396,6 +1455,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateBadges();
   renderCart();
   initCardActions();
+  initCardTitleMarquee();
   initAccordions();
 
   document.addEventListener("click", (e) => {

@@ -294,6 +294,20 @@ per-page override as a "bug fix."
   it directly — there are no separate per-post detail pages, by design; the
   excerpt shown IS the full content, same low-fidelity-content convention as
   the rest of this mockup.
+- **Product card titles never wrap to 2 lines** (2026-08-05): `.card__title`
+  is `white-space:nowrap` with an ellipsis fallback, but a global
+  `initCardTitleMarquee()` (called once at DOMContentLoaded, wired via a
+  `MutationObserver` on `document.body`, not per-render-site) checks every
+  `.card__title` site-wide and turns any that still overflow into a
+  seamless looping ticker (`.card__title--marquee`/`.card__title__track`,
+  two identical text+`•`-separator copies + `translateX(-50%)`). Uses a
+  MutationObserver instead of calling a helper from every place cards get
+  rendered (home bestsellers, PLP grid, PDP's 3 cross-sell rails, cart) so
+  new call sites don't need to remember to wire it themselves. Two
+  identical copies + a **text** separator, not a flex `gap`, is deliberate —
+  a gap would reintroduce the exact stutter bug the header marquee had
+  (see the marquee note further up this file): with a gap, `-50%` no
+  longer lands exactly on the seam between copies.
 - **Product cards** (`productCard()` in `app.js`): one shared renderer.
   **Production has standardized on the "soft" approach for every collection**
   (2026-07-31) — `approachMap` maps jjk/kny/genshin all to `"soft"`. "bold" and
@@ -330,43 +344,58 @@ per-page override as a "bug fix."
   3. **Side** — compact two-column, no rating line, no reviews section (only
      specs + cross-sell) — intentional, not an oversight.
   4. **Immersive** — full-bleed gallery, floating price overlay, full reviews.
-- **PDP Classic below-the-fold redesign** (2026-08-04): a long redesign brief
-  arrived assuming a much richer PDP than this mockup actually has (UGC
-  video, social embeds, packaging/"digital collectible experience", a big
-  review feed with filters) — none of that content or those features exist
-  here. Audited first, flagged the mismatch, client chose "grey-placeholder
-  the missing-media sections rather than skip them or invent content."
-  Result, in order below the untouched purchase area: `specsHTML` grew from
-  3 to 5 accordion items (added **Shipping & Returns**, consolidating facts
-  already stated in `noteHTML`/`guaranteeHTML`/about.html rather than
-  duplicating a paragraph; added **Is this official licensed merchandise?**,
-  the one about.html FAQ question not already covered elsewhere on the PDP —
-  deliberately did NOT add a separate PDP FAQ section since there was nothing
-  left to put in it without repeating the accordion) → `ugcHTML` ("Seen in
-  the wild", `.ugc-scroll`/`.ugc-card`, grey placeholders only, names reused
-  from the existing reviewer pool, not invented people) → `storyHTML` ("The
-  story behind the piece", `.pdp-narrative`, reuses `p.line` + two real
-  product photos, links out to `about.html#craft` for the fuller narrative
-  instead of duplicating it) → `collectibleHTML` ("What's in the box",
-  `.collectible-scroll`/`.collectible-card`, only 2 cards — Presentation/
-  pouch and Certificate of Authenticity — because those are the only two
-  claims with any real backing; deliberately no "digital collectible" or
-  gifting card invented for a jewelry brand) → `reviewsHTML` (added a rating-
-  summary line + a `[data-rev-more]` panel with 3 more reviews behind
-  `[data-rev-toggle]`, reusing the extra review copy already written for
-  home rather than fabricating new testimonials) → `crossHTML` (unchanged,
-  just moved after reviews instead of before — the immediate prior request
-  had moved it before reviews; this redesign's explicit numbered rhythm put
-  it after, so it moved back). No new dependency, no new carousel library —
-  every rail reuses the site's existing native-scroll/scroll-snap pattern
+- **PDP Classic below-the-fold redesign** (2026-08-04, re-tuned 2026-08-05):
+  a redesign brief arrived assuming a much richer PDP than this mockup
+  actually has (UGC video, social embeds, packaging/"digital collectible
+  experience", a big filterable review feed) — none of that content or
+  those features exist here. Audited first, flagged the mismatch; client
+  chose "grey-placeholder the missing-media sections rather than skip them
+  or invent content." Current order below the untouched purchase area
+  (gallery → tag/badge/title/price/desc → rating line with **bigger stars**
+  (`.pdp-rating__stars`, needs the extra `.stars.pdp-rating__stars`
+  specificity to beat the older `.pdp-rating .stars` rule) → wishlist on
+  its own left-aligned line below the rating, not inline with it anymore →
+  variants → ATC/Buy Now → assurance card):
+  `specsHTML` (5 accordion items — Specs & Materials, Concept &
+  Inspiration, **Shipping & Returns** (new, consolidates
+  `noteHTML`/`guaranteeHTML`/about.html facts rather than duplicating a
+  paragraph), Care Instructions, **Is this official licensed
+  merchandise?** (the one about.html FAQ question not already covered on
+  the PDP — deliberately no separate PDP FAQ section, nothing left to put
+  in it) — every item now has a small `faqIco()` lucide icon via
+  `.faq__btn-label`, a flex wrapper needed so the icon+text group together
+  on the left while `.faq__btn`'s own `::after` chevron still gets pushed
+  right by `justify-content:space-between`) → `storyHTML` ("The story
+  behind the piece" — moved above the UGC rail 2026-08-05, client liked it
+  and wanted it earlier; simplified to **one** image (`.pdp-narrative__img`)
+  instead of a two-image row, with `Read the full craft process` as its own
+  prominent `.pdp-narrative__cta` line linking to `about.html#craft`, not
+  inline at the end of a paragraph) → `ugcHTML` ("Seen in the wild", grey
+  placeholders, names reused from the reviewer pool) → `collectibleHTML`
+  ("What's in the box", 2 cards only — Presentation/pouch and Certificate
+  of Authenticity, the only two claims with real backing) → a standalone
+  "Back to All Collections" CTA (`.btn.btn--line`, own centered section) —
+  deliberately pulled out of `.pdp-meta` and moved down here, since a plain
+  text link sitting under the specs accordion read like a stray nav item →
+  `completeLookHTML`/`alsoLikeHTML` (Classic-only split of the old single
+  cross-sell rail: "Complete the Look" filters to `p.collection`, "You May
+  Also Like" filters to *other* collections; both use
+  `.scroll-row--compact` for smaller cards; `crossHTML`/`data-crosssell`
+  itself is untouched and still what the other 3 approaches use) →
+  `reviewsHTML`, last on the page — a plain vertical `.rev-list` of 5
+  reviews plus one more behind `[data-rev-extra]`/`[data-rev-loadmore]`
+  (was a 3-card scroll-row + a 3-more show/hide toggle; only 6 review
+  quotes exist in this mockup, so "Load More" reveals the 1 remaining and
+  then disables, same convention as the PLP's own load-more button).
+  No new dependency, no new carousel library — every rail reuses the
+  site's existing native-scroll/scroll-snap pattern
   (`.scroll-row`/`.rev-scroll`/`.post-scroll`), no desktop prev/next arrows
   were added since no existing rail on the site has them either.
-  While touching this, fixed two real pre-existing dark-mode bugs in the
-  same bug family as the rest of this file: `.rv` (review card) had no
-  hardcoded-text override despite sitting on the fixed `--surface`
-  background — its `h4`/`.stars` were inheriting the inverting `--dark`
-  token and going near-white-on-near-white; same fix applied to the new
-  `.collectible-card`.
+  Two real pre-existing dark-mode bugs were fixed in the same pass, same
+  bug family as the rest of this file: `.rv` (review card) and the new
+  `.collectible-card` both sit on the fixed `--surface` background but had
+  no hardcoded-text override, so their text was inheriting the inverting
+  `--dark` token and going near-white-on-near-white.
 - **Variant pages** (`variant1.html`/`variant2.html`/`variant3.html`,
   `initVariant(approach)` in `app.js`): show the same fixed set of 8 products
   three times, once per card approach (Bold / Clean / Soft), for internal
@@ -539,10 +568,15 @@ per-page override as a "bug fix."
   (base), `.btn--dark` and `.btn--line` are unchanged — the ATC/checkout/form
   buttons still need to read as solid, dominant CTAs per Hard rule 3.
 
-- **Section rhythm is tight, on purpose** (2026-08-02): `.sec` is `2.75rem 0`
-  (was `5rem`), `.sec--sm` is `2rem 0` (was `3rem`), and most `.ct`
-  margin-bottoms were trimmed from `2rem`/`1.5rem` to `1–1.25rem` — a client
-  request to cut scroll depth site-wide. `.hero-slider` dropped its
+- **Section rhythm is tight, on purpose** (2026-08-02, tightened again
+  2026-08-05): `.sec` is now `2.25rem 0` (was `5rem` → `2.75rem` →
+  `2.25rem`), `.sec--sm` is `1.5rem 0` (was `3rem` → `2rem` → `1.5rem`), and
+  most `.ct` margin-bottoms were trimmed from `2rem`/`1.5rem` to
+  `1–1.25rem` — a recurring client request to cut scroll depth site-wide,
+  asked again on 2026-08-05 specifically because it kept feeling too loose
+  even after the first pass. If a future request repeats this yet again,
+  that's a sign these base values are still the wrong default, not that the
+  request is redundant. `.hero-slider` dropped its
   `aspect-ratio:3/4` (near full-viewport-tall on a phone) for an explicit
   `height:56vh` (`64vh` at `min-width:768px`) — "about half the screen," not a
   fixed aspect ratio, was the actual ask. `.plp-hero` shrank the same way
