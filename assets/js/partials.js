@@ -28,14 +28,18 @@ const HEADER_HTML = `
     <button class="hamburger" data-open-menu aria-label="Menu"><span></span><span></span><span></span></button>
     <a class="hdr-logo" href="index.html"><img src="assets/SVG/kraymer-logo.svg" alt="Kraymer" height="14"></a>
     <nav class="dsk-nav" data-dsk-nav aria-label="Main">
-      <a href="coleccion.html">Collections</a>
-      <a href="coleccion.html?collection=jjk">JJK</a>
-      <a href="coleccion.html?collection=kny">KNY</a>
-      <a href="coleccion.html?collection=genshin">Genshin</a>
-      <a href="coleccion.html?type=sets">Sets</a>
+      <div class="dsk-drop">
+        <a href="coleccion.html">All Collections</a>
+        <div class="dsk-drop__panel">
+          <a href="coleccion.html?collection=jjk">JJK</a>
+          <a href="coleccion.html?collection=kny">KNY</a>
+          <a href="coleccion.html?collection=genshin">Genshin</a>
+          <a href="coleccion.html?type=sets">Collector Sets</a>
+        </div>
+      </div>
       <a href="about.html">Our Story</a>
       <a href="blog.html">Journal</a>
-      <a href="quiz.html">Quiz</a>
+      <a href="quiz.html" class="dsk-nav__cta">Take the Quiz</a>
     </nav>
     <div class="hdr-actions">
       <button class="ico dsk-only" data-open-search aria-label="Search">${ICONS.search}</button>

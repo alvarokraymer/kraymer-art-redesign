@@ -725,6 +725,56 @@ per-page override as a "bug fix."
     are nav-real-estate-dependent — they're plain "don't let this blow up"
     fixes that are equally correct starting at tablet width.
 
+- **Desktop pass, round 3: full-page 1400px alignment + nav redesign**
+  (2026-08-08, same day, client: "hay cosas MUY mal, que llegan a márgenes,
+  que no están alineadas" + explicit nav requests). Two unrelated asks
+  handled together since both touch `.hdr-bar`.
+  - **Alignment:** `.hero-slider`, `.plp-hero`, `.sub-scroll` and `.hdr-bar`
+    itself were still running edge-to-edge while `.w`-wrapped content around
+    them was boxed at 1080px/1400px — the actual source of "no están
+    alineadas" (e.g. the hero's headline sat further left than "Best
+    Sellers" below it). Fixed by giving all four the exact same
+    `max-width`/breakpoint pair `.w` uses (1080px from 768px, 1400px from
+    1180px — see the two matching rules in each media block), so every edge
+    on the page lines up at every width. `.pdp-narrative__img`'s deliberate
+    100vw/-50vw full-bleed breakout (added 2026-08-06, reaffirmed as
+    deliberate in round 1 above) is explicitly overridden back to 100%-of-
+    parent in the 768px block — the "everything stays in the boxed column"
+    ask supersedes the earlier full-bleed call. `.marquee` and the
+    `.sec--dark`/`.sec--warm` section bands were deliberately left
+    full-bleed: they're solid-color backdrops with no fixed left edge for
+    their content to misalign against (the scrolling ticker has no "start"),
+    unlike a hero or nav bar — capping *those* would just trade one
+    inconsistency (edge-to-edge bands next to boxed content) for a worse one
+    (a floating dark rectangle with visible page-background gutters on each
+    side, on an ultra-wide screen). Flag if this reasoning doesn't hold once
+    seen live.
+  - **Nav redesign:** the 8 flat `.dsk-nav` links became 4 groups —
+    "All Collections" (`.dsk-drop`, hover/`:focus-within` dropdown panel
+    holding JJK/KNY/Genshin/Collector Sets, wording matched to the mobile
+    nav's own COLLECTIONS submenu) — "Our Story" — "Journal" — "Take the
+    Quiz" (`.dsk-nav__cta`, styled as a small dark pill button, not a plain
+    link, via `.dsk-nav a.dsk-nav__cta` which out-specifies the generic
+    `.dsk-nav a` color/hover rules without `!important`). The dropdown opens
+    on `:hover` *or* `:focus-within`, not hover alone — a keyboard user
+    tabbing into JJK/KNY/etc keeps it open via focus, so this doesn't trip
+    Hard rule 8 (no hover-only gating). No JS was added for any of this,
+    pure CSS.
+  - **"Centramos el menú":** `.hdr-bar` became a 3-column grid — but
+    `grid-template-columns:auto 1fr auto` (logo/nav/icons columns sized to
+    content) was tried first and centered the nav ~39px off the bar's true
+    center, because the logo (~97px) and the icon cluster (~174px) aren't
+    the same width, so "centered in the leftover space" isn't the same as
+    "centered on the bar." Fixed with `1fr auto 1fr`: forcing both flanking
+    columns to an equal fractional share (regardless of their content's
+    actual size) makes the middle `auto` column — and the nav inside it —
+    truly centered on the full bar. `.hdr-logo`/`.hdr-actions` need
+    `justify-self:start`/`end` so they don't stretch to fill their now-wider
+    equal-share columns.
+  - All of the above only activates once `.dsk-nav` itself is visible
+    (≥1180px for the nav-dependent grid change; the alignment fixes use the
+    768px/1180px pair like `.w`) — nothing here touches mobile.
+
 ## Hard rules (from the brief, do not regress)
 
 1. **Mobile-first, non-negotiable.** Base styles target 375–414px. Desktop only
