@@ -139,7 +139,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .dsk-drop{position:relative}
 .dsk-drop>a{display:inline-flex;align-items:center;gap:.35rem}
 .dsk-drop>a::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);margin-top:-3px}
-.dsk-drop__panel{position:absolute;top:100%;left:0;margin-top:.6rem;min-width:180px;background:var(--light);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:0 10px 28px rgba(20,17,16,.14);padding:.4rem 0;display:none;flex-direction:column;z-index:65}
+/* margin-top:0, not a gap — .dsk-drop has no explicit height, so its :hover
+   box is exactly as tall as the trigger link (~20px). A margin-top gap here
+   (tried first, .6rem) put dead space between that box and the panel: the
+   cursor left .dsk-drop's hover area the instant it moved down into the
+   gap, closing the panel before it ever reached the JJK/KNY/etc links —
+   this is what "el drop-down no funciona" was. Fixed by making the panel's
+   own box touch the trigger (margin-top:0) and moving the visual gap inside
+   the panel as padding-top instead, which doesn't break :hover containment
+   since padding is still inside the hoverable box. */
+.dsk-drop__panel{position:absolute;top:100%;left:0;min-width:180px;background:var(--light);border:1px solid var(--line);border-radius:var(--radius-sm);box-shadow:0 10px 28px rgba(20,17,16,.14);padding:.6rem 0 .4rem;display:none;flex-direction:column;z-index:65}
 .dsk-drop:hover .dsk-drop__panel,.dsk-drop:focus-within .dsk-drop__panel{display:flex}
 .dsk-drop__panel a{padding:.6rem 1.1rem;font-size:.8rem;font-weight:600;color:var(--dark);white-space:nowrap}
 .dsk-drop__panel a:hover{background:var(--surface);color:var(--accent)}
