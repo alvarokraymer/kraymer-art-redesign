@@ -1096,7 +1096,18 @@ function initPDP() {
   const thumbStrip = (dataAttr) => hasImgs
     ? `<div class="gal-strip" ${dataAttr}>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : "";
   const galInfoHTML = `<button class="gal-info" data-gal-info hidden aria-label="Image details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><line x1="12" y1="15.5" x2="12" y2="11"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/></svg></button><div class="gal-info__panel" data-gal-info-panel hidden><p data-gal-info-text></p></div>`;
-  const mainGal = (extra) => `<div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5" ${hasImgs ? `data-gal-imgs='${JSON.stringify(imgs)}'` : ""} ${extra||""}>${galInfoHTML}</div>`;
+  /* Prev/next arrows on the main gallery image itself — mobile AND desktop
+     (2026-08-08 round 6, client explicit: "tanto en móvil como en
+     desktop"). Swipe already worked on mobile via goGal()'s touchstart/
+     touchend handlers below, but it isn't discoverable; these call the same
+     goGal()/goGalImmersive() functions, just from a visible button instead
+     of a gesture. Only rendered when hasImgs (more than one real photo) —
+     same guard thumbStrip()/the dot pagination already use, nothing to
+     navigate to otherwise. */
+  const galArrowsHTML = hasImgs ? `
+    <button class="gal-arrow gal-arrow--prev" data-gal-prev aria-label="Previous image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="gal-arrow gal-arrow--next" data-gal-next aria-label="Next image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>` : "";
+  const mainGal = (extra) => `<div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5" ${hasImgs ? `data-gal-imgs='${JSON.stringify(imgs)}'` : ""} ${extra||""}>${galInfoHTML}${galArrowsHTML}</div>`;
   /* 3-column grid, centered icon-over-label — same visual language as
      home's .trust__row, not a vertical list, per 2026-08-06 instruction. */
   const guaranteeHTML = `
@@ -1327,7 +1338,7 @@ function initPDP() {
     html = `
       <nav class="bread" aria-label="Breadcrumb"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
       <div class="pdp-layout">
-        <div>
+        <div class="pdp-gallery">
           ${mainGal('style="border:0"')}
           ${thumbStrip('style="padding:0;gap:.5rem"')}
         </div>
@@ -1361,6 +1372,7 @@ function initPDP() {
         <div style="position:absolute;inset:0;background-image:url(${mainImg});background-size:cover;background-position:center" data-gallery-main-img></div>
         ${soldOverlay}
         ${galInfoHTML}
+        ${galArrowsHTML}
         <div style="position:absolute;bottom:0;left:0;right:0;padding:2rem var(--gutter);background:linear-gradient(to top,rgba(24,21,20,.85) 0%,rgba(24,21,20,.4) 60%,transparent 100%);z-index:1">
           <span style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)">${col.name}</span>
           <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:1rem">
@@ -1394,7 +1406,7 @@ function initPDP() {
     html = `
       <nav class="bread" aria-label="Breadcrumb"><a href="index.html">Home</a><span></span><a href="coleccion.html">All Collections</a><span></span><b>${p.title}</b></nav>
       <div class="pdp-layout">
-        <div>
+        <div class="pdp-gallery">
           ${mainGal()}
           ${thumbStrip('data-gal-strip')}
         </div>
@@ -1491,6 +1503,8 @@ function initPDP() {
     host.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-gal-thumb]");
       if (btn) { goGal(Number(btn.dataset.galThumb)); return; }
+      if (e.target.closest("[data-gal-prev]")) { goGal(galIdx - 1); return; }
+      if (e.target.closest("[data-gal-next]")) { goGal(galIdx + 1); return; }
     });
     let gx = 0;
     main.addEventListener("touchstart", (e) => { gx = e.changedTouches[0].screenX; }, {passive:true});
@@ -1515,6 +1529,8 @@ function initPDP() {
     host.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-gal-thumb]");
       if (btn && mainImgEl) { goGalImmersive(Number(btn.dataset.galThumb)); return; }
+      if (e.target.closest("[data-gal-prev]")) { goGalImmersive(galIdx - 1); return; }
+      if (e.target.closest("[data-gal-next]")) { goGalImmersive(galIdx + 1); return; }
     });
     let gx = 0;
     mainImgEl.addEventListener("touchstart", (e) => { gx = e.changedTouches[0].screenX; }, {passive:true});

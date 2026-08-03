@@ -972,6 +972,46 @@ per-page override as a "bug fix."
     worth the added complexity — flag if that judgment call turns out
     wrong.
 
+- **Desktop pass, round 6: gallery arrows + thumbnails-left** (2026-08-08,
+  same day). Two client asks, one deliberately mobile+desktop, one
+  desktop-only.
+  - **Prev/next arrows on the main gallery image — mobile AND desktop both**
+    (client explicit: "tanto en móvil como en desktop"), unlike almost
+    everything else in this file. `galArrowsHTML` in `initPDP()` (only
+    rendered when `hasImgs`, same guard `thumbStrip()`/the dot pagination
+    already use) is folded into `mainGal()`, so Classic, Editorial and Side
+    all get it automatically — Immersive has its own bespoke gallery markup
+    (doesn't call `mainGal()`), so it got the same `galArrowsHTML` inserted
+    directly. The buttons call the *existing* `goGal()`/`goGalImmersive()`
+    functions (the ones swipe already used) — no new navigation logic, just
+    a visible, discoverable affordance for the same thing swipe already did.
+    `.gal-arrow` has no mobile/desktop split in its CSS at all, on purpose.
+  - **Thumbnails moved to the left of the main image, desktop only**
+    (client explicit: "en desktop... a la izquierda del producto"). New
+    `.pdp-gallery` wrapper class around the gallery column in Classic and
+    Side (Editorial has no thumbnail strip, only dot pagination — nothing
+    to relocate; Immersive's bespoke full-bleed layout is untouched).
+    `flex-direction:row-reverse` at ≥768px, not a markup reorder: `.gal`
+    stays first in the DOM (mobile's image-then-thumbnails-below order is
+    completely untouched) and only *renders* second/right at this
+    breakpoint, with `.gal-strip` flipped to a vertical column
+    (`flex-direction:column`, capped `max-height:644px` with its own
+    scroll) on the left.
+  - **Real pre-existing bug surfaced by this change, fixed:** Approach 3
+    "Side" had a leftover `.pdp--side{display:grid;grid-template-columns:
+    1fr 1fr}` rule on the *whole PDP host element* (bread nav + `.pdp-layout`
+    + cross-sell section — three unrelated siblings), predating the
+    `.pdp-layout{display:grid;grid-template-columns:1fr 1fr}` rule that
+    already does the real gallery/meta split. With both active, `.pdp-layout`
+    got squeezed into a single cell of the *outer* grid alongside the
+    breadcrumb in the other cell. On approaches without a `.pdp-gallery`
+    flex child this happened to render close enough to correct that nobody
+    caught it; adding `.pdp-gallery{flex:1}` inside that already-too-narrow
+    cell made it obvious — the main image collapsed to ~2px wide in
+    testing. Fixed by removing the outer grid (the rule now only resets
+    padding); `.pdp-layout`'s own grid was already sufficient and is what
+    Classic/Editorial/Immersive all rely on unmodified.
+
 ## Hard rules (from the brief, do not regress)
 
 1. **Mobile-first, non-negotiable.** Base styles target 375–414px. Desktop only

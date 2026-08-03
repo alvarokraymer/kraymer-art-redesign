@@ -621,6 +621,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .gal-strip::-webkit-scrollbar{display:none}
 .gal-strip button{flex:none;width:56px;height:56px;border-radius:var(--radius-sm);background-size:cover;background-position:center;border:1px solid #E0E0E0;cursor:pointer;padding:0;transition:border-color .15s;background-color:#F0F0F0}
 .gal-strip button.on{border:1.5px solid var(--dark)}
+/* Prev/next arrows on the main gallery image (2026-08-08 round 6) — visible
+   on mobile AND desktop both, per explicit client instruction, not gated
+   behind a min-width query like most of this file's desktop-only additions.
+   Hardcoded colors, not tokens: always sits over a photo, same reasoning as
+   .gal-info right next to it. */
+.gal-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.85);color:#181514;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(20,17,16,.18);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);cursor:pointer}
+.gal-arrow--prev{left:.6rem}
+.gal-arrow--next{right:.6rem}
+.gal-arrow:hover{background:#fff}
 .pdp-meta{padding-top:1rem}
 .pdp-meta .eyebrow{display:block;margin-bottom:.4rem}
 .pdp-tag{display:inline-block;font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
@@ -769,7 +778,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .pdp--classic .v-chip.selected{background:var(--dark);border-color:var(--dark)}
 .btn--full{width:100%;justify-content:center}
 @media(min-width:768px){
-  .pdp--side{display:grid;grid-template-columns:1fr 1fr;gap:2rem;padding:0}
+  /* This used to make .pdp--side (the whole PDP host element — bread nav +
+     .pdp-layout + cross-sell section, three unrelated siblings) itself a
+     2-column grid, predating .pdp-layout's own 2-column grid rule further
+     up this file. With both active, .pdp-layout (gallery+meta) got squeezed
+     into a single cell of the OUTER grid alongside the breadcrumb in the
+     other cell — caught in round 6 testing as the main gallery image
+     collapsing to ~2px wide once .pdp-gallery's flex:1 had almost no width
+     to actually fill. .pdp-layout already provides the real 2-column split;
+     this rule only needs the padding reset now. */
+  .pdp--side{padding:0}
   .pdp--side .pdp-meta{padding-top:0;display:flex;flex-direction:column;justify-content:center}
 }
 
@@ -992,6 +1010,19 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
      principal... que no haya huecos raros" (client, round 5). Each column
      now sizes to its own content. */
   .pdp-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+  /* Thumbnails to the left of the main image on desktop (2026-08-08 round
+     6, client explicit: "las imágenes que no son la principal... a la
+     izquierda del producto"). row-reverse, not reordering the HTML: .gal
+     (main image) stays first in markup (mobile keeps its existing
+     image-then-thumbnails-below order, completely untouched) and just
+     renders on the right at this breakpoint, with .gal-strip rendering
+     first/left instead. Only affects Classic/Side (.pdp-gallery is a new
+     wrapper class on those two approaches' gallery column) — Editorial has
+     no thumbnail strip, only dot pagination, nothing to relocate; Immersive
+     has its own bespoke full-bleed layout, left alone. */
+  .pdp-gallery{display:flex;flex-direction:row-reverse;align-items:flex-start;gap:1rem}
+  .pdp-gallery .gal{flex:1;min-width:0}
+  .pdp-gallery .gal-strip{flex:none;width:64px;flex-direction:column;max-height:644px;overflow-y:auto;overflow-x:visible}
   .pdp-meta{padding-top:0}
   .quiz-wrap{max-width:600px;margin:0 auto}
   /* .rev-list (Classic/Editorial/Immersive's plain vertical review list —
