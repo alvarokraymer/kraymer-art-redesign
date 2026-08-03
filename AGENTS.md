@@ -1012,6 +1012,43 @@ per-page override as a "bug fix."
     padding); `.pdp-layout`'s own grid was already sufficient and is what
     Classic/Editorial/Immersive all rely on unmodified.
 
+- **Round 7 (2026-08-08): footer bio, craft cards, missing icons — mobile
+  AND desktop both**, unlike almost everything since round 3. Small,
+  targeted asks, not a "desktop pass."
+  - **Footer founder bio:** `.ft-founder__text` gained a `<p
+    class="ft-founder__bio">` between name/role and the "Our Story" CTA —
+    condenses the same two facts about.html's own founder section already
+    states (years teaching art before opening the store; personally
+    approving every design), not new invented backstory. This made the text
+    column taller than the 56px avatar on its own merits, so
+    `.ft-founder{align-items:stretch}` (which existed only so
+    `justify-content:space-between` could pin the CTA to the avatar's
+    bottom edge) became `align-items:flex-start` and
+    `justify-content:space-between` became a plain `gap` — everything now
+    top-aligns like a normal footer row instead of the avatar/social icons
+    stretching to chase the now-taller text column.
+  - **About.html craft section, real cards:** `.craft-item` was a bare
+    h3+p pair, no image, no card treatment — client: "vamos a poner
+    imágenes... reorganízalo en tarjetas elegantes." Each of the 3 items
+    gained a real photo (`.craft-item__img`, 4:3) reusing existing product
+    detail shots as representative craft/material imagery (no wax-sculpting-
+    process photography exists in this project, same "real photo, closer
+    visual match, not the literal SKU" convention Hard rule 9 already
+    allows for demo products) — `giyuRing_detail.webp` (Hand-Sculpted),
+    `anyaXyor_detail.webp` (Solid Metals), `gojoXgeto_detail1.webp` (Small
+    Batches), one per card so none get visually monotonous. Card itself
+    matches the site's established card language (`--surface-soft`, radius,
+    shadow, hardcoded dark-mode text override — same family as
+    `.collectible-card`/`.post-card`).
+  - **Missing icons, about.html's bottom trust row:** `.trust-row-s`
+    (Lifetime Warranty / 60-Day Returns / Made to Order, just above the
+    final "Shop the Collections" CTA) had never had icons at all, unlike
+    home's `.trust__row` right next to the same claims — client: "me
+    faltan iconos en las cosas de más abajo de lifetime warranty etc."
+    Added the same lucide-icon-inline-style pattern `.trust__row` already
+    uses (`shield`/`rotate-ccw`/`clock`, `stroke:var(--accent)`) rather than
+    inventing a new icon convention for one section.
+
 ## Hard rules (from the brief, do not regress)
 
 1. **Mobile-first, non-negotiable.** Base styles target 375–414px. Desktop only

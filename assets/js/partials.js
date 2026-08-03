@@ -115,6 +115,7 @@ const FOOTER_HTML = `
       <img class="ft-founder__avatar" src="assets/kraymerProfile.jpg" alt="Kraymer" style="object-fit:cover">
       <div class="ft-founder__text">
         <div><div class="ft-founder__name">Kraymer</div><div class="ft-founder__role">Founder</div></div>
+        <p class="ft-founder__bio">I spent years teaching art and shipping pieces to collectors before opening this store. Every piece here is still something I would wear on my own hand.</p>
         <a class="ft-founder__cta" href="about.html">Our Story &rarr;</a>
       </div>
       <div class="ft-social">

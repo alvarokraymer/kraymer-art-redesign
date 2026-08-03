@@ -462,10 +462,22 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .trust__proof{font-size:.875rem;color:var(--muted);padding-top:1.1rem;border-top:1px solid var(--line)}
 .trust__proof b{color:#181514}
 
-/* ── Craft ── */
-.craft-grid{display:flex;flex-direction:column;gap:2rem;margin-top:2rem}
+/* ── Craft ──
+   Turned into real cards 2026-08-08 (round 7, client: "vamos a poner
+   imágenes... reorganízalo en tarjetas elegantes") — was three bare
+   h3+p pairs, no photo, no card treatment at all. Same card language as
+   .collectible-card/.post-card elsewhere (surface-soft fill, radius,
+   shadow, hardcoded dark-mode text override for the same reason those
+   need one — see the dark-mode notes earlier in this file). Applies to
+   both mobile and desktop per this round's instruction (unlike most of
+   this file's recent history, this one isn't desktop-only). */
+.craft-grid{display:flex;flex-direction:column;gap:1.25rem;margin-top:2rem}
+.craft-item{background:var(--surface-soft);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(24,21,20,.05)}
+.craft-item__img{aspect-ratio:4/3;background-size:cover;background-position:center}
+.craft-item__body{padding:1.25rem 1.25rem 1.5rem}
 .craft-item h3{margin-bottom:4px}
 .craft-item p{font-size:.875rem;color:var(--muted)}
+[data-theme="dark"] .craft-item{color:#181514}
 .founder{margin-top:2.5rem;padding:2rem;background:var(--light);border-radius:var(--radius);box-shadow:0 1px 3px rgba(35,31,32,.06)}
 .founder__sig{font-family:var(--display);font-style:italic;font-size:1.1rem;color:var(--accent);margin-top:1rem}
 .founder p+p{margin-top:1rem}
@@ -516,19 +528,28 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    background is just a loading-state fallback. Social icons use lucide,
    sized up and on a translucent dark chip so they read as a deliberate row,
    not afterthought text links. */
-.ft-founder{display:flex;align-items:stretch;gap:1rem;padding:1.25rem 0 1rem;border-bottom:1px solid rgba(246,246,246,.1)}
+/* align-items:flex-start, not stretch (changed 2026-08-08 round 7 when a
+   bio paragraph was added to .ft-founder__text): stretch was there so
+   justify-content:space-between on the text column could pin "Our Story"
+   to the avatar's bottom edge — worked when the text column's only real
+   content was a one-line name/role. With a bio paragraph in between now,
+   the text column is taller than the 56px avatar on its own merits, so
+   everything just top-aligns like a normal footer row instead of the
+   avatar/social icons stretching to chase a taller text column. */
+.ft-founder{display:flex;align-items:flex-start;gap:1rem;padding:1.25rem 0 1rem;border-bottom:1px solid rgba(246,246,246,.1)}
 .ft-founder__avatar{width:56px;height:56px;border-radius:50%;background:#4A4645;flex:none}
-/* Text column stretches to match the avatar's height (align-items:stretch
-   above) so justify-content:space-between pins "Our Story" to the photo's
-   bottom edge, with name/role anchored to its top — not just whatever
-   height the text happens to need. */
-.ft-founder__text{display:flex;flex-direction:column;justify-content:space-between}
+.ft-founder__text{display:flex;flex-direction:column;gap:.5rem}
 /* Hardcoded literals, not tokens — .ft's background is forced to stay dark in
    dark mode (see the .ft override above), so var(--light)/var(--dark) would
    invert against a background that never does. Same bug class documented at
    the top of this file for .ft-cols/.marquee. */
 .ft-founder__name{font-family:var(--display);font-size:1.05rem;color:#F6F6F6;font-weight:400}
 .ft-founder__role{font-size:.7rem;color:rgba(246,246,246,.5);margin-top:1px}
+/* Bio line (2026-08-08 round 7, client: "un par de frases con su
+   historia"): condenses the same two facts about.html's own founder
+   section already states (years teaching art before opening the store,
+   personally approving every design) rather than inventing new backstory. */
+.ft-founder__bio{font-size:.8rem;color:rgba(246,246,246,.6);line-height:1.5;max-width:42ch}
 .ft-founder__cta{display:inline-block;font-size:.7rem;font-weight:600;color:var(--accent)}
 .ft-social{display:flex;gap:1.1rem;margin-left:auto}
 .ft-social a{display:flex;flex-direction:column;align-items:center;gap:5px;color:#F6F6F6}
