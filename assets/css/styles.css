@@ -182,6 +182,12 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 [data-theme="dark"] .post-card{color:#181514}
 [data-theme="dark"] .post-card__link{color:#181514}
 [data-theme="dark"] .rvc{color:#181514}
+/* Pre-existing gap in the same bug family, caught 2026-08-04 while adding
+   more .rv cards to the PDP "show more reviews" panel: .rv sits on the
+   fixed --surface background too, but never had its own override — its
+   h4/.stars (no color of their own) were inheriting the inverting --dark
+   token straight off body. */
+[data-theme="dark"] .rv{color:#181514}
 [data-theme="dark"] .pdp-guarantee__item b{color:#181514}
 [data-theme="dark"] .quiz-wrap{color:#181514}
 .marquee{background:var(--dark);color:rgba(246,246,246,.85);overflow:hidden;height:36px;display:flex;align-items:center;font-family:var(--body);position:relative;z-index:61}
@@ -614,6 +620,41 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .pdp-guarantee__item b{font-size:.75rem;font-weight:600;color:var(--dark)}
 .pdp-guarantee__item small{font-size:.6rem;color:var(--muted)}
 .specs{margin-top:1.5rem}
+
+/* ── PDP: "Seen in the wild" UGC rail (2026-08-04) ── */
+.ugc-scroll{display:flex;gap:.85rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:.5rem}
+.ugc-scroll::-webkit-scrollbar{display:none}
+.ugc-card{flex:none;scroll-snap-align:start;width:40vw;max-width:170px}
+/* Grey placeholder — no real customer photos/videos yet, see comment at
+   ugcHTML in app.js. Same convention as .rv__avatar/.rvc__photo. */
+.ugc-card__media{aspect-ratio:4/5;background:#DADADA;border-radius:var(--radius-sm);position:relative;overflow:hidden}
+.ugc-card--video .ugc-card__media{aspect-ratio:9/16}
+.ugc-card__play{position:absolute;inset:0;margin:auto;width:38px;height:38px;border-radius:50%;background:rgba(24,21,20,.55);display:flex;align-items:center;justify-content:center;color:#fff;border:0}
+.ugc-card__cap{margin-top:.4rem;font-size:.7rem;color:var(--muted)}
+
+/* ── PDP: "The story behind the piece" editorial module ── */
+.pdp-narrative p{font-size:.875rem;color:var(--muted);line-height:1.6}
+.pdp-narrative p+p{margin-top:.75rem}
+.pdp-narrative__media{display:flex;gap:.6rem;margin-bottom:1rem}
+.pdp-narrative__img{flex:2;aspect-ratio:4/3;border-radius:var(--radius);background-size:cover;background-position:center}
+.pdp-narrative__img--sm{flex:1;aspect-ratio:3/4}
+
+/* ── PDP: "The complete collectible experience" rail ── */
+.collectible-scroll{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:.5rem}
+.collectible-scroll::-webkit-scrollbar{display:none}
+.collectible-card{flex:none;scroll-snap-align:start;width:72vw;max-width:280px;background:var(--surface);border-radius:var(--radius);overflow:hidden}
+[data-theme="dark"] .collectible-card{color:#181514}
+/* Grey placeholder — no packaging photography exists yet. */
+.collectible-card__img{aspect-ratio:4/3;background:#DADADA}
+.collectible-card__body{padding:1rem}
+.collectible-card__body h3{font-size:1.05rem;margin-bottom:.35rem}
+.collectible-card__body p{font-size:.8rem;color:var(--muted)}
+
+/* ── PDP: reviews rating summary + show-more ── */
+.pdp-rating-summary{font-size:.9rem;color:var(--muted)}
+.pdp-rating-summary .stars{color:var(--dark);letter-spacing:.04em;font-size:1rem;margin-right:.4rem}
+.rev-more{margin-top:1rem}
+.rev-more[hidden]{display:none}
 .pdp--editorial{padding-bottom:1rem}
 .pdp--editorial .pdp-story h3{font-family:var(--display);font-size:1.2rem;font-weight:400;margin-bottom:.5rem}
 .pdp--editorial .pdp-story p{font-size:.875rem;color:var(--muted);line-height:1.6}

@@ -1000,21 +1000,98 @@ function initPDP() {
       <span class="pdp-wish__count" data-wish-count="${p.handle}">${likeCount(p.handle)}</span>
     </button>`;
 
+  const conceptLine = p.line || "Designed as a piece you can wear anywhere, that another fan recognizes across the room.";
   const specsHTML = `
     <div class="pdp-details-head"><span class="eyebrow">Details</span></div>
     <div class="specs faq">
       <div class="faq__item"><button class="faq__btn">Specs &amp; Materials</button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m)=>m.includes("Gold"))?" or 18K gold plated over sterling silver":""}. Hand-set ${p.gem?p.gem.toLowerCase():"stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
-      <div class="faq__item"><button class="faq__btn">Concept &amp; Inspiration</button><div class="faq__panel"><p>${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</p></div></div>
+      <div class="faq__item"><button class="faq__btn">Concept &amp; Inspiration</button><div class="faq__panel"><p>${conceptLine}</p></div></div>
+      <div class="faq__item"><button class="faq__btn">Shipping &amp; Returns</button><div class="faq__panel"><p>Handcrafted to order, ships in 9&ndash;20 days with photo updates along the way, then tracked worldwide. 60-day returns, no questions asked.</p></div></div>
       <div class="faq__item"><button class="faq__btn">Care Instructions</button><div class="faq__panel"><p>Wipe with the included polishing cloth after wear. Store in the pouch. Your lifetime warranty covers the rest.</p></div></div>
+      <div class="faq__item"><button class="faq__btn">Is this official licensed merchandise?</button><div class="faq__panel"><p>No. Every piece is an original design inspired by the worlds we grew up loving, hand-sculpted in our own studio, not a licensed reproduction.</p></div></div>
     </div>`;
+  /* "Seen in the wild" — UGC rail. No real customer photos/videos exist yet
+     (client instruction 2026-08-04: reserve the space with grey placeholders
+     rather than reusing product-shoot photos as fake UGC, or skipping the
+     section outright). Names are drawn from the same reviewer pool as
+     reviewsHTML/home, not newly invented people. Video cards are a taller
+     9:16 placeholder with a static play glyph — never autoplaying, nothing
+     to un-mute since there's no real media wired up yet. */
+  const ugcItems = [
+    { name: "Priya N.", video: false }, { name: "Daniel K.", video: true },
+    { name: "Sam T.", video: false }, { name: "Maria L.", video: true },
+    { name: "Jordan P.", video: false }, { name: "Alex R.", video: false },
+  ];
+  const ugcHTML = `
+    <section class="sec sec--sm" aria-label="Customer photos and videos">
+      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">Seen in the wild</span><h2>Worn by collectors</h2></div>
+      <div class="ugc-scroll">
+        ${ugcItems.map((u) => `
+          <div class="ugc-card${u.video?" ugc-card--video":""}">
+            <div class="ugc-card__media">${u.video?`<button class="ugc-card__play" aria-label="Play video from ${u.name}"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg></button>`:""}</div>
+            <p class="ugc-card__cap">${u.name}</p>
+          </div>`).join("")}
+      </div>
+    </section>`;
+
+  /* "The story behind the piece" — compressed editorial module. Intro reuses
+     the product's own Concept & Inspiration line rather than a duplicate
+     paragraph; images reuse real photoshoot frames (imgs[0]/imgs[1]) for the
+     4 products that have one, otherwise the same placeholder fallback used
+     everywhere else. The fuller craft narrative already lives on
+     about.html#craft — linked, not copy-pasted wholesale, to avoid the exact
+     duplication this redesign is meant to remove. */
+  const storySupportImg = imgs[1] || mainImg;
+  const storyHTML = `
+    <section class="sec sec--sm sec--warm">
+      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">The story behind the piece</span><h2>${p.title}</h2></div>
+      <div class="pdp-narrative">
+        <div class="pdp-narrative__media">
+          <div class="pdp-narrative__img" style="background-image:url(${mainImg})"></div>
+          <div class="pdp-narrative__img pdp-narrative__img--sm" style="background-image:url(${storySupportImg})"></div>
+        </div>
+        <p>${conceptLine}</p>
+        <p>Every piece starts as a wax sculpture at the bench, not a die-cast mold, then goes out in small numbered batches. <a href="about.html#craft">Read the full craft process &rarr;</a></p>
+      </div>
+    </section>`;
+
+  /* "The complete collectible experience" — only the two features with a
+     real claim behind them (pouch, certificate). Deliberately not padded
+     out with a "digital collectible" or gifting card that has no basis for
+     this brand — see chat 2026-08-04 audit. Images are grey placeholders,
+     no packaging photography exists yet. */
+  const collectibleHTML = `
+    <section class="sec sec--sm">
+      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">What's in the box</span><h2>The complete piece</h2></div>
+      <div class="collectible-scroll">
+        <div class="collectible-card">
+          <div class="collectible-card__img"></div>
+          <div class="collectible-card__body"><h3>Presentation</h3><p>Every piece ships with its own polishing cloth and pouch, ready to wear or gift straight out of the box.</p></div>
+        </div>
+        <div class="collectible-card">
+          <div class="collectible-card__img"></div>
+          <div class="collectible-card__body"><h3>Certificate of Authenticity</h3><p>Numbered by hand, matched to your piece's batch.</p></div>
+        </div>
+      </div>
+    </section>`;
+
   const reviewsHTML = `
     <section class="sec sec--sm" id="reviews">
-      <div class="ct" style="margin-bottom:1.5rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
+      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
+      <div class="ct pdp-rating-summary" style="margin-bottom:1.5rem"><span class="stars">★★★★★</span> ${RATING_DEFAULT}</div>
       <div class="rev-scroll">
         <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><span class="rv__avatar"></span><span><b>Priya N.</b> · Verified Buyer</span></p></div>
         <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><span class="rv__avatar"></span><span><b>Daniel K.</b> · Verified Buyer</span></p></div>
         <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><span class="rv__avatar"></span><span><b>Sam T.</b> · Verified Buyer</span></p></div>
       </div>
+      <div class="rev-more" data-rev-more hidden>
+        <div class="rev-scroll">
+          <div class="rv"><span class="stars">★★★★★</span><h4>Better than expected</h4><p>Better finish than pieces I have paid three times as much for.</p><p class="who"><span class="rv__avatar"></span><span><b>Maria L.</b> · Verified Buyer</span></p></div>
+          <div class="rv"><span class="stars">★★★★★</span><h4>Great unboxing</h4><p>Exactly as pictured, and the box alone felt like a gift.</p><p class="who"><span class="rv__avatar"></span><span><b>Jordan P.</b> · Verified Buyer</span></p></div>
+          <div class="rv"><span class="stars">★★★★★</span><h4>Ordered a second piece</h4><p>Ordered two more the week after my first piece arrived.</p><p class="who"><span class="rv__avatar"></span><span><b>Alex R.</b> · Verified Buyer</span></p></div>
+        </div>
+      </div>
+      <div class="ct" style="margin-top:1rem"><button class="btn--ghost" data-rev-toggle>Show more reviews &rarr;</button></div>
     </section>`;
   const crossHTML = `
     <section class="sec sec--sm">
@@ -1152,8 +1229,11 @@ function initPDP() {
           <a class="btn btn--link" href="coleccion.html" style="margin-top:1.5rem">&larr; Back to all collections</a>
         </div>
       </div>
-      ${crossHTML}
-      ${reviewsHTML}`;
+      ${ugcHTML}
+      ${storyHTML}
+      ${collectibleHTML}
+      ${reviewsHTML}
+      ${crossHTML}`;
   }
 
   /* ===== RENDER ===== */
@@ -1173,6 +1253,14 @@ function initPDP() {
   host.addEventListener("click", (e) => {
     const infoBtn = e.target.closest("[data-gal-info]");
     if (infoBtn) { infoBtn.nextElementSibling.hidden = !infoBtn.nextElementSibling.hidden; }
+    const revToggle = e.target.closest("[data-rev-toggle]");
+    if (revToggle) {
+      const more = host.querySelector("[data-rev-more]");
+      if (more) {
+        more.hidden = !more.hidden;
+        revToggle.textContent = more.hidden ? "Show more reviews →" : "Show fewer reviews ↑";
+      }
+    }
   });
 
   /* Gallery: thumbs + swipe on main image */

@@ -320,11 +320,53 @@ per-page override as a "bug fix."
   shared; each approach composes them differently). Default (no param) is
   approach 1 ("Classic").
   1. **Classic** — traditional two-column, thumbnail strip, rating line, full
-     reviews section.
+     reviews section. **The only approach with the 2026-08-04 below-the-fold
+     redesign** (see next bullet) — 2/3/4 still use the older, plainer
+     `specsHTML`→`reviewsHTML`→`crossHTML` tail. Don't assume parity; this was
+     a deliberate scoping call (client asked to redesign "everything below
+     the purchase area" but confirmed Classic-only when asked, since it's the
+     default everyone actually sees).
   2. **Editorial** — story-driven, large visual, dot pagination, full reviews.
   3. **Side** — compact two-column, no rating line, no reviews section (only
      specs + cross-sell) — intentional, not an oversight.
   4. **Immersive** — full-bleed gallery, floating price overlay, full reviews.
+- **PDP Classic below-the-fold redesign** (2026-08-04): a long redesign brief
+  arrived assuming a much richer PDP than this mockup actually has (UGC
+  video, social embeds, packaging/"digital collectible experience", a big
+  review feed with filters) — none of that content or those features exist
+  here. Audited first, flagged the mismatch, client chose "grey-placeholder
+  the missing-media sections rather than skip them or invent content."
+  Result, in order below the untouched purchase area: `specsHTML` grew from
+  3 to 5 accordion items (added **Shipping & Returns**, consolidating facts
+  already stated in `noteHTML`/`guaranteeHTML`/about.html rather than
+  duplicating a paragraph; added **Is this official licensed merchandise?**,
+  the one about.html FAQ question not already covered elsewhere on the PDP —
+  deliberately did NOT add a separate PDP FAQ section since there was nothing
+  left to put in it without repeating the accordion) → `ugcHTML` ("Seen in
+  the wild", `.ugc-scroll`/`.ugc-card`, grey placeholders only, names reused
+  from the existing reviewer pool, not invented people) → `storyHTML` ("The
+  story behind the piece", `.pdp-narrative`, reuses `p.line` + two real
+  product photos, links out to `about.html#craft` for the fuller narrative
+  instead of duplicating it) → `collectibleHTML` ("What's in the box",
+  `.collectible-scroll`/`.collectible-card`, only 2 cards — Presentation/
+  pouch and Certificate of Authenticity — because those are the only two
+  claims with any real backing; deliberately no "digital collectible" or
+  gifting card invented for a jewelry brand) → `reviewsHTML` (added a rating-
+  summary line + a `[data-rev-more]` panel with 3 more reviews behind
+  `[data-rev-toggle]`, reusing the extra review copy already written for
+  home rather than fabricating new testimonials) → `crossHTML` (unchanged,
+  just moved after reviews instead of before — the immediate prior request
+  had moved it before reviews; this redesign's explicit numbered rhythm put
+  it after, so it moved back). No new dependency, no new carousel library —
+  every rail reuses the site's existing native-scroll/scroll-snap pattern
+  (`.scroll-row`/`.rev-scroll`/`.post-scroll`), no desktop prev/next arrows
+  were added since no existing rail on the site has them either.
+  While touching this, fixed two real pre-existing dark-mode bugs in the
+  same bug family as the rest of this file: `.rv` (review card) had no
+  hardcoded-text override despite sitting on the fixed `--surface`
+  background — its `h4`/`.stars` were inheriting the inverting `--dark`
+  token and going near-white-on-near-white; same fix applied to the new
+  `.collectible-card`.
 - **Variant pages** (`variant1.html`/`variant2.html`/`variant3.html`,
   `initVariant(approach)` in `app.js`): show the same fixed set of 8 products
   three times, once per card approach (Bold / Clean / Soft), for internal
