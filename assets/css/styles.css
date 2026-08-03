@@ -454,10 +454,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Boxed on --surface-soft, which stays fixed-light in dark mode — text needs
    the same hardcoded-literal treatment as .card (see dark-mode notes above),
    not the inverting --dark token. */
-.founder-trust{background:var(--surface)}
+.founder-trust{background:var(--surface);padding:1.5rem 0}
 [data-theme="dark"] .founder-trust{background:#2D2929}
-.founder-trust__top{display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap;padding:2rem 0}
-.founder-trust__bottom{text-align:center;background:var(--surface-soft);border-radius:var(--radius) var(--radius) 0 0;padding:1.25rem 0 1.5rem}
+.founder-trust__card{border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(35,31,32,.06)}
+.founder-trust__top{display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap;padding:2rem;background:var(--light)}
+.founder-trust__bottom{text-align:center;background:var(--surface-soft);padding:1.25rem 1.5rem 1.5rem}
 .trust__row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
 .trust__icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(196,168,130,.14);margin:0 auto .6rem}
 .trust__item b{display:block;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#181514}
@@ -1118,6 +1119,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .pdp-gallery .gal-strip{flex:none;width:64px;flex-direction:column;max-height:644px;overflow-y:auto;overflow-x:visible}
   .pdp-meta{padding-top:0}
   .quiz-wrap{max-width:600px;margin:0 auto}
+  .founder-trust__card{max-width:600px;margin:0 auto}
   /* .rev-list (Classic/Editorial/Immersive's plain vertical review list —
      .rev-scroll's own cards already cap at max-width:340px and don't need
      this) had no width limit of its own: at a 1300px+ PDP column, review
