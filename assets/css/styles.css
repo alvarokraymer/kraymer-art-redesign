@@ -207,7 +207,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .hs-dots{position:absolute;bottom:1.25rem;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:.6rem;align-items:center}
 .hs-dots button{width:1rem;height:1.5px;background:rgba(246,246,246,.3);border-radius:1px;transition:all .4s cubic-bezier(.25,.46,.45,.94);border:0;padding:0}
 .hs-dots button.on{width:2rem;background:var(--accent)}
-.hero-slider{position:relative;width:100%;height:56vh;min-height:360px;max-height:560px;overflow:hidden;background:var(--dark)}
+.hero-slider{position:relative;width:100%;height:52vh;min-height:340px;max-height:520px;overflow:hidden;background:var(--dark)}
 .hs-track{display:flex;height:100%;transition:transform .7s cubic-bezier(.22,1,.36,1);will-change:transform}
 .hs-slide{flex:0 0 100%;height:100%;background-size:cover;background-position:center;position:relative;display:flex;align-items:flex-end}
 .hs-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(35,31,32,.85) 0%,rgba(35,31,32,.3) 50%,rgba(35,31,32,.15) 100%)}
@@ -408,7 +408,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Boxed on --surface-soft, which stays fixed-light in dark mode — text needs
    the same hardcoded-literal treatment as .card (see dark-mode notes above),
    not the inverting --dark token. */
-.trust{text-align:center;padding-top:1.25rem;padding-bottom:1.25rem;background:var(--surface-soft);border-radius:var(--radius);box-shadow:0 1px 3px rgba(24,21,20,.05);margin:1rem auto}
+.trust{text-align:center;padding-top:1.25rem;padding-bottom:1.25rem;background:var(--surface-soft);box-shadow:0 1px 3px rgba(24,21,20,.05);margin:.75rem auto}
 .trust__row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
 .trust__icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(196,168,130,.14);margin:0 auto .6rem}
 .trust__item b{display:block;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#181514}
@@ -460,7 +460,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .faq__panel p{padding-bottom:1.25rem;color:var(--muted);font-size:.875rem;max-width:52ch}
 
 /* ── Footer ── */
-.ft{background:var(--dark);color:rgba(246,246,246,.82);margin-top:1.5rem}
+.ft{background:var(--dark);color:rgba(246,246,246,.82);margin-top:1rem}
 .ft-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:2rem 0;border-bottom:1px solid rgba(246,246,246,.1)}
 .ft-cols h3{font-family:var(--body);font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(246,246,246,.5);margin-bottom:.75rem}
 .ft-cols a{display:block;padding:3px 0;font-size:.875rem;color:rgba(246,246,246,.6)}
@@ -470,15 +470,20 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    background is just a loading-state fallback. Social icons use lucide,
    sized up and on a translucent dark chip so they read as a deliberate row,
    not afterthought text links. */
-.ft-founder{display:flex;align-items:flex-start;gap:1rem;padding:1.5rem 0 1.25rem;border-bottom:1px solid rgba(246,246,246,.1)}
+.ft-founder{display:flex;align-items:stretch;gap:1rem;padding:1.25rem 0 1rem;border-bottom:1px solid rgba(246,246,246,.1)}
 .ft-founder__avatar{width:56px;height:56px;border-radius:50%;background:#4A4645;flex:none}
+/* Text column stretches to match the avatar's height (align-items:stretch
+   above) so justify-content:space-between pins "Our Story" to the photo's
+   bottom edge, with name/role anchored to its top — not just whatever
+   height the text happens to need. */
+.ft-founder__text{display:flex;flex-direction:column;justify-content:space-between}
 /* Hardcoded literals, not tokens — .ft's background is forced to stay dark in
    dark mode (see the .ft override above), so var(--light)/var(--dark) would
    invert against a background that never does. Same bug class documented at
    the top of this file for .ft-cols/.marquee. */
 .ft-founder__name{font-family:var(--display);font-size:1.05rem;color:#F6F6F6;font-weight:400}
 .ft-founder__role{font-size:.7rem;color:rgba(246,246,246,.5);margin-top:1px}
-.ft-founder__cta{display:inline-block;margin-top:.4rem;font-size:.7rem;font-weight:600;color:var(--accent)}
+.ft-founder__cta{display:inline-block;font-size:.7rem;font-weight:600;color:var(--accent)}
 .ft-social{display:flex;gap:1.1rem;margin-left:auto}
 .ft-social a{display:flex;flex-direction:column;align-items:center;gap:5px;color:#F6F6F6}
 .ft-soc__icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(246,246,246,.08);border:1px solid rgba(246,246,246,.16);transition:background .2s,border-color .2s,transform .2s}
@@ -541,7 +546,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .plp-grid{padding:1.5rem 0}
 .plp-grid .pgrid,.pgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.5rem 1rem;align-items:start}
 .load-more{text-align:center;padding:0}
-.load-more__bar{height:1px;background:var(--line);margin-top:1rem}
+.load-more__bar{height:1px;background:var(--line);margin-top:.75rem}
 
 /* ── PDP ── */
 .bread{font-size:.875rem;color:var(--muted);padding:1rem 0}
@@ -618,21 +623,23 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .pdp-cta-row .pdp-buynow{flex:1;margin-top:0}
 .atc-note{padding:1rem;background:transparent;font-size:.875rem}
 .atc-note b{display:block;color:var(--muted);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:2px}
-/* Groups the handmade-timeline note and the guarantee row into one card
-   instead of two stacked boxes — reads as a single "what you're getting"
-   block rather than disparate callouts. */
-.pdp-assurance{margin-top:.75rem;border:1px solid var(--line);border-radius:var(--radius-sm);overflow:hidden}
-.pdp-assurance .pdp-guarantee{border-radius:0;border-top:1px solid var(--line);margin-top:0}
+/* Groups the handmade-timeline note and the guarantee row into one
+   full-width, square-cornered card instead of two stacked rounded boxes —
+   reads as a single "what you're getting" block, matching home's .trust
+   treatment (also square-cornered) rather than a softer PDP-only style. */
+.pdp-assurance{margin-top:.75rem;border:1px solid var(--line);overflow:hidden}
+.pdp-assurance .pdp-guarantee{border-top:1px solid var(--line);margin-top:0}
 .pdp-details-head{margin-top:1.75rem;margin-bottom:.25rem}
 .trust-row-s{display:flex;gap:.5rem;margin-top:1rem}
 .trust-row-s span{flex:1;text-align:center;padding:.75rem .5rem;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:.75rem;color:var(--muted)}
 .trust-row-s span b{display:block;color:var(--dark);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
-.pdp-guarantee{display:flex;flex-direction:column;gap:.7rem;margin-top:1rem;padding:1.1rem;background:var(--surface-soft);border-radius:var(--radius-sm)}
-.pdp-guarantee__item{display:flex;align-items:center;gap:.75rem}
-.pdp-guarantee__item svg{flex:none}
-.pdp-guarantee__item span{display:flex;flex-direction:column}
-.pdp-guarantee__item b{font-size:.75rem;font-weight:600;color:var(--dark)}
-.pdp-guarantee__item small{font-size:.6rem;color:var(--muted)}
+/* 3 columns, centered icon-over-label — same language as home's
+   .trust__row/.trust__icon, not a vertical list. */
+.pdp-guarantee{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:0;padding:1.1rem .5rem;background:var(--surface-soft);text-align:center}
+.pdp-guarantee__item{display:flex;flex-direction:column;align-items:center}
+.pdp-guarantee__icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:rgba(196,168,130,.14);margin-bottom:.5rem}
+.pdp-guarantee__item b{font-size:.62rem;font-weight:600;letter-spacing:.04em;color:var(--dark)}
+.pdp-guarantee__item small{font-size:.58rem;color:var(--muted);margin-top:2px}
 .specs{margin-top:1.5rem}
 
 /* ── PDP: "Seen in the wild" UGC rail (2026-08-04) ── */
@@ -649,8 +656,14 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* ── PDP: "The story behind the piece" editorial module ── */
 .pdp-narrative p{font-size:.875rem;color:var(--muted);line-height:1.6}
 .pdp-narrative p+p{margin-top:.75rem}
-/* Single, full-width image — simplified from a two-image row (2026-08-05). */
-.pdp-narrative__img{aspect-ratio:4/3;border-radius:var(--radius);background-size:cover;background-position:center;margin-bottom:1rem}
+/* Single image, true edge-to-edge (breaks out of the ambient .w gutter that
+   every PDP section otherwise sits in — PDP's <main> IS .w, so a full-bleed
+   child needs the viewport-breakout trick, not just "no padding"), square
+   corners on purpose (2026-08-06). The text below it gets its OWN extra
+   inset (.pdp-narrative__text) instead of sitting flush with the section's
+   edge — image bleeds, text doesn't, a deliberate asymmetry. */
+.pdp-narrative__img{aspect-ratio:4/3;background-size:cover;background-position:center;width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;margin-bottom:1rem}
+.pdp-narrative__text{padding:0 .5rem}
 .pdp-narrative__cta{display:inline-flex;align-items:center;gap:.4rem;margin-top:.75rem;font-weight:600;color:var(--accent);font-size:.9rem}
 
 /* ── PDP: "The complete collectible experience" rail ── */

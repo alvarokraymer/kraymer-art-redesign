@@ -983,11 +983,13 @@ function initPDP() {
     ? `<div class="gal-strip" ${dataAttr}>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : "";
   const galInfoHTML = `<button class="gal-info" data-gal-info hidden aria-label="Image details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><line x1="12" y1="15.5" x2="12" y2="11"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/></svg></button><div class="gal-info__panel" data-gal-info-panel hidden><p data-gal-info-text></p></div>`;
   const mainGal = (extra) => `<div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5" ${hasImgs ? `data-gal-imgs='${JSON.stringify(imgs)}'` : ""} ${extra||""}>${galInfoHTML}</div>`;
+  /* 3-column grid, centered icon-over-label — same visual language as
+     home's .trust__row, not a vertical list, per 2026-08-06 instruction. */
   const guaranteeHTML = `
     <div class="pdp-guarantee">
-      <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span><b>Lifetime Warranty</b><small>Every piece, forever</small></span></div>
-      <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span><b>60-Day Returns</b><small>No questions asked</small></span></div>
-      <div class="pdp-guarantee__item"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg><span><b>Certificate of Authenticity</b><small>Numbered by hand</small></span></div>
+      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><b>Lifetime Warranty</b><small>Every piece, forever</small></div>
+      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><b>60-Day Returns</b><small>No questions asked</small></div>
+      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg></span><b>Certificate</b><small>Numbered by hand</small></div>
     </div>`;
   const noteHTML = `<div class="atc-note"><b>Handcrafted to order</b>Ships in 9–20 days. You get photo updates while your piece is being made, then tracked shipping.</div>`;
   const variantsHTML = (size, metal, metalStyle) => {
@@ -1076,17 +1078,23 @@ function initPDP() {
       <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">The story behind the piece</span><h2>${p.title}</h2></div>
       <div class="pdp-narrative">
         <div class="pdp-narrative__img" style="background-image:url(${mainImg})"></div>
-        <p>${conceptLine}</p>
-        <p>Every piece starts as a wax sculpture at the bench, not a die-cast mold, then goes out in small numbered batches.</p>
-        <a class="pdp-narrative__cta" href="about.html#craft"><i data-lucide="arrow-right" style="width:16px;height:16px"></i>Read the full craft process</a>
+        <div class="pdp-narrative__text">
+          <p>${conceptLine}</p>
+          <p>Every piece starts as a wax sculpture at the bench, not a die-cast mold, then goes out in small numbered batches.</p>
+          <a class="pdp-narrative__cta" href="about.html#craft"><i data-lucide="arrow-right" style="width:16px;height:16px"></i>Read the full craft process</a>
+        </div>
       </div>
     </section>`;
 
-  /* "The complete collectible experience" — only the two features with a
-     real claim behind them (pouch, certificate). Deliberately not padded
-     out with a "digital collectible" or gifting card that has no basis for
-     this brand — see chat 2026-08-04 audit. Images are grey placeholders,
-     no packaging photography exists yet. */
+  /* "The complete collectible experience" — moved above the UGC rail
+     2026-08-06. Only 3 cards, each grounded in a real, already-stated claim:
+     presentation/pouch, Certificate of Authenticity, and solid-vs-plated
+     materials (the same "not costume jewelry" comparison already made on
+     about.html) — the one legitimate way to address the "how do we compare
+     to other brands" ask without inventing a benchmark or naming a
+     competitor. Deliberately still no "digital collectible" or gifting
+     card invented — see the 2026-08-04 audit. Images are grey
+     placeholders, no packaging photography exists yet. */
   const collectibleHTML = `
     <section class="sec sec--sm">
       <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">What's in the box</span><h2>The complete piece</h2></div>
@@ -1099,6 +1107,10 @@ function initPDP() {
           <div class="collectible-card__img"></div>
           <div class="collectible-card__body"><h3>Certificate of Authenticity</h3><p>Numbered by hand, matched to your piece's batch.</p></div>
         </div>
+        <div class="collectible-card">
+          <div class="collectible-card__img"></div>
+          <div class="collectible-card__body"><h3>Solid, Not Plated</h3><p>925 sterling silver and 18K gold, the same standard as fine jewelry, not the base metal most costume pieces are built on.</p></div>
+        </div>
       </div>
     </section>`;
 
@@ -1109,7 +1121,7 @@ function initPDP() {
      mockup). Kept as the very last section on the page per 2026-08-05
      instruction. */
   const reviewsHTML = `
-    <section class="sec sec--sm" id="reviews">
+    <section class="sec sec--sm" id="reviews" style="padding-bottom:.75rem">
       <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">Reviews</span><h2>What collectors say</h2></div>
       <div class="ct pdp-rating-summary" style="margin-bottom:1.5rem"><span class="stars">★★★★★</span> ${RATING_DEFAULT}</div>
       <div class="rev-list">
@@ -1120,7 +1132,7 @@ function initPDP() {
         <div class="rv"><span class="stars">★★★★★</span><h4>Great unboxing</h4><p>Exactly as pictured, and the box alone felt like a gift.</p><p class="who"><span class="rv__avatar"></span><span><b>Jordan P.</b> · Verified Buyer</span></p></div>
         <div class="rv" data-rev-extra hidden><span class="stars">★★★★★</span><h4>Ordered a second piece</h4><p>Ordered two more the week after my first piece arrived.</p><p class="who"><span class="rv__avatar"></span><span><b>Alex R.</b> · Verified Buyer</span></p></div>
       </div>
-      <div class="ct" style="margin-top:1rem"><button class="btn btn--line" data-rev-loadmore>Load More Reviews</button></div>
+      <div class="ct" style="margin-top:1rem"><button class="btn btn--line" data-rev-loadmore><i data-lucide="plus" style="width:16px;height:16px"></i>Load More Reviews</button></div>
     </section>`;
   const crossHTML = `
     <section class="sec sec--sm">
@@ -1274,8 +1286,8 @@ function initPDP() {
         </div>
       </div>
       ${storyHTML}
-      ${ugcHTML}
       ${collectibleHTML}
+      ${ugcHTML}
       <section class="sec sec--sm" style="text-align:center">
         <a class="btn btn--line" href="coleccion.html"><i data-lucide="arrow-left" style="width:16px;height:16px"></i>Back to All Collections</a>
       </section>

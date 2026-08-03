@@ -93,9 +93,8 @@ const FOOTER_HTML = `
   <div class="w">
     <div class="ft-founder">
       <img class="ft-founder__avatar" src="assets/kraymerProfile.jpg" alt="Kraymer" style="object-fit:cover">
-      <div>
-        <div class="ft-founder__name">Kraymer</div>
-        <div class="ft-founder__role">Founder</div>
+      <div class="ft-founder__text">
+        <div><div class="ft-founder__name">Kraymer</div><div class="ft-founder__role">Founder</div></div>
         <a class="ft-founder__cta" href="about.html">Our Story &rarr;</a>
       </div>
       <div class="ft-social">

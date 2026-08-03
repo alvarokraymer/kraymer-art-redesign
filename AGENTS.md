@@ -396,6 +396,21 @@ per-page override as a "bug fix."
   `.collectible-card` both sit on the fixed `--surface` background but had
   no hardcoded-text override, so their text was inheriting the inverting
   `--dark` token and going near-white-on-near-white.
+  **2026-08-06 follow-up pass:** `collectibleHTML` now renders *before*
+  `ugcHTML` (was after) and grew a 3rd card, "Solid, Not Plated" — the one
+  legitimate way to answer "how do we compare to other brands" without
+  inventing a benchmark or naming a competitor: it reuses the same
+  solid-metal-vs-costume-jewelry claim already made on about.html, not a
+  new one. `guaranteeHTML` is a 3-column grid now (icon-over-label, same
+  visual language as home's `.trust__row`/`.trust__icon`), not a vertical
+  list, and `.pdp-assurance` lost its border-radius to match home's square-
+  cornered `.trust`. `storyHTML`'s image (`.pdp-narrative__img`) is a true
+  viewport-edge-to-edge bleed now (the classic `left:50%;margin-left:-50vw`
+  breakout, needed because PDP's `<main>` **is** `.w` itself — every PDP
+  section sits inside that ambient gutter, so "full-bleed" here means
+  actively breaking out of it, not just removing padding) with square
+  corners; the text below it moved into its own `.pdp-narrative__text` with
+  deliberate extra inset — image bleeds, text doesn't, on purpose.
 - **Variant pages** (`variant1.html`/`variant2.html`/`variant3.html`,
   `initVariant(approach)` in `app.js`): show the same fixed set of 8 products
   three times, once per card approach (Bold / Clean / Soft), for internal
