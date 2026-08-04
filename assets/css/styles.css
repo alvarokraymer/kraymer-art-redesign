@@ -434,16 +434,27 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Mobile scroll bleed (round 11, client: horizontal scrolls should "empezar
    ... con el margen ... pero al scrollear llegar hasta los margenes de la
    pantalla") — these rows sit inside a .w-padded ancestor, so their own box
-   is narrower than the viewport on both sides already. Pulling the right
-   edge out by --gutter with a negative margin lets the last card scroll
-   flush to the true screen edge instead of stopping at a second gutter,
-   while the left edge (unchanged) keeps lining up with the page margin.
-   Reset to 0 at desktop — that tier already gets its own boxing from the
-   .scrollx-wrap JS wraps in app.js, untouched by this. Rows that are already
-   fullwidth themselves (bestsellers/.sub-scroll) get the equivalent fix via
-   --scrollbleed-pr on their own padding-right instead, see :root above. */
+   is narrower than the viewport on both sides already. A right-only bleed
+   (round 11 v1) fixed the last card reaching the true right edge, but left
+   the row's own border-box starting at the gutter (x:24) on the left —
+   CSS clips scrolled content at the border edge, so an exiting card was
+   getting clipped right at the margin instead of sliding the extra 24px to
+   the true left edge like it does on the right (client, v2: cards "se
+   esconden por detras del margen" on the left only). Fix: bleed the box out
+   on BOTH sides (full viewport width) and add matching padding-left so the
+   at-rest first-card position is unchanged — only the clip boundary moves,
+   from the margin to the true edge, on both sides now. Reset to 0 at
+   desktop — that tier already gets its own boxing from the .scrollx-wrap JS
+   wraps in app.js, untouched by this. Rows that are already fullwidth
+   themselves (bestsellers/.sub-scroll) don't have this bug: their own
+   border-box already spans the full viewport, so the clip boundary was
+   already the true edge on both sides. */
 .post-scroll,.rev-scroll,.ugc-scroll,.collectible-scroll,.gal-strip,
-[data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-right:calc(-1 * var(--gutter))}
+[data-crosssell],[data-crosssell-same],[data-crosssell-other]{
+  margin-left:calc(-1 * var(--gutter));
+  margin-right:calc(-1 * var(--gutter));
+  padding-left:var(--gutter);
+}
 /* min()-capped, not a bare vw: at 375-414px these always resolve to the vw
    value (well under the px ceiling), so mobile is byte-for-byte unaffected —
    but uncapped 62vw/42vw on a wide desktop viewport would render ~1190px/
@@ -999,7 +1010,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   /* Undo the mobile scroll-bleed trick above — desktop keeps its existing
      symmetric boxing via the .scrollx-wrap JS wraps, untouched by round 11. */
   .post-scroll,.rev-scroll,.ugc-scroll,.collectible-scroll,.gal-strip,
-  [data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-right:0}
+  [data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-left:0;margin-right:0;padding-left:0}
   /* Height bumped slightly (640->680px), not dramatically — client:
      "no quiero cambiar mucho la altura, igual un poco más" — mostly to
      give the background-position fixes below a little more room to work
