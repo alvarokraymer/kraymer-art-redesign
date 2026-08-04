@@ -36,7 +36,7 @@ const HEADER_HTML = `
           <a href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
           <a href="coleccion.html?collection=kny">Demon Slayer</a>
           <a href="coleccion.html?collection=genshin">Genshin Impact</a>
-          <a href="#" style="font-weight:400;color:var(--muted)">Ita Bags${NAV_NEW_TAG}</a>
+          <a href="ita-bag-preorder.html" style="font-weight:400;color:var(--muted)">Ita Bags${NAV_NEW_TAG}</a>
           <a href="coleccion.html?type=sets">Collector Sets</a>
           <a href="#" style="color:var(--accent);font-weight:800">Collector's Club</a>
           <a href="#">Mystery Box</a>
@@ -70,7 +70,7 @@ const HEADER_HTML = `
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">Demon Slayer</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin Impact</a>
-      <a class="mob-link mob-link--sub" href="#" style="font-weight:400">Ita Bags${NAV_NEW_TAG}</a>
+      <a class="mob-link mob-link--sub" href="ita-bag-preorder.html" style="font-weight:400">Ita Bags${NAV_NEW_TAG}</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
     </div>
     <a class="mob-link" href="#" style="color:var(--accent);font-weight:800">Collector's Club</a>
