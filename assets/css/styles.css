@@ -58,12 +58,6 @@
   --radius-pill: 999px;
   --gutter:      1.5rem;
   --header-h:    52px;
-  /* Horizontal-scroll rows keep a flat 24px right inset on desktop (matches
-     the pre-existing JS-forced padding, not --gutter's 40px there) but bleed
-     to 0 on mobile so the last card can reach the true screen edge instead
-     of stopping at a second gutter — see the mobile-scroll-bleed rules
-     below and the round-11 note on .post-scroll/.ugc-scroll/etc. */
-  --scrollbleed-pr: 0px;
 
   --surface:      #F3F3F2;  /* neutral card/section fill — keep this gray, not cream */
   --surface-soft: #F8F8F7;
@@ -434,39 +428,47 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Mobile scroll bleed (round 11, client: horizontal scrolls should "empezar
    ... con el margen ... pero al scrollear llegar hasta los margenes de la
    pantalla") — these rows sit inside a .w-padded ancestor, so their own box
-   is narrower than the viewport on both sides already. A right-only bleed
-   (round 11 v1) fixed the last card reaching the true right edge, but left
-   the row's own border-box starting at the gutter (x:24) on the left —
-   CSS clips scrolled content at the border edge, so an exiting card was
-   getting clipped right at the margin instead of sliding the extra 24px to
-   the true left edge like it does on the right (client, v2: cards "se
-   esconden por detras del margen" on the left only). Fix: bleed the box out
-   on BOTH sides (full viewport width) and add matching padding-left so the
-   at-rest first-card position is unchanged — only the clip boundary moves,
-   from the margin to the true edge, on both sides now. Reset to 0 at
-   desktop — that tier already gets its own boxing from the .scrollx-wrap JS
-   wraps in app.js, untouched by this. Rows that are already fullwidth
-   themselves (bestsellers/.sub-scroll) don't have this bug: their own
-   border-box already spans the full viewport, so the clip boundary was
-   already the true edge on both sides.
-   Two follow-up fixes needed for the padding-left to actually render (v3):
+   is narrower than the viewport on both sides already. Bleeding the box out
+   on BOTH sides (negative margin, full viewport width) moves the CLIP
+   boundary from the margin to the true screen edge, so a card being
+   actively scrolled can slide all the way through the margin zone instead
+   of getting clipped right at it (v2 fix — client: cards "se esconden por
+   detras del margen" on the left only, since a v1 right-only bleed left the
+   left border-box edge sitting at the gutter). padding-left/right then
+   re-adds the margin back as the RESTING position — v3 client feedback was
+   that a fully-flush right edge at the end of the scroll ("se queda pegada")
+   reads wrong; the margin should still be there once you stop scrolling,
+   just not block the scroll gesture itself the way the original un-bled
+   layout did. So: clip boundary at the true edge (smooth scroll, no early
+   cut), but a matching padding-left/right keeps every rest position —
+   first card, last card — sitting 1 gutter in from the edge, same as
+   before any of this. Reset to 0 at desktop — that tier already gets its
+   own boxing from the .scrollx-wrap JS wraps in app.js, untouched by this.
+   Rows that are already fullwidth themselves (bestsellers/.sub-scroll) get
+   the same padding-left/right:24px symmetric treatment directly via their
+   own JS-set inline style instead (see app.js) — no bleed trick needed
+   there since their border-box was already fullwidth to begin with.
+   Two things needed for the padding to actually render (v3):
    1) scroll-snap-type:x mandatory on these rows makes the browser correct
-   scrollLeft to 24px on first paint — snapping the FIRST card's border edge
-   (not its padding-inset position) to the scrollport start, which visually
-   cancels the padding-left out (confirmed: scrollLeft measured 24 on a cold
-   load, before any user interaction). scroll-padding-left tells the snap
-   engine the padded position IS the valid start point, stopping that
-   auto-correction. 2) .gal-strip's own `padding:.75rem 0` shorthand
-   (below) resets padding-left back to 0 — same specificity, later in the
-   file, so it wins on source order alone. !important on just this one
-   declaration is the contained fix; reordering the whole rule block would
-   be harder to keep in sync with .gal-strip's own edits over time. */
+   scrollLeft on first paint — snapping the FIRST card's border edge (not
+   its padding-inset position) to the scrollport start, which visually
+   cancels padding-left out (confirmed: scrollLeft measured 24 on a cold
+   load, before any user interaction). scroll-padding-left/right tells the
+   snap engine the padded position IS the valid rest point, stopping that
+   auto-correction — needed on both sides now that both are padded. 2)
+   .gal-strip's own `padding:.75rem 0` shorthand (below) resets padding
+   back to 0 — same specificity, later in the file, so it wins on source
+   order alone. !important on just this declaration is the contained fix;
+   reordering the whole rule block would be harder to keep in sync with
+   .gal-strip's own edits over time. */
 .post-scroll,.rev-scroll,.ugc-scroll,.collectible-scroll,.gal-strip,
 [data-crosssell],[data-crosssell-same],[data-crosssell-other]{
   margin-left:calc(-1 * var(--gutter));
   margin-right:calc(-1 * var(--gutter));
   padding-left:var(--gutter)!important;
+  padding-right:var(--gutter)!important;
   scroll-padding-left:var(--gutter);
+  scroll-padding-right:var(--gutter);
 }
 /* min()-capped, not a bare vw: at 375-414px these always resolve to the vw
    value (well under the px ceiling), so mobile is byte-for-byte unaffected —
@@ -1019,11 +1021,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 
 /* ── Desktop ── */
 @media(min-width:768px){
-  :root{--gutter:2.5rem;--scrollbleed-pr:24px}
+  :root{--gutter:2.5rem}
   /* Undo the mobile scroll-bleed trick above — desktop keeps its existing
      symmetric boxing via the .scrollx-wrap JS wraps, untouched by round 11. */
   .post-scroll,.rev-scroll,.ugc-scroll,.collectible-scroll,.gal-strip,
-  [data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-left:0;margin-right:0;padding-left:0!important;scroll-padding-left:0}
+  [data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-left:0;margin-right:0;padding-left:0!important;padding-right:0!important;scroll-padding-left:0;scroll-padding-right:0}
   /* Height bumped slightly (640->680px), not dramatically — client:
      "no quiero cambiar mucho la altura, igual un poco más" — mostly to
      give the background-position fixes below a little more room to work

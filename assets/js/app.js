@@ -684,7 +684,7 @@ function initHome() {
   if (strip) {
     const viewAllCard = `<a class="viewall-card" href="coleccion.html"><span>View All<br>&rarr;</span></a>`;
     strip.innerHTML = best.map((p) => productCard(p, { approach: false })).join("") + viewAllCard;
-    strip.style.cssText += "padding-left:24px!important;padding-right:var(--scrollbleed-pr)!important;scroll-padding-left:24px!important";
+    strip.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important;scroll-padding-right:24px!important";
     strip.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
 
   }
@@ -876,7 +876,7 @@ function initPLP() {
       const n = poolForCounts.filter((p) => p.type === t.id).length;
       return `<button class="sub ${activeType === t.id ? "active" : ""}" data-type="${t.id}">${catIcons[t.id] || ""}<b>${t.name}</b><span>${n} piece${n === 1 ? "" : "s"}</span></button>`;
     }).join("");
-  subHost.style.cssText += "padding-left:24px!important;padding-right:var(--scrollbleed-pr)!important;scroll-padding-left:24px!important";
+  subHost.style.cssText += "padding-left:24px!important;padding-right:24px!important;scroll-padding-left:24px!important;scroll-padding-right:24px!important";
 
   /* Sort icons — chips live inside the Filters panel (see filterPanel below),
      not inline on the page. */
