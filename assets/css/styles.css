@@ -448,12 +448,25 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    wraps in app.js, untouched by this. Rows that are already fullwidth
    themselves (bestsellers/.sub-scroll) don't have this bug: their own
    border-box already spans the full viewport, so the clip boundary was
-   already the true edge on both sides. */
+   already the true edge on both sides.
+   Two follow-up fixes needed for the padding-left to actually render (v3):
+   1) scroll-snap-type:x mandatory on these rows makes the browser correct
+   scrollLeft to 24px on first paint — snapping the FIRST card's border edge
+   (not its padding-inset position) to the scrollport start, which visually
+   cancels the padding-left out (confirmed: scrollLeft measured 24 on a cold
+   load, before any user interaction). scroll-padding-left tells the snap
+   engine the padded position IS the valid start point, stopping that
+   auto-correction. 2) .gal-strip's own `padding:.75rem 0` shorthand
+   (below) resets padding-left back to 0 — same specificity, later in the
+   file, so it wins on source order alone. !important on just this one
+   declaration is the contained fix; reordering the whole rule block would
+   be harder to keep in sync with .gal-strip's own edits over time. */
 .post-scroll,.rev-scroll,.ugc-scroll,.collectible-scroll,.gal-strip,
 [data-crosssell],[data-crosssell-same],[data-crosssell-other]{
   margin-left:calc(-1 * var(--gutter));
   margin-right:calc(-1 * var(--gutter));
-  padding-left:var(--gutter);
+  padding-left:var(--gutter)!important;
+  scroll-padding-left:var(--gutter);
 }
 /* min()-capped, not a bare vw: at 375-414px these always resolve to the vw
    value (well under the px ceiling), so mobile is byte-for-byte unaffected —
@@ -1010,7 +1023,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   /* Undo the mobile scroll-bleed trick above — desktop keeps its existing
      symmetric boxing via the .scrollx-wrap JS wraps, untouched by round 11. */
   .post-scroll,.rev-scroll,.ugc-scroll,.collectible-scroll,.gal-strip,
-  [data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-left:0;margin-right:0;padding-left:0}
+  [data-crosssell],[data-crosssell-same],[data-crosssell-other]{margin-left:0;margin-right:0;padding-left:0!important;scroll-padding-left:0}
   /* Height bumped slightly (640->680px), not dramatically — client:
      "no quiero cambiar mucho la altura, igual un poco más" — mostly to
      give the background-position fixes below a little more room to work
