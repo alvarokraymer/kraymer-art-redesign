@@ -1,7 +1,7 @@
 const COLLECTIONS = {
-  jjk:     { name: "JJK", abbr: "JJ", accent: "jjk" },
-  kny:     { name: "KNY", abbr: "KN", accent: "kny" },
-  genshin: { name: "Genshin", abbr: "GI",  accent: "genshin" },
+  jjk:     { name: "Jujutsu Kaisen", abbr: "JJ", accent: "jjk" },
+  kny:     { name: "Demon Slayer", abbr: "KN", accent: "kny" },
+  genshin: { name: "Genshin Impact", abbr: "GI",  accent: "genshin" },
   all:     { name: "Full Collection", abbr: "", accent: "" },
 };
 
@@ -56,11 +56,11 @@ const PRODUCTS = [
 ];
 
 const BLOG_POSTS = [
-  { slug:"find-your-ring-size", category:"Guides", title:"Find Your Ring Size", excerpt:"Measure a ring you already own. Inside diameter, matched to our chart. And if you get it wrong, resizing is free.", image:"assets/productPhotos/giyuRing_PP/giyuRing_scale.webp" },
-  { slug:"caring-for-silver", category:"Care", title:"Caring for Silver", excerpt:"Wipe with the polishing cloth after each wear. Store in the pouch. Silver ages; that is its character.", image:"assets/productPhotos/giyuRing_PP/giyuRing_detail.webp" },
+  { slug:"find-your-ring-size", category:"Guides", title:"Find Your Ring Size", excerpt:"Measure a ring you already own, inside diameter, matched to our chart. Get it wrong and resizing is free.", image:"assets/productPhotos/giyuRing_PP/giyuRing_scale.webp" },
+  { slug:"caring-for-silver", category:"Care", title:"Caring for Silver", excerpt:"Wipe with the polishing cloth after each wear. Store in the pouch. Silver ages. That's its character.", image:"assets/productPhotos/giyuRing_PP/giyuRing_detail.webp" },
   { slug:"subtlety-and-meaning", category:"Journal", title:"Subtlety and Meaning", excerpt:"Every piece carries a reference only you need to recognize. Wear it for yourself. Let those who know, notice.", image:"assets/productPhotos/gojoXgeto_PP/gojoXgeto_model1.webp" },
   { slug:"choosing-your-metal", category:"Guides", title:"Choosing Your Metal: Silver or Gold Plate", excerpt:"Both are solid, hypoallergenic and built to last. The difference is tone against your skin, not durability.", image:"assets/productPhotos/anyaXyor_PP/anaXyor_variation.webp" },
-  { slug:"inside-the-workshop", category:"Behind the Scenes", title:"Inside the Workshop: How a Piece Gets Made", excerpt:"From wax sculpture to hand-set stone. A look at the bench work behind every numbered batch.", image:"assets/productPhotos/giyuPin_PP/giyuPin_detail1.webp" },
+  { slug:"inside-the-workshop", category:"Behind the Scenes", title:"Inside the Studio: How a Piece Gets Made", excerpt:"From wax sculpture to hand-set stone. A look at the bench work behind every numbered batch.", image:"assets/productPhotos/giyuPin_PP/giyuPin_detail1.webp" },
   { slug:"gift-guide", category:"Gifting", title:"A Gift Guide for the Fan Who Has Everything", excerpt:"Pieces that read as fine jewelry first. The reference is there for anyone who already knows.", image:"assets/productPhotos/anyaXyor_PP/anyaXyor_model2.webp" },
   { slug:"reading-a-batch-number", category:"Behind the Scenes", title:"Reading Your Batch Number", excerpt:"Every piece is stamped with a batch and a number. Here's what those digits actually track, and why we keep it.", image:"assets/productPhotos/giyuPin_PP/giyuPin_detail2.webp" },
 ];

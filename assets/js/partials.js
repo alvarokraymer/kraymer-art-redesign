@@ -12,14 +12,14 @@ const ICONS = {
 
 const ANNOUNCE_HTML = `
 <div class="marquee"><div class="marquee__track">
-  <span>10,000+ clients</span><span>&middot;</span>
+  <span>10,000+ collectors</span><span>&middot;</span>
   <span>Free delivery over $150</span><span>&middot;</span>
   <span>Lifetime warranty</span><span>&middot;</span>
-  <span>Handcrafted to order</span><span>&middot;</span>
-  <span>10,000+ clients</span><span>&middot;</span>
+  <span>Made to order, by hand</span><span>&middot;</span>
+  <span>10,000+ collectors</span><span>&middot;</span>
   <span>Free delivery over $150</span><span>&middot;</span>
   <span>Lifetime warranty</span><span>&middot;</span>
-  <span>Handcrafted to order</span><span>&middot;</span>
+  <span>Made to order, by hand</span><span>&middot;</span>
 </div></div>`;
 
 const HEADER_HTML = `
@@ -31,9 +31,9 @@ const HEADER_HTML = `
       <div class="dsk-drop">
         <a href="coleccion.html">All Collections</a>
         <div class="dsk-drop__panel">
-          <a href="coleccion.html?collection=jjk">JJK</a>
-          <a href="coleccion.html?collection=kny">KNY</a>
-          <a href="coleccion.html?collection=genshin">Genshin</a>
+          <a href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
+          <a href="coleccion.html?collection=kny">Demon Slayer</a>
+          <a href="coleccion.html?collection=genshin">Genshin Impact</a>
           <a href="coleccion.html?type=sets">Collector Sets</a>
         </div>
       </div>
@@ -62,9 +62,9 @@ const HEADER_HTML = `
     <a class="mob-link" href="coleccion.html">All Collections</a>
     <button class="mob-label-btn" data-mob-collapse>COLLECTIONS <span class="mob-arrow"></span></button>
     <div class="mob-sub" data-mob-sub>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">JJK</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">KNY</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">Demon Slayer</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin Impact</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
     </div>
     <a class="mob-link" href="#">Mystery Box</a>
@@ -72,7 +72,7 @@ const HEADER_HTML = `
     <div class="mob-sub open" data-mob-sub>
       <a class="mob-link mob-link--sub" href="about.html">Our Story</a>
       <a class="mob-link mob-link--sub" href="blog.html">Journal</a>
-      <a class="mob-link mob-link--sub" href="quiz.html">Find Your Domain</a>
+      <a class="mob-link mob-link--sub" href="quiz.html">Find Your Piece</a>
       <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
       <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
     </div>
@@ -99,11 +99,11 @@ const HEADER_HTML = `
 <!-- Search overlay (lightbox) -->
 <div class="search" data-search-overlay>
   <div class="search__bar">
-    <input type="search" placeholder="Search pieces..." data-search-input aria-label="Search">
+    <input type="search" placeholder="What are you hunting for?" data-search-input aria-label="Search">
     <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 1rem">&times;</button>
   </div>
   <div class="search__body" data-search-results>
-    <p class="search__hint">Try "sapphire", "garnet" or "topaz".</p>
+    <p class="search__hint">Try a stone, a character, or a series. Sapphire. Gojo. Genshin Impact.</p>
   </div>
 </div>
 `;
@@ -123,13 +123,16 @@ const FOOTER_HTML = `
           <a href="https://tiktok.com/@kraymer.art" target="_blank" rel="noopener" aria-label="TikTok, 10k followers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 3c.5 2.5 2 4 4.5 4.3"/></svg></span><span class="ft-soc__count">10k</span></a>
         </div>
       </div>
-      <p class="ft-founder__bio">I spent years teaching art and shipping pieces to collectors before opening this store. Every piece here is still something I would wear on my own hand.</p>
+      <p class="ft-founder__bio">Hi, I'm Kraymer. Before jewelry, I was teaching art online. The standard hasn't moved. I only make what I'd wear myself.</p>
       <a class="ft-founder__cta" href="about.html">Our Story &rarr;</a>
     </div>
     <div class="ft-cols">
       <div>
         <h3>Shop</h3>
         <a href="coleccion.html">All Collections</a>
+        <a href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
+        <a href="coleccion.html?collection=kny">Demon Slayer</a>
+        <a href="coleccion.html?collection=genshin">Genshin Impact</a>
         <a href="coleccion.html?type=sets">Collector Sets</a>
         <a href="#">Mystery Box</a>
       </div>
@@ -138,14 +141,16 @@ const FOOTER_HTML = `
         <a href="about.html">Our Story</a>
         <a href="about.html#craft">The Craft</a>
         <a href="blog.html">Journal</a>
-        <a href="quiz.html">Find Your Domain</a>
+        <a href="quiz.html">Find Your Piece</a>
         <a href="index.html#reviews">Customer Reviews</a>
+        <a href="https://instagram.com/kraymer.art" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://youtube.com/@KraymerArt" target="_blank" rel="noopener">YouTube</a>
       </div>
       <div class="ft-care">
         <h3>Customer Care</h3>
         <a href="#" data-open-sizeguide>Ring Size Guide</a>
-        <a href="#">Shipping &amp; Handmade Timeline</a>
-        <a href="#">60-Day Returns</a>
+        <a href="#">Shipping &amp; Made-to-Order Timeline</a>
+        <a href="#">60 Day Returns</a>
         <a href="#">Lifetime Warranty</a>
         <a href="index.html#faq">FAQ</a>
         <a href="mailto:support@kraymerart.com" class="mail">support@kraymerart.com</a>
@@ -153,7 +158,7 @@ const FOOTER_HTML = `
     </div>
     <div class="ft-news">
       <h2>Join 10,000+ collectors</h2>
-      <p>First access to new pieces, private offers, and a look inside the workshop.</p>
+      <p>First access to new pieces, private offers, and a look inside the studio.</p>
       <form data-newsletter>
         <input type="email" placeholder="Your email" aria-label="Email" required>
         <button type="submit">Subscribe</button>
@@ -166,7 +171,7 @@ const FOOTER_HTML = `
     <div class="ft-copy">
       <p>&copy; 2026 Kraymer. All rights reserved.</p>
       <p>Privacy Policy &middot; Terms of Service &middot; Refund Policy</p>
-      <p style="margin-top:.75rem;opacity:.5">Kraymer designs are original handcrafted works.</p>
+      <p style="margin-top:.75rem;opacity:.5">Every Kraymer design is an original, hand-sculpted work.</p>
     </div>
   </div>
 </footer>
@@ -183,7 +188,7 @@ const CART_HTML = `
   <div class="drawer__bot" data-cart-foot hidden>
     <div class="drawer__sub"><span>Subtotal</span><b data-cart-subtotal>$0</b></div>
     <button class="btn btn--dark btn--full" data-checkout>Checkout</button>
-    <p class="drawer__note">Free shipping over $150 &middot; 60-day returns</p>
+    <p class="drawer__note">Free shipping over $150 &middot; 60 day returns</p>
   </div>
 </aside>
 `;

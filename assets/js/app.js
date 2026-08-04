@@ -122,13 +122,13 @@ function productCard(p, opts = {}) {
 
   if (p.soldOut) {
     stateClass = "sold";
-    stateBadge = '<span class="badge badge--soldout">Sold out</span>';
+    stateBadge = '<span class="badge badge--soldout">Sold Out</span>';
   } else if (p.comingSoon) {
     stateClass = "card--coming-soon";
-    stateBadge = '<span class="badge badge--coming">Coming soon</span>';
+    stateBadge = '<span class="badge badge--coming">Coming Soon</span>';
   } else if (p.lowStock) {
     stateClass = "card--low-stock";
-    stateBadge = '<span class="badge badge--lowstock">Low stock</span>';
+    stateBadge = '<span class="badge badge--lowstock">Only a Few Left</span>';
   } else if (p.isNew) {
     stateBadge = '<span class="badge badge--new">New</span>';
   } else if (p.isFeatured) {
@@ -428,7 +428,7 @@ function hidePromoFab() { const fab = document.querySelector("[data-promo-fab]")
 
 const SIZE_GUIDE_HTML = `
   <h3>Ring Size Guide</h3>
-  <p class="small muted">Measure the inside diameter of a ring that fits you, then match it below.</p>
+  <p class="small muted">Measure the inside diameter of a ring that already fits you, then match it below.</p>
   <table class="size-table">
     <tr><th>US</th><th>EU</th><th>UK</th><th>Diameter (mm)</th></tr>
     <tr><td>5</td><td>49</td><td>J</td><td>15.7</td></tr>
@@ -440,7 +440,7 @@ const SIZE_GUIDE_HTML = `
     <tr><td>11</td><td>64</td><td>V</td><td>20.6</td></tr>
     <tr><td>12</td><td>67</td><td>X</td><td>21.4</td></tr>
   </table>
-  <p class="small" style="margin-top:var(--space-3)"><b style="color:var(--accent)">Free lifetime resizing.</b> <span class="muted">If it does not fit, we adjust it. Forever, at no cost.</span></p>
+  <p class="small" style="margin-top:var(--space-3)"><b style="color:var(--accent)">Free resizing for life.</b> <span class="muted">If it doesn't fit, we fix it. No charge, no time limit.</span></p>
 `;
 
 /* MOCKUP ONLY: this modal simulates checkout. There is no real
@@ -736,14 +736,14 @@ function initHome() {
   initQuizWidget();
 }
 
-/* ---- Quiz: Find Your Domain (3 steps, series -> metal -> style) — its own
+/* ---- Quiz: Find Your Piece (3 steps, series -> metal -> style) — its own
    page (quiz.html), not inline on home (see AGENTS.md quiz CTA note) ---- */
 function initQuizWidget() {
   const quiz = document.querySelector("[data-quiz]");
   if (quiz) {
     const state = { series: null, metal: null, style: null };
     const steps = [
-      { key: "series", q: "Pick your collection", opts: [["jjk", "Collection JJ"], ["kny", "Collection KN"], ["genshin", "Collection GI"]] },
+      { key: "series", q: "Pick your collection", opts: [["jjk", "Jujutsu Kaisen"], ["kny", "Demon Slayer"], ["genshin", "Genshin Impact"]] },
       { key: "metal", q: "Pick your metal", opts: [["silver", "925 Sterling Silver"], ["gold", "18K Gold"]] },
       { key: "style", q: "Pick your style", opts: [["subtle", "Subtle, every day"], ["statement", "Statement piece"]] },
     ];
@@ -823,9 +823,9 @@ function initPLP() {
      never naming Berserk/AoT — extended here to keep all three consistent:
      the imagery does the work, not the title). */
   const heroCopy = {
-    jjk: { eyebrow: "Collection JJ", line: "Cursed energy, cast in solid silver. Two eyes on one technique, precision that never blinks." },
-    kny: { eyebrow: "Collection KN", line: "Breath held to a single, exact note. Steel that remembers the fight, calm that holds the line." },
-    genshin: { eyebrow: "Collection GI", line: "Elements bent to one will. Light that keeps every color it passed through." },
+    jjk: { eyebrow: "Collection", line: "Cursed energy, cast in solid silver. Two eyes on one technique, precision that never blinks." },
+    kny: { eyebrow: "Collection", line: "Breath held to a single, exact note. Steel that remembers the fight, calm that holds the line." },
+    genshin: { eyebrow: "Collection", line: "Elements bent to one will. Light that keeps every color it passed through." },
   }[colParam];
   if (colParam && COLLECTIONS[colParam]) {
     hero.hidden = false;
@@ -851,9 +851,9 @@ function initPLP() {
     tiles.className = "w";
     tiles.style.padding = ".75rem 0 0";
     tiles.innerHTML = `<div class="scroll-row" style="display:flex;gap:1rem;padding:0 var(--gutter)">
-      <a class="ftile" href="coleccion.html?collection=jjk" style="background-image:url(assets/banner4.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">JJK</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Precision and presence</p></div></a>
-      <a class="ftile" href="coleccion.html?collection=kny" style="background-image:url(assets/banner2.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">KNY</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Forged in flame</p></div></a>
-      <a class="ftile" href="coleccion.html?collection=genshin" style="background-image:url(assets/banner3.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Collection</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Genshin</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Elemental weight</p></div></a>
+      <a class="ftile" href="coleccion.html?collection=jjk" style="background-image:url(assets/banner4.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Jujutsu Kaisen</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Precision and presence</h3></div></a>
+      <a class="ftile" href="coleccion.html?collection=kny" style="background-image:url(assets/banner2.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Demon Slayer</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Forged in flame</h3></div></a>
+      <a class="ftile" href="coleccion.html?collection=genshin" style="background-image:url(assets/banner3.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Genshin Impact</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Elemental weight</h3></div></a>
       <a class="ftile" href="#" style="background-image:url(assets/banner1.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#C4A882">Mystery Box</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Collector's Club</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Unreleased pieces. Every 4 weeks.</p></div></a>
     </div>`;
     subHost.parentNode.insertBefore(tiles, subHost);
@@ -959,7 +959,7 @@ function initPLP() {
     "pre-order": svgIco(`<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>`),
   };
   filterPanel.innerHTML = `
-    <div class="fp__top"><span class="fp__title">Filters</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
+    <div class="fp__top"><span class="fp__title">Sort &amp; Filter</span><button class="fp__clear" data-clear-filters>Clear all</button></div>
     <div class="fp__body">
       <div class="v-group">
         <p class="v-label">Sort by</p>
@@ -971,9 +971,9 @@ function initPLP() {
       <div class="v-group">
         <p class="v-label">Collection</p>
         <div class="v-row" data-fil-group="col">
-          <button class="v-chip" data-fil-val="jjk">${filIcons.jjk}JJK</button>
-          <button class="v-chip" data-fil-val="kny">${filIcons.kny}KNY</button>
-          <button class="v-chip" data-fil-val="genshin">${filIcons.genshin}Genshin</button>
+          <button class="v-chip" data-fil-val="jjk">${filIcons.jjk}Jujutsu Kaisen</button>
+          <button class="v-chip" data-fil-val="kny">${filIcons.kny}Demon Slayer</button>
+          <button class="v-chip" data-fil-val="genshin">${filIcons.genshin}Genshin Impact</button>
         </div>
       </div>` : ""}
       <div class="v-group">
@@ -1000,7 +1000,7 @@ function initPLP() {
         </div>
       </div>
     </div>
-    <div class="fp__bot"><button class="btn btn--dark btn--full" data-apply-filters>Apply filters</button></div>
+    <div class="fp__bot"><button class="btn btn--dark btn--full" data-apply-filters>Apply Filters</button></div>
   `;
   document.body.appendChild(filterPanel);
   filterPanel.insertAdjacentHTML("beforebegin", `<div class="scrim fp-scrim" data-close-fp></div>`);
@@ -1039,7 +1039,7 @@ function initPLP() {
   /* Load more: visual progress only */
   const loadBtn = document.querySelector("[data-load-more]");
   if (loadBtn) loadBtn.addEventListener("click", () => {
-    loadBtn.textContent = "That is every piece in this mockup";
+    loadBtn.textContent = "You've seen every piece in this collection";
     loadBtn.disabled = true;
   });
 
@@ -1062,6 +1062,7 @@ function initPDP() {
   const p = kaProduct(params.get("id")) || PRODUCTS[0];
   const col = COLLECTIONS[p.collection];
   const host = document.querySelector("[data-pdp]");
+  document.title = `${p.title} · Kraymer`;
   const approach = params.get("approach") || "1";
 
   const isRing = p.type === "rings" || (p.type === "sets" && p.sizes.length > 1);
@@ -1113,26 +1114,26 @@ function initPDP() {
   const guaranteeHTML = `
     <div class="pdp-guarantee">
       <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><b>Lifetime Warranty</b><small>Every piece, forever</small></div>
-      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><b>60-Day Returns</b><small>No questions asked</small></div>
-      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg></span><b>Certificate</b><small>Numbered by hand</small></div>
+      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><b>60 Day Returns</b><small>No questions asked</small></div>
+      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg></span><b>Certificate of Authenticity</b><small>Numbered by hand</small></div>
     </div>`;
-  const noteHTML = `<div class="atc-note"><b>Handcrafted to order</b>Ships in 9–20 days. You get photo updates while your piece is being made, then tracked shipping.</div>`;
+  const noteHTML = `<div class="atc-note"><b>Made to Order, by Hand</b>Ships in 9 to 20 days. You'll get photo updates while your piece is being made, then tracked shipping.</div>`;
   const variantsHTML = (size, metal, metalStyle) => {
     let h = "";
     if (p.metals.length) {
       h += `<div class="v-group"><p class="v-label">Metal</p><div class="${metalStyle}" data-metal-opts>${p.metals.map((m,i) => `<button class="${metalStyle === 'metal-cards' ? 'metal-card' : 'v-chip'} ${i===0?'selected':''}" data-metal="${m}"><span>${m}</span></button>`).join("")}</div></div>`;
     }
     if (p.sizes.length) {
-      h += `<div class="v-group"><p class="v-label">${isRing?"Ring size":"Size"} ${isRing?`<button data-open-sizeguide>Guide</button>`:""}</p><div class="v-row" data-size-opts>${p.sizes.map((s,i) => `<button class="v-chip ${i===0?'selected':''}" data-size="${s}">${s}</button>`).join("")}</div>${isRing?`<p class="sm muted" style="margin-top:.5rem">Free lifetime resizing.</p>`:""}</div>`;
+      h += `<div class="v-group"><p class="v-label">${isRing?"Ring size":"Size"} ${isRing?`<button data-open-sizeguide>Guide</button>`:""}</p><div class="v-row" data-size-opts>${p.sizes.map((s,i) => `<button class="v-chip ${i===0?'selected':''}" data-size="${s}">${s}</button>`).join("")}</div>${isRing?`<p class="sm muted" style="margin-top:.5rem">Free resizing for life.</p>`:""}</div>`;
     }
     return h;
   };
 
   /* --- PDP state helpers --- */
   const pdpBadge = () => {
-    if (p.soldOut) return `<span class="pdp-state-badge pdp-state--sold">Sold out</span>`;
-    if (p.comingSoon) return `<span class="pdp-state-badge pdp-state--coming">Coming soon</span>`;
-    if (p.lowStock) return `<span class="pdp-state-badge pdp-state--low">Only a few left</span>`;
+    if (p.soldOut) return `<span class="pdp-state-badge pdp-state--sold">Sold Out</span>`;
+    if (p.comingSoon) return `<span class="pdp-state-badge pdp-state--coming">Coming Soon</span>`;
+    if (p.lowStock) return `<span class="pdp-state-badge pdp-state--low">Only a Few Left</span>`;
     if (p.isNew) return `<span class="pdp-state-badge pdp-state--new">New</span>`;
     return "";
   };
@@ -1160,7 +1161,7 @@ function initPDP() {
     <div class="specs faq">
       <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("gem")}Specs &amp; Materials</span></button><div class="faq__panel"><p>Solid 925 sterling silver${p.metals.some((m)=>m.includes("Gold"))?" or 18K gold plated over sterling silver":""}. Hand-set ${p.gem?p.gem.toLowerCase():"stone"}, brilliant cut. Hypoallergenic and nickel free.</p></div></div>
       <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("sparkles")}Concept &amp; Inspiration</span></button><div class="faq__panel"><p>${conceptLine}</p></div></div>
-      <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("truck")}Shipping &amp; Returns</span></button><div class="faq__panel"><p>Handcrafted to order, ships in 9&ndash;20 days with photo updates along the way, then tracked worldwide. 60-day returns, no questions asked.</p></div></div>
+      <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("truck")}Shipping &amp; Returns</span></button><div class="faq__panel"><p>Made to order, ships in 9 to 20 days with photo updates along the way, then tracked worldwide. 60 day returns, no questions asked.</p></div></div>
       <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("droplet")}Care Instructions</span></button><div class="faq__panel"><p>Wipe with the included polishing cloth after wear. Store in the pouch. Your lifetime warranty covers the rest.</p></div></div>
       <div class="faq__item"><button class="faq__btn"><span class="faq__btn-label">${faqIco("badge-check")}Is this official licensed merchandise?</span></button><div class="faq__panel"><p>No. Every piece is an original design inspired by the worlds we grew up loving, hand-sculpted in our own studio, not a licensed reproduction.</p></div></div>
     </div>`;
@@ -1270,7 +1271,7 @@ function initPDP() {
         <div class="rv"><span class="stars">★★★★★</span><h4>Exactly as pictured</h4><p>The detail is incredible. I wear it every day and it still looks new.</p><p class="who"><span class="rv__avatar"></span><span><b>Priya N.</b> · Verified Buyer</span></p></div>
         <div class="rv"><span class="stars">★★★★★</span><h4>Worth every penny</h4><p>Photos do not do it justice. The weight and finish feel substantial.</p><p class="who"><span class="rv__avatar"></span><span><b>Daniel K.</b> · Verified Buyer</span></p></div>
         <div class="rv"><span class="stars">★★★★★</span><h4>Perfect gift</h4><p>Bought this for a friend. They have not taken it off since.</p><p class="who"><span class="rv__avatar"></span><span><b>Sam T.</b> · Verified Buyer</span></p></div>
-        <div class="rv"><span class="stars">★★★★★</span><h4>Better than expected</h4><p>Better finish than pieces I have paid three times as much for.</p><p class="who"><span class="rv__avatar"></span><span><b>Maria L.</b> · Verified Buyer</span></p></div>
+        <div class="rv"><span class="stars">★★★★★</span><h4>Better than expected</h4><p>Better finish than pieces I've paid three times as much for.</p><p class="who"><span class="rv__avatar"></span><span><b>Maria L.</b> · Verified Buyer</span></p></div>
         <div class="rv"><span class="stars">★★★★★</span><h4>Great unboxing</h4><p>Exactly as pictured, and the box alone felt like a gift.</p><p class="who"><span class="rv__avatar"></span><span><b>Jordan P.</b> · Verified Buyer</span></p></div>
         <div class="rv" data-rev-extra hidden><span class="stars">★★★★★</span><h4>Ordered a second piece</h4><p>Ordered two more the week after my first piece arrived.</p><p class="who"><span class="rv__avatar"></span><span><b>Alex R.</b> · Verified Buyer</span></p></div>
       </div>
@@ -1293,7 +1294,7 @@ function initPDP() {
     </section>`;
   const alsoLikeHTML = `
     <section class="sec sec--sm">
-      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">Other collectors' picks</span><h2>You May Also Like</h2></div>
+      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">Other Collectors' Picks</span><h2>You May Also Like</h2></div>
       <div class="scroll-row scroll-row--compact" data-crosssell-other></div>
     </section>`;
 
@@ -1479,7 +1480,7 @@ function initPDP() {
     const revLoadBtn = e.target.closest("[data-rev-loadmore]");
     if (revLoadBtn) {
       host.querySelectorAll("[data-rev-extra]").forEach((el) => { el.hidden = false; });
-      revLoadBtn.textContent = "That is every review in this mockup";
+      revLoadBtn.textContent = "You've read every review on this piece";
       revLoadBtn.disabled = true;
     }
   });
@@ -1680,7 +1681,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const news = document.querySelector("[data-newsletter]");
   if (news) news.addEventListener("submit", (e) => {
     e.preventDefault();
-    news.innerHTML = '<p class="small" style="color:var(--gold-soft)">You are on the list. (Mockup only, no email was sent.)</p>';
+    news.innerHTML = '<p class="small" style="color:var(--gold-soft)">You\'re on the list. (Mockup only, no email was sent.)</p>';
   });
 
   /* Promo popup: submit + FAB visibility on load */
@@ -1690,7 +1691,7 @@ document.addEventListener("DOMContentLoaded", () => {
     promoState = "subscribed";
     hidePromoFab();
     e.target.closest(".modal__box").innerHTML = `
-      <span class="eyebrow" style="color:var(--accent)">You are in</span>
+      <span class="eyebrow" style="color:var(--accent)">You're in</span>
       <h3>10% Off, Sent</h3>
       <p class="small muted">Check your inbox for the code. (Mockup only, no email was sent.)</p>
       <button class="btn btn--dark btn--full" data-close-modal style="margin-top:1rem">Continue Shopping</button>`;
