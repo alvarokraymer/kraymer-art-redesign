@@ -3,6 +3,8 @@
    Announce bar (not sticky) before header.
    ============================================================ */
 
+const NAV_NEW_TAG = '<span style="display:inline-block;margin-left:.4rem;padding:1px 6px;font-size:.55rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);border-radius:999px;vertical-align:middle">New</span>';
+
 const ICONS = {
   search: '<i data-lucide="search" style="width:20px;height:20px"></i>',
   account: '<i data-lucide="user" style="width:20px;height:20px"></i>',
@@ -29,12 +31,15 @@ const HEADER_HTML = `
     <a class="hdr-logo" href="index.html"><img src="assets/SVG/kraymer-logo.svg" alt="Kraymer" height="14"></a>
     <nav class="dsk-nav" data-dsk-nav aria-label="Main">
       <div class="dsk-drop">
-        <a href="coleccion.html">All Collections</a>
+        <a href="coleccion.html">All Jewelry</a>
         <div class="dsk-drop__panel">
           <a href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
           <a href="coleccion.html?collection=kny">Demon Slayer</a>
           <a href="coleccion.html?collection=genshin">Genshin Impact</a>
+          <a href="#" style="font-weight:400;color:var(--muted)">Ita Bags${NAV_NEW_TAG}</a>
           <a href="coleccion.html?type=sets">Collector Sets</a>
+          <a href="#" style="color:var(--accent);font-weight:800">Collector's Club</a>
+          <a href="#">Mystery Box</a>
         </div>
       </div>
       <a href="about.html">Our Story</a>
@@ -59,21 +64,29 @@ const HEADER_HTML = `
     Search
   </button>
   <div class="mob-links">
-    <a class="mob-link" href="coleccion.html">All Collections</a>
+    <a class="mob-link" href="coleccion.html">All Jewelry</a>
     <button class="mob-label-btn" data-mob-collapse>COLLECTIONS <span class="mob-arrow"></span></button>
     <div class="mob-sub" data-mob-sub>
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">Demon Slayer</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin Impact</a>
+      <a class="mob-link mob-link--sub" href="#" style="font-weight:400">Ita Bags${NAV_NEW_TAG}</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
     </div>
+    <a class="mob-link" href="#" style="color:var(--accent);font-weight:800">Collector's Club</a>
     <a class="mob-link" href="#">Mystery Box</a>
-    <button class="mob-label-btn open" data-mob-collapse>BRAND <span class="mob-arrow"></span></button>
+    <button class="mob-label-btn open" data-mob-collapse>KRAYMER <span class="mob-arrow"></span></button>
     <div class="mob-sub open" data-mob-sub>
       <a class="mob-link mob-link--sub" href="about.html">Our Story</a>
       <a class="mob-link mob-link--sub" href="blog.html">Journal</a>
       <a class="mob-link mob-link--sub" href="quiz.html">Find Your Piece</a>
       <a class="mob-link mob-link--sub" href="index.html#reviews">Reviews</a>
+    </div>
+    <button class="mob-label-btn" data-mob-collapse>SUPPORT <span class="mob-arrow"></span></button>
+    <div class="mob-sub" data-mob-sub>
+      <a class="mob-link mob-link--sub" href="#">Contact</a>
+      <a class="mob-link mob-link--sub" href="#">Track Order</a>
+      <a class="mob-link mob-link--sub" href="#">Shipping and Returns</a>
       <a class="mob-link mob-link--sub" href="index.html#faq">FAQ</a>
     </div>
   </div>
