@@ -1113,9 +1113,11 @@ function initPDP() {
      home's .trust__row, not a vertical list, per 2026-08-06 instruction. */
   const guaranteeHTML = `
     <div class="pdp-guarantee">
-      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><b>Lifetime Warranty</b><small>Every piece, forever</small></div>
-      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><b>60 Day Returns</b><small>No questions asked</small></div>
-      <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg></span><b>Certificate of Authenticity</b><small>Numbered by hand</small></div>
+      <div class="pdp-guarantee__grid">
+        <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><b>Lifetime Warranty</b><small>Every piece, forever</small></div>
+        <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span><b>60 Day Returns</b><small>No questions asked</small></div>
+        <div class="pdp-guarantee__item"><span class="pdp-guarantee__icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5" width="18" height="18"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12l2 2 4-4"/></svg></span><b>Certificate of Authenticity</b><small>Numbered by hand</small></div>
+      </div>
     </div>`;
   const noteHTML = `<div class="atc-note"><b>Made to Order, by Hand</b>Ships in 9 to 20 days. You'll get photo updates while your piece is being made, then tracked shipping.</div>`;
   const variantsHTML = (size, metal, metalStyle) => {
@@ -1209,14 +1211,16 @@ function initPDP() {
      line, not copy-pasted wholesale, to avoid the exact duplication this
      redesign is meant to remove. */
   const storyHTML = `
-    <section class="sec sec--sm sec--warm">
-      <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">The story behind the piece</span><h2>${p.title}</h2></div>
-      <div class="pdp-narrative">
-        <div class="pdp-narrative__img" style="background-image:url(${mainImg})"></div>
-        <div class="pdp-narrative__text">
-          <p>${conceptLine}</p>
-          <p>Every piece starts as a wax sculpture at the bench, not a die-cast mold, then goes out in small numbered batches.</p>
-          <a class="pdp-narrative__cta" href="about.html#craft"><i data-lucide="arrow-right" style="width:16px;height:16px"></i>Read the full craft process</a>
+    <section class="sec sec--sm sec--warm pdp-story">
+      <div class="w">
+        <div class="ct" style="margin-bottom:1rem"><span class="eyebrow">The story behind the piece</span><h2>${p.title}</h2></div>
+        <div class="pdp-narrative">
+          <div class="pdp-narrative__img" style="background-image:url(${mainImg})"></div>
+          <div class="pdp-narrative__text">
+            <p>${conceptLine}</p>
+            <p>Every piece starts as a wax sculpture at the bench, not a die-cast mold, then goes out in small numbered batches.</p>
+            <a class="pdp-narrative__cta" href="about.html#craft"><i data-lucide="arrow-right" style="width:16px;height:16px"></i>Read the full craft process</a>
+          </div>
         </div>
       </div>
     </section>`;
@@ -1428,10 +1432,11 @@ function initPDP() {
           </div>
           <div class="atc-bar">
             ${pdpCTA()}
-            <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
+            <div class="pdp-assurance">${noteHTML}</div>
           </div>
         </div>
       </div>
+      ${guaranteeHTML}
       ${specsHTML}
       ${storyHTML}
       ${collectibleHTML}

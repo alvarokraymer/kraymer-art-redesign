@@ -790,12 +790,44 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .trust-row-s span{flex:1;text-align:center;padding:.75rem .5rem;border:1px solid var(--muted);border-radius:var(--radius-sm);font-size:.75rem;color:var(--muted)}
 .trust-row-s span b{display:block;color:var(--dark);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
 /* 3 columns, centered icon-over-label — same language as home's
-   .trust__row/.trust__icon, not a vertical list. */
-.pdp-guarantee{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:0;padding:1.1rem .5rem;background:var(--surface-soft);text-align:center}
+   .trust__row/.trust__icon, not a vertical list. .pdp-guarantee itself is
+   just the background box; .pdp-guarantee__grid is the actual 3-col layout,
+   split out so Classic (below) can bleed the background to the page edge
+   while re-capping the grid at the same 1080px .w uses, instead of the grid
+   itself stretching edge to edge on wide screens. */
+.pdp-guarantee{margin-top:0;background:var(--surface-soft);text-align:center}
+.pdp-guarantee__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;padding:1.1rem .5rem}
 .pdp-guarantee__item{display:flex;flex-direction:column;align-items:center}
 .pdp-guarantee__icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:rgba(196,168,130,.14);margin-bottom:.5rem}
 .pdp-guarantee__item b{font-size:.62rem;font-weight:600;letter-spacing:.04em;color:var(--dark)}
 .pdp-guarantee__item small{font-size:.58rem;color:var(--muted);margin-top:2px}
+/* Classic PDP only (2026-08-1x client ask): the guarantee strip now renders
+   as a full-width sibling after .pdp-layout (see app.js) instead of nested
+   inside .pdp-assurance/.pdp-meta. Two reasons it had to move, not just gain
+   a bleed rule in place: .pdp-assurance has overflow:hidden (clips any bleed
+   outright), and .pdp-meta is one column of the 2-col desktop grid — neither
+   full-width nor centered on the viewport — so a same-spot bleed only
+   reached the column's own edges, landing flush on the right but stranded
+   ~600px short of the left edge. Living outside .pdp-layout entirely (same
+   level as specsHTML/storyHTML) makes the bleed below symmetric at every
+   breakpoint. Same bleed math as .post-scroll/.pdp-story — negative margin
+   on the background box, re-capped by .pdp-guarantee__grid's own max-width
+   so the icons keep their original width/inset instead of stretching to
+   match the now-full-bleed background. Scoped to .pdp--classic since the
+   other 3 approaches still nest guaranteeHTML inside .pdp-assurance. */
+.pdp--classic .pdp-guarantee{margin-top:1.5rem;margin-left:calc(-1 * var(--gutter));margin-right:calc(-1 * var(--gutter))}
+/* 1400px matches .w's own wide-desktop max-width (line ~1259) — kept as a
+   literal here rather than the .w class itself because adding .w's padding
+   to this grid would also apply to approaches 2-4, where it sits in a much
+   narrower column and 40px of horizontal padding would eat visibly into it.
+   If .w's max-width ever changes, update this to match. */
+.pdp--classic .pdp-guarantee__grid{max-width:1400px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter)}
+/* Story section background bleeds to the page edge; its content is now
+   wrapped in its own inner .w (see app.js) instead of the section's own
+   padding, so the 1080px cap + centering come back too — otherwise the
+   title and the narrative card would stretch edge to edge on wide screens
+   right along with the background, instead of just the background alone. */
+.pdp-story{margin-left:calc(-1 * var(--gutter));margin-right:calc(-1 * var(--gutter))}
 .specs{margin-top:1.5rem}
 
 /* ── PDP: "Seen in the wild" UGC rail (2026-08-04) ── */
