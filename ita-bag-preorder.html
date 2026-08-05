@@ -83,7 +83,10 @@
     .addon-card__buy{position:absolute;bottom:.75rem;right:.75rem;width:40px;height:40px;border-radius:50%;background:var(--dark);color:var(--light);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;transition:transform .15s,background .15s}
     .addon-card__buy:active{transform:scale(.92)}
     .addon-card__buy.on{background:var(--accent);border-color:var(--accent)}
-    .addon-card__body{padding:.85rem .9rem 1rem}
+    /* var(--surface) is #F3F3F2, near enough to the requested #F2F2F2 that
+       it isn't worth a one-off hex — and it reads as a visible step down
+       from the ~#F6F6F6 the real product photography is shot on. */
+    .addon-card__body{padding:.85rem .9rem 1rem;background:var(--surface)}
     .addon-card__series{font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
     .addon-card__title{font-family:var(--display);font-size:1rem;font-weight:400;margin:.3rem 0 .35rem;line-height:1.25}
     .addon-card__price{font-family:var(--display);font-size:.95rem}
