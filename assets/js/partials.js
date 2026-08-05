@@ -136,7 +136,8 @@ const FOOTER_HTML = `
           <a href="https://tiktok.com/@kraymer.art" target="_blank" rel="noopener" aria-label="TikTok, 10k followers"><span class="ft-soc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 3c.5 2.5 2 4 4.5 4.3"/></svg></span><span class="ft-soc__count">10k</span></a>
         </div>
       </div>
-      <p class="ft-founder__bio">Hi, I'm Kraymer. Before jewelry, I was teaching art online. The standard hasn't moved. I only make what I'd wear myself.</p>
+      <p class="ft-founder__bio">Hello. I'm Kraymer, and some of you know me from my art tutorials online. I've gone from teaching art to designing pieces you can wear, each one drawn by hand before it's made.</p>
+      <p class="ft-founder__bio">I hope you love wearing them as much as I loved designing them.</p>
       <a class="ft-founder__cta" href="about.html">Our Story &rarr;</a>
     </div>
     <div class="ft-cols">
