@@ -33,9 +33,9 @@ const HEADER_HTML = `
       <div class="dsk-drop">
         <a href="coleccion.html">All Jewelry</a>
         <div class="dsk-drop__panel">
-          <a href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
-          <a href="coleccion.html?collection=kny">Demon Slayer</a>
-          <a href="coleccion.html?collection=genshin">Genshin Impact</a>
+          <a href="coleccion.html?collection=jjk">JJK</a>
+          <a href="coleccion.html?collection=kny">KNY</a>
+          <a href="coleccion.html?collection=genshin">GI</a>
           <a href="ita-bag-preorder.html" style="font-weight:400;color:var(--muted)">Ita Bags${NAV_NEW_TAG}</a>
           <a href="coleccion.html?type=sets">Collector Sets</a>
           <a href="#" style="color:var(--accent);font-weight:800">Collector's Club</a>
@@ -67,9 +67,9 @@ const HEADER_HTML = `
     <a class="mob-link" href="coleccion.html">All Jewelry</a>
     <button class="mob-label-btn" data-mob-collapse>COLLECTIONS <span class="mob-arrow"></span></button>
     <div class="mob-sub" data-mob-sub>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">Demon Slayer</a>
-      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">Genshin Impact</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=jjk">JJK</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=kny">KNY</a>
+      <a class="mob-link mob-link--sub" href="coleccion.html?collection=genshin">GI</a>
       <a class="mob-link mob-link--sub" href="ita-bag-preorder.html" style="font-weight:400">Ita Bags${NAV_NEW_TAG}</a>
       <a class="mob-link mob-link--sub" href="coleccion.html?type=sets">Collector Sets</a>
     </div>
@@ -116,7 +116,7 @@ const HEADER_HTML = `
     <button data-close-search style="font-size:1.5rem;color:var(--muted);padding:0 1rem">&times;</button>
   </div>
   <div class="search__body" data-search-results>
-    <p class="search__hint">Try a stone, a character, or a series. Sapphire. Gojo. Genshin Impact.</p>
+    <p class="search__hint">Try a stone, a character, or a series. Sapphire. Gojo. GI.</p>
   </div>
 </div>
 `;
@@ -143,9 +143,9 @@ const FOOTER_HTML = `
       <div>
         <h3>Shop</h3>
         <a href="coleccion.html">All Collections</a>
-        <a href="coleccion.html?collection=jjk">Jujutsu Kaisen</a>
-        <a href="coleccion.html?collection=kny">Demon Slayer</a>
-        <a href="coleccion.html?collection=genshin">Genshin Impact</a>
+        <a href="coleccion.html?collection=jjk">JJK</a>
+        <a href="coleccion.html?collection=kny">KNY</a>
+        <a href="coleccion.html?collection=genshin">GI</a>
         <a href="coleccion.html?type=sets">Collector Sets</a>
         <a href="#">Mystery Box</a>
       </div>

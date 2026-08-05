@@ -743,7 +743,7 @@ function initQuizWidget() {
   if (quiz) {
     const state = { series: null, metal: null, style: null };
     const steps = [
-      { key: "series", q: "Pick your collection", opts: [["jjk", "Jujutsu Kaisen"], ["kny", "Demon Slayer"], ["genshin", "Genshin Impact"]] },
+      { key: "series", q: "Pick your collection", opts: [["jjk", "JJK"], ["kny", "KNY"], ["genshin", "GI"]] },
       { key: "metal", q: "Pick your metal", opts: [["silver", "925 Sterling Silver"], ["gold", "18K Gold"]] },
       { key: "style", q: "Pick your style", opts: [["subtle", "Subtle, every day"], ["statement", "Statement piece"]] },
     ];
@@ -851,9 +851,9 @@ function initPLP() {
     tiles.className = "w";
     tiles.style.padding = ".75rem 0 0";
     tiles.innerHTML = `<div class="scroll-row" style="display:flex;gap:1rem;padding:0 var(--gutter)">
-      <a class="ftile" href="coleccion.html?collection=jjk" style="background-image:url(assets/banner4.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Jujutsu Kaisen</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Precision and presence</h3></div></a>
-      <a class="ftile" href="coleccion.html?collection=kny" style="background-image:url(assets/banner2.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Demon Slayer</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Forged in flame</h3></div></a>
-      <a class="ftile" href="coleccion.html?collection=genshin" style="background-image:url(assets/banner3.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">Genshin Impact</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Elemental weight</h3></div></a>
+      <a class="ftile" href="coleccion.html?collection=jjk" style="background-image:url(assets/banner4.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">JJK</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Precision and presence</h3></div></a>
+      <a class="ftile" href="coleccion.html?collection=kny" style="background-image:url(assets/banner2.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">KNY</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Forged in flame</h3></div></a>
+      <a class="ftile" href="coleccion.html?collection=genshin" style="background-image:url(assets/genshingCat_hero.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#A09892">GI</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Elemental weight</h3></div></a>
       <a class="ftile" href="#" style="background-image:url(assets/banner1.png);background-size:cover;background-position:center;min-width:min(55vw,320px);min-height:120px;border-radius:var(--radius);flex:none;display:flex;align-items:flex-end;overflow:hidden;text-decoration:none;position:relative"><div style="position:relative;z-index:1;padding:1rem;width:100%"><span class="eyebrow" style="color:#C4A882">Mystery Box</span><h3 style="color:#fff;font-size:1.15rem;font-weight:300">Collector's Club</h3><p style="font-size:.75rem;color:rgba(255,255,255,.65)">Unreleased pieces. Every 4 weeks.</p></div></a>
     </div>`;
     subHost.parentNode.insertBefore(tiles, subHost);
@@ -971,9 +971,9 @@ function initPLP() {
       <div class="v-group">
         <p class="v-label">Collection</p>
         <div class="v-row" data-fil-group="col">
-          <button class="v-chip" data-fil-val="jjk">${filIcons.jjk}Jujutsu Kaisen</button>
-          <button class="v-chip" data-fil-val="kny">${filIcons.kny}Demon Slayer</button>
-          <button class="v-chip" data-fil-val="genshin">${filIcons.genshin}Genshin Impact</button>
+          <button class="v-chip" data-fil-val="jjk">${filIcons.jjk}JJK</button>
+          <button class="v-chip" data-fil-val="kny">${filIcons.kny}KNY</button>
+          <button class="v-chip" data-fil-val="genshin">${filIcons.genshin}GI</button>
         </div>
       </div>` : ""}
       <div class="v-group">
