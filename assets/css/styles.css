@@ -502,7 +502,15 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .founder-trust{background:var(--surface);padding:1.5rem 0}
 [data-theme="dark"] .founder-trust{background:#2D2929}
 .founder-trust__card{border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 3px rgba(35,31,32,.06)}
-.founder-trust__top{display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap;padding:2rem;background:var(--light)}
+/* Column stack now, not a row: the copy grew past what fits alongside the
+   avatar, so it needs the card's full width instead of sharing a row with
+   it. .founder-trust__head is the only row left (avatar + eyebrow, one
+   line); everything else (title, copy, signature, CTA) stacks under it at
+   the same left edge. */
+.founder-trust__top{padding:2rem;background:var(--light)}
+.founder-trust__head{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.founder-trust__top h3{margin-bottom:.75rem}
+.founder-trust__top > a.btn--ghost{display:inline-block;margin-top:1rem}
 .founder-trust__bottom{text-align:center;background:var(--surface-soft);padding:1.25rem 1.5rem 1.5rem}
 .trust__row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
 .trust__icon{display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(196,168,130,.14);margin:0 auto .6rem}
@@ -1095,16 +1103,12 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
   .trust__item b{font-size:.8rem}
   .trust__item span{font-size:.72rem}
   .trust__proof{font-size:1rem}
-  /* "Read our full story" CTA: on mobile, .founder's flex-wrap naturally
-     drops it to its own line since the avatar+text row alone rarely fits a
-     narrow screen with room to spare. On desktop there's plenty of room, so
-     it stayed inline to the right of the text instead — client wants it
-     below regardless of available width. flex-basis:100% forces it onto a
-     new row in the wrapping flex container without touching the HTML.
-     Selector is `.founder > a.btn--ghost`, not a bare class, because
-     about.html's own (much bigger) .founder section has no direct-child
-     anchor at all — this only ever matches the home-page teaser. */
-  .founder-trust__top > a.btn--ghost{flex-basis:100%;margin-top:.5rem}
+  /* "Read our full story" CTA now sits below the signature in normal block
+     flow at every breakpoint (2026-08-1x: .founder-trust__top became a
+     column stack, not a wrapping flex row), so the old flex-basis:100% hack
+     that used to force it onto its own line on desktop is gone — the base
+     rule above already puts it on its own line everywhere, nothing left to
+     override here. */
   /* Promo gift FAB: was sized for a mobile thumb-reach target; bumped for
      desktop where it reads as small next to everything else's new scale. */
   .promo-fab{width:76px;height:76px}
