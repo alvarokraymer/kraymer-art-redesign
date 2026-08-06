@@ -230,7 +230,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    h4/.stars (no color of their own) were inheriting the inverting --dark
    token straight off body. */
 [data-theme="dark"] .rv{color:#181514}
-[data-theme="dark"] .pdp-guarantee__item b{color:#181514}
 [data-theme="dark"] .quiz-wrap{color:#181514}
 .marquee{background:var(--dark);color:rgba(246,246,246,.85);overflow:hidden;height:36px;display:flex;align-items:center;font-family:var(--body);position:relative;z-index:61}
 .marquee__track{display:flex;gap:2.5rem;animation:marquee 28s linear infinite;white-space:nowrap;will-change:transform;padding:0 1rem}
@@ -808,7 +807,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .pdp-guarantee__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;padding:1.1rem .5rem}
 .pdp-guarantee__item{display:flex;flex-direction:column;align-items:center}
 .pdp-guarantee__icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:rgba(196,168,130,.14);margin-bottom:.5rem}
-.pdp-guarantee__item b{font-size:.62rem;font-weight:600;letter-spacing:.04em;color:var(--dark)}
+/* Matches .trust__item (homepage founder-trust row) exactly — same
+   uppercase/letter-spacing/weight, not its own slightly-different style. */
+.pdp-guarantee__item b{display:block;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#181514}
 .pdp-guarantee__item small{font-size:.58rem;color:var(--muted);margin-top:2px}
 /* Classic PDP only (2026-08-1x client ask): the guarantee strip now renders
    as a full-width sibling after .pdp-layout (see app.js) instead of nested
@@ -1103,6 +1104,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
      too small for a box that size. */
   .trust__item b{font-size:.8rem}
   .trust__item span{font-size:.72rem}
+  .pdp-guarantee__item b{font-size:.8rem}
+  .pdp-guarantee__item small{font-size:.72rem}
   .trust__proof{font-size:1rem}
   /* "Read our full story" CTA now sits below the signature in normal block
      flow at every breakpoint (2026-08-1x: .founder-trust__top became a
