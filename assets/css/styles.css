@@ -253,7 +253,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .hs-track{display:flex;height:100%;transition:transform .7s cubic-bezier(.22,1,.36,1);will-change:transform}
 .hs-slide{flex:0 0 100%;height:100%;background-size:cover;background-position:center;position:relative;display:flex;align-items:flex-end}
 .hs-slide__video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hs-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(35,31,32,.85) 0%,rgba(35,31,32,.3) 50%,rgba(35,31,32,.15) 100%)}
+.hs-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(to right,rgba(35,31,32,.45) 0%,rgba(35,31,32,.2) 50%,rgba(35,31,32,.05) 100%)}
 .hs-content{position:relative;z-index:2;padding:var(--gutter);padding-bottom:2.5rem;width:100%}
 .hs-content .eyebrow{color:var(--accent);margin-bottom:.5rem}
 .hs-content h2{font-family:var(--display);font-size:2rem;font-weight:300;color:#F6F6F6;line-height:1.05;letter-spacing:-.02em;margin-bottom:.6rem;max-width:14ch}
@@ -486,7 +486,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 /* Panoramic, not portrait — about half the old 300px height, full-width. */
 .ftile{position:relative;border-radius:var(--radius);overflow:hidden;min-height:150px;display:flex;align-items:flex-end;background-color:var(--dark);background-size:cover;background-position:center;box-shadow:0 4px 24px rgba(0,0,0,.25);transition:transform .3s cubic-bezier(.25,.46,.45,.94)}
 .ftile:active{transform:scale(.98)}
-.ftile::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(24,21,20,.95) 0%,rgba(24,21,20,.5) 55%,rgba(24,21,20,.05) 100%)}
+.ftile::after{content:"";position:absolute;inset:0;background:linear-gradient(to right,rgba(24,21,20,.55) 0%,rgba(24,21,20,.25) 55%,rgba(24,21,20,.05) 100%)}
 .ftile__body{position:relative;z-index:1;padding:1.1rem 1.25rem}
 /* Hardcoded, not tokens — the gradient overlay is permanently dark, but
    --light/--muted-d invert in dark mode and would go dark-on-dark. Same bug
