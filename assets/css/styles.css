@@ -118,7 +118,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .site-header{position:sticky;top:0;z-index:60;background:#fff;border-bottom:1px solid var(--line);will-change:transform}
 .hdr-bar{height:var(--header-h);display:flex;align-items:center;padding:0 var(--gutter);gap:.5rem}
 .hdr-logo{display:flex;align-items:center}
-.hdr-logo img{display:block;filter:invert(1)}
+.hdr-logo img{display:block;filter:none}
 .hdr-actions{margin-left:auto;display:flex;align-items:center;gap:2px}
 /* Desktop-only header nav + extra icons (search/wishlist) — added 2026-08-08
    for the desktop pass. Hidden here so mobile stays byte-for-byte identical;
@@ -216,7 +216,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 [data-theme="dark"] .marquee{background:var(--light)}
 [data-theme="dark"] .ft{background:var(--light)}
 [data-theme="dark"] .hamburger span{background:var(--dark)}
-[data-theme="dark"] .hdr-logo img{filter:none}
+[data-theme="dark"] .hdr-logo img{filter:invert(1)}
 /* .card (soft/base approaches) and .post-card sit on --surface/--surface-soft,
    which stay light in dark mode — their title/price text must not inherit the
    inverting --dark token or it goes near-white on a near-white card. */
@@ -253,7 +253,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .hs-track{display:flex;height:100%;transition:transform .7s cubic-bezier(.22,1,.36,1);will-change:transform}
 .hs-slide{flex:0 0 100%;height:100%;background-size:cover;background-position:center;position:relative;display:flex;align-items:flex-end}
 .hs-slide__video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.hs-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(to right,rgba(35,31,32,.45) 0%,rgba(35,31,32,.2) 50%,rgba(35,31,32,.05) 100%)}
+.hs-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(to top right,rgba(35,31,32,.45) 0%,rgba(35,31,32,.2) 50%,rgba(35,31,32,.05) 100%)}
 .hs-content{position:relative;z-index:2;padding:var(--gutter);padding-bottom:2.5rem;width:100%}
 .hs-content .eyebrow{color:var(--accent);margin-bottom:.5rem}
 .hs-content h2{font-family:var(--display);font-size:2rem;font-weight:300;color:#F6F6F6;line-height:1.05;letter-spacing:-.02em;margin-bottom:.6rem;max-width:14ch}
