@@ -506,10 +506,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    avatar, so it needs the card's full width instead of sharing a row with
    it. .founder-trust__head is the only row left (avatar + eyebrow, one
    line); everything else (title, copy, signature, CTA) stacks under it at
-   the same left edge. */
+   the same left edge. "Hello there!" sits in the head row too, stacked
+   under the eyebrow next to the avatar, not down with the body copy. */
 .founder-trust__top{padding:2rem;background:var(--light)}
 .founder-trust__head{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem}
-.founder-trust__top h3{margin-bottom:.75rem}
 .founder-trust__top > a.btn--ghost{display:inline-block;margin-top:1rem}
 .founder-trust__bottom{text-align:center;background:var(--surface-soft);padding:1.25rem 1.5rem 1.5rem}
 .trust__row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem}
