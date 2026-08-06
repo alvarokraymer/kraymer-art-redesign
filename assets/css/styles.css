@@ -276,7 +276,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
    18px-top-only for soft), showing as a mismatched notch/gap at the corners
    where the two disagree. */
 .card__img .ph{position:absolute;inset:0;z-index:0;border-radius:inherit}
-.card__body{padding:.9rem .9rem 1.1rem;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:inherit}
+.card__body{padding:.9rem .9rem 1.1rem;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:inherit;background:#fff}
 .card__body:hover .card__title{text-decoration:underline;text-underline-offset:3px}
 .card__series{font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 /* Always one line, never wraps to two — cards stay a consistent height even
