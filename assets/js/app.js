@@ -706,13 +706,13 @@ function initHome() {
     promoObserver.observe(heroSection);
   }
 
-  /* Hero slider: auto-rotate every 5s, touch swipe */
+  /* Hero slider: auto-rotate every 8s, touch swipe */
   const track = document.querySelector("[data-hs-track]");
   const dots = document.querySelector("[data-hs-dots]");
   if (track && dots) {
     const total = track.children.length;
     let current = 0;
-    let auto = setInterval(() => go(current + 1), 5000);
+    let auto = setInterval(() => go(current + 1), 8000);
     const go = (i) => {
       current = ((i % total) + total) % total;
       track.style.transform = `translateX(-${current * 100}%)`;
@@ -727,7 +727,7 @@ function initHome() {
       const dx = sx - ex;
       if (Math.abs(dx) > 60) {
         clearInterval(auto);
-        auto = setInterval(() => go(current + 1), 5000);
+        auto = setInterval(() => go(current + 1), 8000);
         go(dx > 0 ? current + 1 : current - 1);
       }
     }, {passive:true});
