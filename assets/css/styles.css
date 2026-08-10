@@ -692,14 +692,24 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .gal{aspect-ratio:1;border-radius:var(--radius);overflow:hidden;background:var(--surface);position:relative}
 .gal .ph{position:absolute;inset:0;background:var(--surface);border-radius:inherit}
 .gal .ph svg{width:45%}
-/* Info button + caption panel on the last two gallery shots of the 4 fully-
-   shot products (see PDP_IMAGE_NOTES). Hardcoded, not tokens — always sits
-   over a photo. */
-.gal-info{position:absolute;top:.6rem;right:.6rem;z-index:4;width:32px;height:32px;border-radius:50%;background:rgba(24,21,20,.55);color:#F6F6F6;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
-.gal-info[hidden]{display:none}
-.gal-info__panel{position:absolute;inset:0;z-index:5;background:rgba(24,21,20,.72);color:#F6F6F6;display:flex;align-items:center;justify-content:center;padding:1.75rem;text-align:center}
-.gal-info__panel[hidden]{display:none}
-.gal-info__panel p{font-size:.9rem;line-height:1.5;max-width:26ch}
+/* Hotspot dots + detail popover on the last two gallery shots of the 4
+   fully-shot products (see PDP_IMAGE_HOTSPOTS). Hardcoded colors, not
+   tokens — always sits over a photo. */
+.gal-hotspots{position:absolute;inset:0;z-index:4;pointer-events:none}
+.gal-hotspot{position:absolute;transform:translate(-50%,-50%);width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.85);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;pointer-events:auto;animation:hotspot-pulse 2.4s ease-in-out infinite}
+.gal-hotspot__dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.gal-hotspot.is-active{animation:none;background:var(--accent)}
+.gal-hotspot.is-active .gal-hotspot__dot{background:#fff}
+@keyframes hotspot-pulse{0%,100%{box-shadow:0 0 0 0 rgba(196,168,130,.45)}50%{box-shadow:0 0 0 8px rgba(196,168,130,0)}}
+.gal-hotspot__panel{position:absolute;z-index:6;min-width:170px;max-width:220px;background:rgba(24,21,20,.92);color:#F6F6F6;padding:.7rem .9rem;border-radius:var(--radius-sm);pointer-events:auto;transform:translate(-50%,calc(-100% - 14px))}
+.gal-hotspot__panel.hs-below{transform:translate(-50%,14px)}
+.gal-hotspot__panel.hs-left{transform:translate(0,calc(-100% - 14px))}
+.gal-hotspot__panel.hs-left.hs-below{transform:translate(0,14px)}
+.gal-hotspot__panel.hs-right{transform:translate(-100%,calc(-100% - 14px))}
+.gal-hotspot__panel.hs-right.hs-below{transform:translate(-100%,14px)}
+.gal-hotspot__panel[hidden]{display:none}
+.gal-hotspot__panel b{display:block;font-size:.62rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.25rem}
+.gal-hotspot__panel p{font-size:.8rem;line-height:1.45}
 .gal-strip{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding:.75rem 0;scroll-snap-type:x proximity}
 .gal-strip::-webkit-scrollbar{display:none}
 .gal-strip button{flex:none;width:56px;height:56px;border-radius:var(--radius-sm);background-size:cover;background-position:center;border:1px solid #E0E0E0;cursor:pointer;padding:0;transition:border-color .15s;background-color:#F0F0F0}

@@ -1046,14 +1046,54 @@ function initPLP() {
   apply();
 }
 
-/* Detail captions for the last two gallery shots — only the 4 products with
-   their own full local photoshoot (7 real images each) get these; every
-   other product has too few images for "the last two" to mean anything. */
-const PDP_IMAGE_NOTES = {
-  "anya-x-yor": ["Worn everyday, paired with a plain stud.", "Catching afternoon light, no filter."],
-  "giyu-pin": ["Charged under any light source.", "Glows blue for hours after dark."],
-  "giyu-ring": ["Shown on a size 7, worn solo.", "Stacked next to the matching pin."],
-  "gojo-x-geto": ["Worn stacked, both bands together.", "Shown solo, catching studio light."],
+/* Hotspot markers (materials / gem / design detail) on the last two gallery
+   shots — only the 4 products with their own full local photoshoot (7 real
+   images each) get these; every other product has too few images for "the
+   last two" to mean anything. x/y are percent positions within the image,
+   eyeballed against the actual photos in assets/productPhotos/. */
+const PDP_IMAGE_HOTSPOTS = {
+  "anya-x-yor": [
+    [ // anyaXyor_model1.webp
+      {x:52, y:27, label:"Hoop", text:"925 sterling silver or 18K gold plated hoop, hand-set with pavé stones."},
+      {x:49, y:41, label:"Rose charm", text:"Cast solid in the round, then hand-finished — never stamped or hollow."},
+      {x:48, y:59, label:"Spike drop", text:"Matches the hoop's metal, weighted for a subtle sway when worn."},
+    ],
+    [ // anyaXyor_model2.webp
+      {x:55, y:32, label:"Hoop", text:"925 sterling silver or 18K gold plated hoop, hand-set with pavé stones."},
+      {x:52, y:47, label:"Rose charm", text:"Cast solid in the round, then hand-finished — never stamped or hollow."},
+      {x:50, y:64, label:"Spike drop", text:"Matches the hoop's metal, weighted for a subtle sway when worn."},
+    ],
+  ],
+  "giyu-pin": [
+    [ // giyuPin_GID.webp
+      {x:32, y:26, label:"Glow enamel", text:"Hard enamel charged with glow pigment — charges under any light, glows blue for hours after dark."},
+      {x:60, y:58, label:"Finish", text:"Blackened zinc alloy casting with a polished, raised outline."},
+    ],
+    [ // giyuPin_GID_detail.webp
+      {x:26, y:20, label:"Glow enamel", text:"Hard enamel charged with glow pigment — charges under any light, glows blue for hours after dark."},
+      {x:62, y:55, label:"Finish", text:"Blackened zinc alloy casting with a polished, raised outline."},
+    ],
+  ],
+  "giyu-ring": [
+    [ // giyuRing_model1.webp
+      {x:57, y:40, label:"Band", text:"925 sterling silver or 18K gold plated — the design is cut into solid metal, not printed."},
+      {x:49, y:44, label:"Engraving", text:"Hand-engraved wave and dragon motif, unique to this piece."},
+    ],
+    [ // giyuRing_model2.webp
+      {x:52, y:46, label:"Band", text:"925 sterling silver or 18K gold plated — the design is cut into solid metal, not printed."},
+      {x:46, y:49, label:"Engraving", text:"Hand-engraved wave and dragon motif, unique to this piece."},
+    ],
+  ],
+  "gojo-x-geto": [
+    [ // gojoXgeto_model1.webp
+      {x:37, y:53, label:"Accent stone", text:"Hand-set, bezel-mounted so it sits flush against the chain."},
+      {x:54, y:68, label:"Pendant", text:"Cast solid then hand-finished, available in 18K gold plated or 925 sterling silver."},
+    ],
+    [ // gojoXgeto_model2.webp
+      {x:43, y:58, label:"Accent stone", text:"Hand-set, bezel-mounted so it sits flush against the chain."},
+      {x:48, y:73, label:"Pendant", text:"Cast solid then hand-finished, available in 18K gold plated or 925 sterling silver."},
+    ],
+  ],
 };
 
 /* ---- PDP ---- */
@@ -1071,32 +1111,32 @@ function initPDP() {
   const mainImg = imgs[0] || phImg(p);
   const gemColor = accentColors[p.collection] || PH_GOLD;
 
-  /* Info button + caption overlay on the last two gallery images (see
-     PDP_IMAGE_NOTES). One button/panel pair exists per page (only one PDP
-     approach renders at a time), shared across the classic/editorial/side
+  /* Hotspot dots + popover on the last two gallery images (see
+     PDP_IMAGE_HOTSPOTS). One hotspot-layer element exists per page (only one
+     PDP approach renders at a time), shared across the classic/editorial/side
      main-gallery path and the immersive path — both call this after moving. */
-  const imgNotes = PDP_IMAGE_NOTES[p.handle];
-  const noteForIdx = (i) => {
-    if (!imgNotes) return null;
-    const start = imgs.length - imgNotes.length;
-    return i >= start ? imgNotes[i - start] : null;
+  const imgHotspots = PDP_IMAGE_HOTSPOTS[p.handle];
+  const hotspotsForIdx = (i) => {
+    if (!imgHotspots) return null;
+    const start = imgs.length - imgHotspots.length;
+    return i >= start ? imgHotspots[i - start] : null;
   };
-  const applyImgNote = (i) => {
-    const btn = host.querySelector("[data-gal-info]");
-    if (!btn) return;
-    const panel = btn.nextElementSibling;
-    const note = noteForIdx(i);
-    btn.hidden = !note;
-    if (panel) {
-      panel.hidden = true;
-      panel.querySelector("[data-gal-info-text]").textContent = note || "";
-    }
+  const applyImgHotspots = (i) => {
+    const layer = host.querySelector("[data-gal-hotspots]");
+    if (!layer) return;
+    const spots = hotspotsForIdx(i);
+    layer.innerHTML = !spots ? "" : spots.map((h, j) => {
+      const panelPos = `left:${h.x}%;top:${h.y}%`;
+      const vAlign = h.y < 30 ? "hs-below" : "";
+      const hAlign = h.x < 25 ? "hs-left" : h.x > 75 ? "hs-right" : "";
+      return `<button class="gal-hotspot" style="left:${h.x}%;top:${h.y}%" data-hotspot="${j}" aria-label="${h.label}"><span class="gal-hotspot__dot"></span></button><div class="gal-hotspot__panel ${vAlign} ${hAlign}" style="${panelPos}" data-hotspot-panel="${j}" hidden><b>${h.label}</b><p>${h.text}</p></div>`;
+    }).join("");
   };
 
   /* --- Helpers --- */
   const thumbStrip = (dataAttr) => hasImgs
     ? `<div class="gal-strip" ${dataAttr}>${imgs.map((url,i) => `<button class="${i===0?'on':''}" data-gal-thumb="${i}" style="background-image:url(${url})"></button>`).join("")}</div>` : "";
-  const galInfoHTML = `<button class="gal-info" data-gal-info hidden aria-label="Image details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><circle cx="12" cy="12" r="9.5"/><line x1="12" y1="15.5" x2="12" y2="11"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/></svg></button><div class="gal-info__panel" data-gal-info-panel hidden><p data-gal-info-text></p></div>`;
+  const galHotspotsHTML = `<div class="gal-hotspots" data-gal-hotspots></div>`;
   /* Prev/next arrows on the main gallery image itself — mobile AND desktop
      (2026-08-08 round 6, client explicit: "tanto en móvil como en
      desktop"). Swipe already worked on mobile via goGal()'s touchstart/
@@ -1108,7 +1148,7 @@ function initPDP() {
   const galArrowsHTML = hasImgs ? `
     <button class="gal-arrow gal-arrow--prev" data-gal-prev aria-label="Previous image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
     <button class="gal-arrow gal-arrow--next" data-gal-next aria-label="Next image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>` : "";
-  const mainGal = (extra) => `<div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5" ${hasImgs ? `data-gal-imgs='${JSON.stringify(imgs)}'` : ""} ${extra||""}>${galInfoHTML}${galArrowsHTML}</div>`;
+  const mainGal = (extra) => `<div class="gal" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center;touch-action:pan-y pinch-zoom;border:1px solid #D5D5D5" ${hasImgs ? `data-gal-imgs='${JSON.stringify(imgs)}'` : ""} ${extra||""}>${galHotspotsHTML}${galArrowsHTML}</div>`;
   /* 3-column grid, centered icon-over-label — same visual language as
      home's .trust__row, not a vertical list, per 2026-08-06 instruction. */
   const guaranteeHTML = `
@@ -1380,7 +1420,7 @@ function initPDP() {
       <div style="position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;background:#F4EEEB" data-gallery-main style="background-image:url(${mainImg});background-size:cover;background-position:center">
         <div style="position:absolute;inset:0;background-image:url(${mainImg});background-size:cover;background-position:center" data-gallery-main-img></div>
         ${soldOverlay}
-        ${galInfoHTML}
+        ${galHotspotsHTML}
         ${galArrowsHTML}
         <div style="position:absolute;bottom:0;left:0;right:0;padding:2rem var(--gutter);background:linear-gradient(to top,rgba(24,21,20,.85) 0%,rgba(24,21,20,.4) 60%,transparent 100%);z-index:1">
           <span style="font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6)">${col.name}</span>
@@ -1477,11 +1517,22 @@ function initPDP() {
     otherEl.querySelectorAll(".card").forEach((c) => c.removeAttribute("data-images"));
   }
 
-  /* Info button: toggles the caption panel over whichever image is showing */
-  applyImgNote(0);
+  /* Hotspot dots: clicking one toggles its popover, closes any other open
+     one in the same layer (only one detail shown at a time). */
+  applyImgHotspots(0);
   host.addEventListener("click", (e) => {
-    const infoBtn = e.target.closest("[data-gal-info]");
-    if (infoBtn) { infoBtn.nextElementSibling.hidden = !infoBtn.nextElementSibling.hidden; }
+    const hsBtn = e.target.closest("[data-hotspot]");
+    if (hsBtn) {
+      const targetLayer = hsBtn.closest("[data-gal-hotspots]");
+      const panel = targetLayer.querySelector(`[data-hotspot-panel="${hsBtn.dataset.hotspot}"]`);
+      const opening = panel.hidden;
+      targetLayer.querySelectorAll("[data-hotspot-panel]").forEach((p) => { p.hidden = true; });
+      targetLayer.querySelectorAll(".gal-hotspot").forEach((b) => b.classList.remove("is-active"));
+      if (opening) { panel.hidden = false; hsBtn.classList.add("is-active"); }
+    } else if (!e.target.closest("[data-hotspot-panel]")) {
+      host.querySelectorAll("[data-hotspot-panel]").forEach((p) => { p.hidden = true; });
+      host.querySelectorAll(".gal-hotspot").forEach((b) => b.classList.remove("is-active"));
+    }
     const revLoadBtn = e.target.closest("[data-rev-loadmore]");
     if (revLoadBtn) {
       host.querySelectorAll("[data-rev-extra]").forEach((el) => { el.hidden = false; });
@@ -1497,7 +1548,7 @@ function initPDP() {
     const goGal = (i) => {
       galIdx = ((i % imgs.length) + imgs.length) % imgs.length;
       main.style.backgroundImage = `url(${imgs[galIdx]})`;
-      applyImgNote(galIdx);
+      applyImgHotspots(galIdx);
       host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => {
         b.classList.toggle("on", j===galIdx);
         if (b.style.opacity !== undefined && !b.classList.contains("pdp-dot")) {
@@ -1531,7 +1582,7 @@ function initPDP() {
     const goGalImmersive = (i) => {
       galIdx = ((i % imgs.length) + imgs.length) % imgs.length;
       mainImgEl.style.backgroundImage = `url(${imgs[galIdx]})`;
-      applyImgNote(galIdx);
+      applyImgHotspots(galIdx);
       host.querySelectorAll("[data-gal-thumb]").forEach((b,j) => {
         b.style.opacity = j===galIdx ? "1" : ".6";
       });
