@@ -288,6 +288,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 .card__title__track{display:inline-block;white-space:nowrap;animation:card-title-marquee 8s linear infinite}
 .card__title__sep{margin:0 1.5rem;opacity:.4}
 @keyframes card-title-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.card__rating{display:flex;align-items:center;gap:.35rem;font-size:.7rem;line-height:1}
+.card__rating .stars{letter-spacing:.03em}
+.card__rating-count{color:var(--muted)}
 .card__price{font-size:.875rem;font-weight:600}
 .card__price s{color:var(--muted);font-weight:400;margin-left:.5rem}
 .sold{opacity:.4}

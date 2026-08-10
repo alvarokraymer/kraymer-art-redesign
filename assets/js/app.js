@@ -89,6 +89,13 @@ function ph(label, opts = {}) {
 
 /* ---------------- 2. Product card renderer ---------------- */
 
+/* Same 4.9/5 (128 reviews) figure the PDP rating summary uses (see
+   data.js) — one storefront-wide rating, not per-product, so the card just
+   needs the review count out of it. */
+const CARD_RATING_COUNT = (RATING_DEFAULT.match(/\((\d+)/) || [])[1] || "";
+const cardRatingHTML = CARD_RATING_COUNT
+  ? `<div class="card__rating"><span class="stars">★★★★★</span><span class="card__rating-count">(${CARD_RATING_COUNT})</span></div>` : "";
+
 function priceHTML(p) {
   const discount = p.compareAt ? Math.round((1 - p.price / p.compareAt) * 100) : 0;
   if (p.pieces > 1) {
@@ -168,6 +175,7 @@ function productCard(p, opts = {}) {
     <a class="card__body" href="producto.html?id=${p.handle}">
       <span class="card__series">${col.name}</span>
       <h3 class="card__title">${p.title}</h3>
+      ${cardRatingHTML}
       ${priceHTML(p)}
     </a>
   </article>`;
