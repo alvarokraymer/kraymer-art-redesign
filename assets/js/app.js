@@ -780,7 +780,7 @@ function initQuizWidget() {
         <div class="quiz__result">
           <p class="eyebrow">Your piece</p>
           <h3 class="card__title">${pick.title}</h3>
-          <p class="small" style="margin:var(--space-sm) 0 var(--space-3);opacity:.8">${pick.line}</p>
+          <p class="small" style="margin:var(--space-sm) 0 var(--space-3);opacity:.8">${pick.desc||pick.line}</p>
           <a href="producto.html?id=${pick.handle}">View the piece &rarr;</a>
         </div>`;
     };
@@ -1061,6 +1061,8 @@ function initPDP() {
   const col = COLLECTIONS[p.collection];
   const host = document.querySelector("[data-pdp]");
   document.title = `${p.title} · Kraymer`;
+  const metaDescEl = document.querySelector('meta[name="description"]');
+  if (metaDescEl && p.metaDesc) metaDescEl.setAttribute("content", p.metaDesc);
   const approach = params.get("approach") || "1";
 
   const isRing = p.type === "rings" || (p.type === "sets" && p.sizes.length > 1);
@@ -1297,7 +1299,7 @@ function initPDP() {
           <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
           ${pdpPrice('style="margin-bottom:.75rem"')}
           ${pdpWish()}
-          <div class="pdp-desc">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
+          <div class="pdp-desc">${p.desc||p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
           <div class="pdp-config">
             ${variantsHTML("chips","metal-cards","metal-cards")}
           </div>
@@ -1330,7 +1332,7 @@ function initPDP() {
           <h1 class="pdp-title" style="font-size:1.5rem;margin-bottom:.25rem">${p.title}</h1>
           ${pdpPrice('style="margin-bottom:.75rem"')}
           ${pdpWish()}
-          <div class="pdp-desc" style="font-size:1rem">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
+          <div class="pdp-desc" style="font-size:1rem">${p.desc||p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
           <div class="pdp-config" style="background:transparent;padding:1rem 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:1.5rem 0">
             ${variantsHTML("chips","v-row","v-row")}
           </div>
@@ -1374,7 +1376,7 @@ function initPDP() {
         <div class="pdp-config" style="background:transparent;padding:0;margin-bottom:1.5rem">
           ${variantsHTML("chips","metal-cards","metal-cards")}
         </div>
-        <div class="pdp-desc" style="text-align:center;font-size:1.2rem;margin-bottom:1.5rem">${p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
+        <div class="pdp-desc" style="text-align:center;font-size:1.2rem;margin-bottom:1.5rem">${p.desc||p.line||"Designed as a piece you can wear anywhere, that another fan recognizes across the room."}</div>
         ${pdpCTA("min-height:58px;font-size:.9rem;border-radius:var(--radius-pill);width:100%")}
         <div class="pdp-assurance">${noteHTML}${guaranteeHTML}</div>
         ${specsHTML}
