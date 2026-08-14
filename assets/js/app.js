@@ -1415,7 +1415,7 @@ function initPDP() {
           ${pdpBadge()}
           <div class="pdp-headline"><h1 class="pdp-title">${p.title}</h1></div>
           ${pdpPrice('style="margin-bottom:.75rem"')}
-          <div class="pdp-desc">Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i></div>
+          <div class="pdp-desc">${p.desc || p.line || 'Handcrafted in sterling silver. A piece designed to be worn every day, <i>subtle enough for those who know.</i>'}</div>
           <div class="pdp-rating"><span class="stars pdp-rating__stars">★★★★★</span> ${RATING_DEFAULT} · <a href="#reviews">Read reviews</a></div>
           ${pdpWish()}
           <div class="pdp-config">
