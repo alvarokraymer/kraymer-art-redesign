@@ -841,12 +841,27 @@ function initPLP() {
     hero.querySelector(".eyebrow").textContent = heroCopy.eyebrow;
     hero.querySelector("h1").textContent = COLLECTIONS[colParam].name;
     hero.querySelector("[data-plp-desc]").textContent = heroCopy.line;
-    const heroImg = {
-      jjk: "assets/jj_hero.png",
-      kny: "assets/giyuRing_hero_AI.png",
-      genshin: "assets/genshin_hero.png",
-    }[colParam];
-    hero.style.backgroundImage = `url(${heroImg})`;
+    /* Reuses the exact same hero media as the home slider for this
+       collection (2026-08-14 instruction), kny's being a video. */
+    const oldVideo = hero.querySelector(".hs-slide__video");
+    if (oldVideo) oldVideo.remove();
+    if (colParam === "kny") {
+      hero.style.backgroundImage = "none";
+      const vid = document.createElement("video");
+      vid.className = "hs-slide__video";
+      vid.src = "assets/webAssets/kny_hero.webm";
+      vid.autoplay = true;
+      vid.loop = true;
+      vid.muted = true;
+      vid.playsInline = true;
+      hero.insertBefore(vid, hero.firstChild);
+    } else {
+      const heroImg = {
+        jjk: "assets/webAssets/jjk_hero.webp",
+        genshin: "assets/webAssets/gi_hero.webp",
+      }[colParam];
+      hero.style.backgroundImage = `url(${heroImg})`;
+    }
   } else {
     hero.hidden = true;
   }
