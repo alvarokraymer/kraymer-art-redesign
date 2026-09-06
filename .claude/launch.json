@@ -4,8 +4,32 @@
     {
       "name": "kraymer-static",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["http-server", "-p", "8000", "-c-1", "."],
-      "port": 8000
+      "runtimeArgs": ["http-server", "-c-1", "."],
+      "autoPort": true
+    },
+    {
+      "name": "kraymer-creative",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "A:/Kraymer/05_coding/kraymer-creative", "-p", "8643", "-c-1"],
+      "port": 8643
+    },
+    {
+      "name": "kraymer-marketing",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["http-server", "A:/Kraymer/05_coding/kraymer-marketing", "-p", "8644", "-c-1"],
+      "port": 8644
+    },
+    {
+      "name": "kraymer-shopify-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["shopify", "theme", "dev", "--path", "A:/Kraymer/02_Website/shopify-theme/working", "--store", "kraymerart.myshopify.com", "--theme", "150749773986"],
+      "port": 9292
+    },
+    {
+      "name": "kraymer-shopify-dev-audit",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["shopify", "theme", "dev", "--path", "A:/Kraymer/02_Website/shopify-theme/working", "--store", "kraymerart.myshopify.com", "--theme", "150749773986", "--port", "9393"],
+      "port": 9393
     }
   ]
 }
