@@ -1,4 +1,8 @@
 export async function onRequest(context) {
+  return context.next();
+}
+
+async function onRequestDisabled(context) {
   const { request, next } = context;
   const url = new URL(request.url);
 
