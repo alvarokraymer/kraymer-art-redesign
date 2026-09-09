@@ -137,6 +137,8 @@ This is why Mix & Match (above) says "as each piece type unlocks" instead of ass
 **Plain text:**
 > Pick a base tier first, pins, jewelry, or both. Once the campaign ends, you'll get a survey where you can add extras, more pins, more jewelry, or the Ita Bag, whatever you didn't grab the first time. Back the 3 pin tier now and fall in love with a necklace later? You're not locked out, you just add it.
 
+**Note:** the "About this campaign" graphic (free to pledge, limited release, handmade jewelry, pledge now CTA) now sits right here, right before this screen, not up near About at the top. Its own closing line is "Pledge now", so it leads straight into the how-to-pledge tutorial below instead of sitting disconnected near the intro.
+
 ### 13. New to Kickstarter? (this was missing, David asked for it directly: "add a proper explanation for how to pledge")
 **Baked:** `NEW TO KICKSTARTER?` + 4 numbered steps, ideally as a GIF: 1. Click "Back this project" 2. Select your reward 3. Create a Kickstarter account (takes 10 seconds) 4. Confirm payment and click "Pledge".
 **Plain text:**
