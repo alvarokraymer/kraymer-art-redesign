@@ -48,10 +48,8 @@ That's ~3.3 hours for the highest-impact half. Ita Bag, Charms, Artist's Story, 
 
 Each entry: what's baked into the image (for whoever designs it) vs. the plain paragraph that goes around it in the Kickstarter editor (no image, no formatting beyond bold/italic).
 
-### 1. Shipping & Packaging
-**Baked:** `SHIPPING & PACKAGING` + the real box/pouch photo you already have on the site.
-**Plain text:**
-> Every piece of jewelry in this campaign ships in the exact same box and pouch you already know from KraymerArt. Nothing about how your order arrives is changing, just what's inside it!
+### Shipping & Packaging — moved to the end of the flow, see the last entry below
+Pride Animals (the reference campaign) put shipping right before Risks and challenges, not near the top. Backers want logistics right before they commit, not while they're still getting hooked by the product. Fixed to match.
 
 ### 2. Mix & Match
 **Baked:** `MIX. MATCH. MAKE IT YOURS.` + a grid showing pieces from different mains together.
@@ -155,6 +153,11 @@ This is why Mix & Match (above) says "as each piece type unlocks" instead of ass
 
 **Plain text:**
 > Not sure where to start? Here's the fastest way to compare. The full list with every option is just below.
+
+### 15. Shipping & Packaging (repositioned to the end, right before Risks and challenges)
+**Baked:** `SHIPPING & PACKAGING` + the real box/pouch photo you already have on the site.
+**Plain text:**
+> Every piece of jewelry in this campaign ships in the exact same box and pouch you already know from KraymerArt. Nothing about how your order arrives is changing, just what's inside it!
 
 **Transition line before final CTA:**
 > That's the collection, start wherever feels right.
