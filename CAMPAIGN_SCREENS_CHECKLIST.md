@@ -1,7 +1,8 @@
 # Love and Deepspace: Signals Between Stars — Campaign Build Checklist
 
-Status: planning complete, nothing below is live yet.
-Order matters: product (1-4) → trust (5-8) → money mechanics (9-13).
+Status: draft is live in kickstarter-preview.html as tall black placeholders, nothing designed yet.
+Order matters: product (1-5) → trust (6-8) → money mechanics (9-14).
+About and Handmade-Process-adjacent artist content now live at the very top of the page (right after the hero), not as separate mid-page screens.
 
 **Also required, not a "screen": one clean product photo per reward tier (10 photos total), for Kickstarter's native reward cards. No text, no design, just a photo of what that tier includes.**
 
@@ -57,34 +58,40 @@ Each entry: what's baked into the image (for whoever designs it) vs. the plain p
 **Plain text:**
 > Here's the part I want to be clear on: nothing here is locked to one main. As each piece type unlocks, you'll be able to combine them however you like, a necklace from one main and a pin from another, or everything from just one. I built this so you decide how you collect, not me.
 
+### 3. Every Backer Unlocks the Next Piece (unlock thresholds, requested by David directly)
+**Baked:** funding ladder, template only: `NECKLACES UNLOCK AT $[20,000]` → `RINGS AT $[30,000]` → `BRACELETS AT $[40,000]`.
+**Plain text:**
+> Some piece types unlock as we hit funding milestones together. Necklaces unlock at $[20,000], rings at $[30,000], bracelets at $[40,000]. The more of us back this, the more of the collection becomes available to everyone.
+
+This is why Mix & Match (above) says "as each piece type unlocks" instead of assuming everything already exists, don't promise rings/bracelets are available before this ladder confirms it.
+
 **Transition line before the next screen:**
 > Speaking of what you can carry all of this in...
 
-### 3. Ita Bag + Keychains
-**Baked:** `CARRY YOUR FAVOURITES` + photo of the Ita Bag with keychains attached.
+### 4. Ita Bag + Keychains
+**Baked:** `CARRY YOUR FAVOURITES` + photo of the Ita Bag with keychains attached. **You already have a real product photo for this one**, no placeholder needed.
 **Plain text:**
 > The Ita Bag comes with its keychains included. Clip them in, swap them around, it's built to hold your favourites from day one.
 
 **Transition line before the next screen:**
 > And if you want something even smaller to carry with you...
 
-### 4. Charms
-**Baked:** `CHARMS` + one charm in close detail + all six in a row.
+### 5. Charms + the Base Bracelet
+**Baked:** `CHARMS` + the base Kraymer charm bracelet (the one that's a freebie at certain tiers) + one charm in close detail + all six in a row.
 **Plain text:**
-> Here's a closer look at the charms too. I'll share exactly how these fit into your pledge once that's locked in, for now, just wanted you to see them.
+> This is the base Kraymer charm bracelet, the one you can get as a freebie at certain tiers, and the charms that clip onto it. I'll share exactly how these fit into your pledge once that's locked in, for now, just wanted you to see how they connect.
+
+**Why merged with the freebie, not separate:** the charm bracelet freebie (see Freebies, below) and the charms product line are the same physical system, one is the base, the other clips onto it. Showing them 6 screens apart was confusing, this is why the two are now next to each other.
 
 **Transition line before the next screen:**
 > Before I get into pricing, I want to tell you why I feel good about putting my name on all of this.
 
-### 5. Quality & Lifetime Warranty
+### 6. Quality & Lifetime Warranty
 **Baked:** `MADE TO LAST. BACKED FOR LIFE.` + `10,000+ PIECES MADE` as the hero stat + badges: Lifetime Warranty / Free Repairs, Always.
 **Plain text:**
 > I want to be upfront about something: I've made and shipped over 10,000 pieces of jewelry at this point, and I've learned a lot along the way, some of it the hard way. That's exactly why I feel confident giving every piece in this campaign a Lifetime Warranty. If something breaks, I fix it. No fine print. I'm one person running a small business, not a corporation looking for ways to avoid a repair.
 
-### 6. Artist's Story
-**Baked:** `HI, I'M KRAYMER` + a real photo of you or your workspace.
-**Plain text:**
-> I've been making anime and gaming inspired jewelry and pins for over 10 years now. It started small, just me, a handful of designs, and a lot of trial and error. Now over 130k+ of you follow along, and I still design every single piece myself. Love and Deepspace means a lot to me, and I wanted to make something that let you carry that feeling with you, not just look at it.
+**Note:** Artist's Story is no longer a separate screen here, it moved to the very top of the page (right after the hero) as the About section, since having "About" and a second "Hi, I'm Kraymer" screen later said the same thing twice.
 
 ### 7. Handmade Process
 **Baked:** `HOW IT'S ACTUALLY MADE` + 4 numbered steps with real process photos.
@@ -109,9 +116,9 @@ Each entry: what's baked into the image (for whoever designs it) vs. the plain p
 > I take custom commissions too, anywhere from $3,000 to $50,000 USD depending on how involved the piece is. That includes multiple design rounds, sketches, and full production. Spots are limited, so if that's something you're interested in, message me here on Kickstarter or email hello@kraymerart.com. Happy to share previous client work on request.
 
 ### 10. Freebies
-**Baked:** `FREEBIES` + 3 icons: jewelry storage box, base charm bracelet, pin display banner.
+**Baked:** `FREEBIES` + 2 icons: jewelry storage box, pin display banner. (The charm bracelet freebie is already shown in screen 5, don't repeat it here or it'll look like a third, different bracelet.)
 **Plain text:**
-> Depending on your tier, your pledge also comes with a little extra: an exclusive jewelry storage box, a base Kraymer charm bracelet, or an enamel pin display banner. Check exactly which tiers include which on the reward list below.
+> Depending on your tier, your pledge also comes with a little extra: an exclusive jewelry storage box, an enamel pin display banner, or the charm bracelet shown earlier. Check exactly which tiers include which on the reward list below.
 
 ### 11. Volume Pricing
 **Baked:** the price ladder using real numbers (not invented, pulled straight from the reward table):
@@ -132,7 +139,14 @@ Each entry: what's baked into the image (for whoever designs it) vs. the plain p
 **Plain text:**
 > Pick a base tier first, pins, jewelry, or both. Once the campaign ends, you'll get a survey where you can add extras, more pins, more jewelry, or the Ita Bag, whatever you didn't grab the first time. Back the 3 pin tier now and fall in love with a necklace later? You're not locked out, you just add it.
 
-### 13. Which Tier Is Right For You
+### 13. New to Kickstarter? (this was missing, David asked for it directly: "add a proper explanation for how to pledge")
+**Baked:** `NEW TO KICKSTARTER?` + 4 numbered steps, ideally as a GIF: 1. Click "Back this project" 2. Select your reward 3. Create a Kickstarter account (takes 10 seconds) 4. Confirm payment and click "Pledge".
+**Plain text:**
+> If this is your first time backing something on Kickstarter, it's a lot simpler than it looks. Pick your reward, create a free account if you don't already have one, confirm your payment method, and that's it, you're not charged until the campaign ends.
+
+**Note:** this exact tutorial existed on the Pride Animals campaign as a GIF. It got dropped when the old campaign's images were stripped out, this puts it back, redesigned for this campaign.
+
+### 14. Which Tier Is Right For You
 **Baked:** 4 columns only, not all 10 tiers (10 would be unreadable as a graphic):
 - `JUST ONE PIN` — $29
 - `BEST TO START` — 3 pins, $79
